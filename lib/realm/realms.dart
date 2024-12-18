@@ -74,8 +74,15 @@ class Realms {
         JobOrderEdcUpdate.schema,
         JobOrderTrainingMaterial.schema,
         JobOrder.schema,
-        Inbox.schema
-      ]),
+        Inbox.schema,
+      ],
+        schemaVersion: 2,
+        migrationCallback: (migration, oldVersion) {
+          if (oldVersion < 2){
+
+          }
+        },
+      ),
     );
 
     return realm!;

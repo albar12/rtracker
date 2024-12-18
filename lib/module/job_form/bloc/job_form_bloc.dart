@@ -148,6 +148,11 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       List<Uint8List> transactionTestImages = [];
       List<Uint8List> qrisReceiptImages = [];
       List<Uint8List> brizziInstallmentReceiptImages = [];
+      List<Uint8List> picMerchantImages = [];
+      List<Uint8List> rollSalesDraftImages = [];
+      List<Uint8List> trainingStatementLetterImages = [];
+      List<Uint8List> edcAppImages = [];
+      List<Uint8List> otherImages = [];
 
       if (event.jobOrder.merchant != null) {
         if (event.jobOrder.merchant!.signature != null) {
@@ -177,6 +182,47 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
 
         for (ImageFile imageFile in event.jobOrder.machineAndCard!.images) {
           machineImages.add(
+            Uint8List.fromList(
+              imageFile.file,
+            ),
+          );
+        }
+
+        // Add here
+        for (ImageFile imageFile in event.jobOrder.machineAndCard!.picMerchantImages) {
+          picMerchantImages.add(
+            Uint8List.fromList(
+              imageFile.file,
+            ),
+          );
+        }
+
+        for (ImageFile imageFile in event.jobOrder.machineAndCard!.rollSalesDraftImages) {
+          rollSalesDraftImages.add(
+            Uint8List.fromList(
+              imageFile.file,
+            ),
+          );
+        }
+
+        for (ImageFile imageFile in event.jobOrder.machineAndCard!.trainingStatementLetterImages) {
+          trainingStatementLetterImages.add(
+            Uint8List.fromList(
+              imageFile.file,
+            ),
+          );
+        }
+
+        for (ImageFile imageFile in event.jobOrder.machineAndCard!.edcAppImages) {
+          edcAppImages.add(
+            Uint8List.fromList(
+              imageFile.file,
+            ),
+          );
+        }
+
+        for (ImageFile imageFile in event.jobOrder.machineAndCard!.otherImages) {
+          otherImages.add(
             Uint8List.fromList(
               imageFile.file,
             ),
@@ -224,6 +270,11 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
         qrisReceiptImages: qrisReceiptImages,
         brizziInstallmentReceiptImages: brizziInstallmentReceiptImages,
         sendJobOrder: sendJobOrder,
+        picMerchantImages: picMerchantImages,
+        rollSalesDraftImages: rollSalesDraftImages,
+        trainingStatementLetterImages: trainingStatementLetterImages,
+        edcAppImages: edcAppImages,
+        otherImages: otherImages
       );
 
       if (response.statusCode == 200) {

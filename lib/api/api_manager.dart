@@ -575,6 +575,11 @@ class ApiManager {
     required List<Uint8List> qrisReceiptImages,
     required List<Uint8List> brizziInstallmentReceiptImages,
     required SendJobOrder sendJobOrder,
+    required List<Uint8List> picMerchantImages,
+    required List<Uint8List> rollSalesDraftImages,
+    required List<Uint8List> trainingStatementLetterImages,
+    required List<Uint8List> edcAppImages,
+    required List<Uint8List> otherImages,
   }) async {
     Dio dio = await getDio();
 
@@ -665,6 +670,72 @@ class ApiManager {
           'brizziInstallmentReceiptImages[]',
           MultipartFile.fromBytes(
             brizziInstallmentReceiptImage,
+            filename: "image.png",
+            contentType: MediaType('image', 'png'),
+          ),
+        ),
+      );
+    }
+
+    // Add new Image
+    for (Uint8List image in picMerchantImages) {
+      formData.files.add(
+        MapEntry(
+          'picMerchantImages[]',
+          MultipartFile.fromBytes(
+            image,
+            filename: "image.png",
+            contentType: MediaType('image', 'png'),
+          ),
+        ),
+      );
+    }
+
+    for (Uint8List image in rollSalesDraftImages) {
+      formData.files.add(
+        MapEntry(
+          'rollSalesDraftImages[]',
+          MultipartFile.fromBytes(
+            image,
+            filename: "image.png",
+            contentType: MediaType('image', 'png'),
+          ),
+        ),
+      );
+    }
+
+    for (Uint8List image in trainingStatementLetterImages) {
+      formData.files.add(
+        MapEntry(
+          'trainingStatementLetterImages[]',
+          MultipartFile.fromBytes(
+            image,
+            filename: "image.png",
+            contentType: MediaType('image', 'png'),
+          ),
+        ),
+      );
+    }
+
+    for (Uint8List image in edcAppImages) {
+      formData.files.add(
+        MapEntry(
+          'edcAppImages[]',
+          MultipartFile.fromBytes(
+            image,
+            filename: "image.png",
+            contentType: MediaType('image', 'png'),
+          ),
+        ),
+      );
+    }
+
+    for (Uint8List image in otherImages) {
+      formData.files.add(
+        MapEntry(
+          'otherImages[]',
+          MultipartFile.fromBytes(
+            image,
             filename: "image.png",
             contentType: MediaType('image', 'png'),
           ),

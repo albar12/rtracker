@@ -402,6 +402,11 @@ class _JobOrderMachineAndCard {
   late _JobOrderEdcCommunicationType? edcCommunicationType;
   late List<_ImageFile> images;
   late List<_ImageFile> serialNumberPhotos;
+  late List<_ImageFile> picMerchantImages;
+  late List<_ImageFile> rollSalesDraftImages;
+  late List<_ImageFile> trainingStatementLetterImages;
+  late List<_ImageFile> edcAppImages;
+  late List<_ImageFile> otherImages;
 }
 
 @RealmModel()

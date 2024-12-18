@@ -2661,6 +2661,11 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
     JobOrderEdcCommunicationType? edcCommunicationType,
     Iterable<ImageFile> images = const [],
     Iterable<ImageFile> serialNumberPhotos = const [],
+    Iterable<ImageFile> picMerchantImages = const [],
+    Iterable<ImageFile> rollSalesDraftImages = const [],
+    Iterable<ImageFile> trainingStatementLetterImages = const [],
+    Iterable<ImageFile> edcAppImages = const [],
+    Iterable<ImageFile> otherImages = const [],
   }) {
     RealmObjectBase.set(this, 'simCard', simCard);
     RealmObjectBase.set(this, 'provider', provider);
@@ -2674,9 +2679,26 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
     RealmObjectBase.set(this, 'edcType', edcType);
     RealmObjectBase.set(this, 'edcCommunicationType', edcCommunicationType);
     RealmObjectBase.set<RealmList<ImageFile>>(
-        this, 'images', RealmList<ImageFile>(images));
+        this, 'images', RealmList<ImageFile>(images),
+    );
     RealmObjectBase.set<RealmList<ImageFile>>(
-        this, 'serialNumberPhotos', RealmList<ImageFile>(serialNumberPhotos));
+        this, 'serialNumberPhotos', RealmList<ImageFile>(serialNumberPhotos),
+    );
+    RealmObjectBase.set<RealmList<ImageFile>>(
+      this, 'picMerchantImages', RealmList<ImageFile>(picMerchantImages),
+    );
+    RealmObjectBase.set<RealmList<ImageFile>>(
+      this, 'rollSalesDraftImages', RealmList<ImageFile>(rollSalesDraftImages),
+    );
+    RealmObjectBase.set<RealmList<ImageFile>>(
+      this, 'trainingStatementLetterImages', RealmList<ImageFile>(trainingStatementLetterImages),
+    );
+    RealmObjectBase.set<RealmList<ImageFile>>(
+      this, 'edcAppImages', RealmList<ImageFile>(edcAppImages),
+    );
+    RealmObjectBase.set<RealmList<ImageFile>>(
+      this, 'otherImages', RealmList<ImageFile>(otherImages),
+    );
   }
 
   JobOrderMachineAndCard._();
@@ -2761,6 +2783,41 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
       throw RealmUnsupportedSetError();
 
   @override
+  RealmList<ImageFile> get picMerchantImages =>
+      RealmObjectBase.get<ImageFile>(this, 'picMerchantImages') as RealmList<ImageFile>;
+  @override
+  set picMerchantImages(covariant RealmList<ImageFile> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  RealmList<ImageFile> get rollSalesDraftImages =>
+      RealmObjectBase.get<ImageFile>(this, 'rollSalesDraftImages') as RealmList<ImageFile>;
+  @override
+  set rollSalesDraftImages(covariant RealmList<ImageFile> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  RealmList<ImageFile> get trainingStatementLetterImages =>
+      RealmObjectBase.get<ImageFile>(this, 'trainingStatementLetterImages') as RealmList<ImageFile>;
+  @override
+  set trainingStatementLetterImages(covariant RealmList<ImageFile> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  RealmList<ImageFile> get edcAppImages =>
+      RealmObjectBase.get<ImageFile>(this, 'edcAppImages') as RealmList<ImageFile>;
+  @override
+  set edcAppImages(covariant RealmList<ImageFile> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  RealmList<ImageFile> get otherImages =>
+      RealmObjectBase.get<ImageFile>(this, 'otherImages') as RealmList<ImageFile>;
+  @override
+  set otherImages(covariant RealmList<ImageFile> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
   Stream<RealmObjectChanges<JobOrderMachineAndCard>> get changes =>
       RealmObjectBase.getChanges<JobOrderMachineAndCard>(this);
 
@@ -2774,25 +2831,49 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
     RealmObjectBase.registerFactory(JobOrderMachineAndCard._);
     return const SchemaObject(ObjectType.realmObject, JobOrderMachineAndCard,
         'JobOrderMachineAndCard', [
-      SchemaProperty('simCard', RealmPropertyType.string, optional: true),
-      SchemaProperty('provider', RealmPropertyType.object,
-          optional: true, linkTarget: 'JobOrderProvider'),
-      SchemaProperty('sam', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam2', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam3', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam4', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam5', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam6', RealmPropertyType.string, optional: true),
-      SchemaProperty('sam7', RealmPropertyType.string, optional: true),
-      SchemaProperty('edcType', RealmPropertyType.object,
-          optional: true, linkTarget: 'JobOrderEdcType'),
-      SchemaProperty('edcCommunicationType', RealmPropertyType.object,
-          optional: true, linkTarget: 'JobOrderEdcCommunicationType'),
-      SchemaProperty('images', RealmPropertyType.object,
-          linkTarget: 'ImageFile', collectionType: RealmCollectionType.list),
-      SchemaProperty('serialNumberPhotos', RealmPropertyType.object,
-          linkTarget: 'ImageFile', collectionType: RealmCollectionType.list),
-    ]);
+          SchemaProperty('simCard', RealmPropertyType.string, optional: true),
+          SchemaProperty('provider', RealmPropertyType.object,
+              optional: true, linkTarget: 'JobOrderProvider'),
+          SchemaProperty('sam', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam2', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam3', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam4', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam5', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam6', RealmPropertyType.string, optional: true),
+          SchemaProperty('sam7', RealmPropertyType.string, optional: true),
+          SchemaProperty('edcType', RealmPropertyType.object,
+            optional: true,
+            linkTarget: 'JobOrderEdcType',
+          ),
+          SchemaProperty(
+            'edcCommunicationType',
+            RealmPropertyType.object,
+            optional: true,
+            linkTarget: 'JobOrderEdcCommunicationType',
+          ),
+          SchemaProperty(
+            'images',
+            RealmPropertyType.object,
+            linkTarget: 'ImageFile',
+            collectionType: RealmCollectionType.list,
+          ),
+          SchemaProperty(
+            'serialNumberPhotos',
+            RealmPropertyType.object,
+            linkTarget: 'ImageFile',
+            collectionType: RealmCollectionType.list,
+          ),
+          SchemaProperty('picMerchantImages', RealmPropertyType.object,
+            linkTarget: 'ImageFile', collectionType: RealmCollectionType.list,),
+          SchemaProperty('rollSalesDraftImages', RealmPropertyType.object,
+            linkTarget: 'ImageFile', collectionType: RealmCollectionType.list,),
+          SchemaProperty('trainingStatementLetterImages', RealmPropertyType.object,
+            linkTarget: 'ImageFile', collectionType: RealmCollectionType.list,),
+          SchemaProperty('edcAppImages', RealmPropertyType.object,
+            linkTarget: 'ImageFile', collectionType: RealmCollectionType.list,),
+          SchemaProperty('otherImages', RealmPropertyType.object,
+            linkTarget: 'ImageFile', collectionType: RealmCollectionType.list,),
+        ]);
   }
 }
 
@@ -4624,7 +4705,7 @@ class JobOrder extends _JobOrder
           optional: true, linkTarget: 'JobOrderServicePoint'),
       SchemaProperty('cmRemark', RealmPropertyType.string, optional: true),
       SchemaProperty('jobType', RealmPropertyType.object,
-          optional: true, linkTarget: 'JobOrderJobType'),
+          optional: true, linkTarget: 'JobOrderJobType',),
     ]);
   }
 }

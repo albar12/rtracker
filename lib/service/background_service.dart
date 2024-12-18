@@ -1077,6 +1077,11 @@ class BackgroundService {
         List<Uint8List> transactionTestImages = [];
         List<Uint8List> qrisReceiptImages = [];
         List<Uint8List> brizziInstallmentReceiptImages = [];
+        List<Uint8List> picMerchantImages = [];
+        List<Uint8List> rollSalesDraftImages = [];
+        List<Uint8List> trainingStatementLetterImages = [];
+        List<Uint8List> edcAppImages = [];
+        List<Uint8List> otherImages = [];
 
         if (jobOrder.merchant != null) {
           if (jobOrder.merchant!.signature != null) {
@@ -1106,6 +1111,47 @@ class BackgroundService {
 
           for (ImageFile imageFile in jobOrder.machineAndCard!.images) {
             machineImages.add(
+              Uint8List.fromList(
+                imageFile.file,
+              ),
+            );
+          }
+
+          // Add here
+          for (ImageFile imageFile in jobOrder.machineAndCard!.picMerchantImages) {
+            picMerchantImages.add(
+              Uint8List.fromList(
+                imageFile.file,
+              ),
+            );
+          }
+
+          for (ImageFile imageFile in jobOrder.machineAndCard!.rollSalesDraftImages) {
+            rollSalesDraftImages.add(
+              Uint8List.fromList(
+                imageFile.file,
+              ),
+            );
+          }
+
+          for (ImageFile imageFile in jobOrder.machineAndCard!.trainingStatementLetterImages) {
+            trainingStatementLetterImages.add(
+              Uint8List.fromList(
+                imageFile.file,
+              ),
+            );
+          }
+
+          for (ImageFile imageFile in jobOrder.machineAndCard!.edcAppImages) {
+            edcAppImages.add(
+              Uint8List.fromList(
+                imageFile.file,
+              ),
+            );
+          }
+
+          for (ImageFile imageFile in jobOrder.machineAndCard!.otherImages) {
+            otherImages.add(
               Uint8List.fromList(
                 imageFile.file,
               ),
@@ -1153,6 +1199,11 @@ class BackgroundService {
           qrisReceiptImages: qrisReceiptImages,
           brizziInstallmentReceiptImages: brizziInstallmentReceiptImages,
           sendJobOrder: sendJobOrder,
+          picMerchantImages: picMerchantImages,
+          rollSalesDraftImages: rollSalesDraftImages,
+          trainingStatementLetterImages: trainingStatementLetterImages,
+          edcAppImages: edcAppImages,
+          otherImages: otherImages,
         );
 
         if (response.statusCode == 200) {
