@@ -8,14 +8,14 @@ part of 'schemas.dart';
 
 class Inbox extends _Inbox with RealmEntity, RealmObjectBase, RealmObject {
   Inbox(
-    String id,
-    String title,
-    String body,
-    DateTime date,
-    bool read,
-    bool sent,
-    int version,
-  ) {
+      String id,
+      String title,
+      String body,
+      DateTime date,
+      bool read,
+      bool sent,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'title', title);
     RealmObjectBase.set(this, 'body', body);
@@ -121,9 +121,9 @@ class ImageFile extends _ImageFile
 
 class Version extends _Version with RealmEntity, RealmObjectBase, RealmObject {
   Version(
-    String key,
-    int value,
-  ) {
+      String key,
+      int value,
+      ) {
     RealmObjectBase.set(this, 'key', key);
     RealmObjectBase.set(this, 'value', value);
   }
@@ -160,10 +160,10 @@ class Version extends _Version with RealmEntity, RealmObjectBase, RealmObject {
 
 class Vendor extends _Vendor with RealmEntity, RealmObjectBase, RealmObject {
   Vendor(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -208,10 +208,10 @@ class Vendor extends _Vendor with RealmEntity, RealmObjectBase, RealmObject {
 class BaseOffice extends _BaseOffice
     with RealmEntity, RealmObjectBase, RealmObject {
   BaseOffice(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -257,12 +257,12 @@ class BaseOffice extends _BaseOffice
 class ServicePoint extends _ServicePoint
     with RealmEntity, RealmObjectBase, RealmObject {
   ServicePoint(
-    String id,
-    String vendorId,
-    String baseOfficeId,
-    String name,
-    int version,
-  ) {
+      String id,
+      String vendorId,
+      String baseOfficeId,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'vendorId', vendorId);
     RealmObjectBase.set(this, 'baseOfficeId', baseOfficeId);
@@ -324,12 +324,12 @@ class ServicePoint extends _ServicePoint
 
 class JobType extends _JobType with RealmEntity, RealmObjectBase, RealmObject {
   JobType(
-    String id,
-    String vendorId,
-    String name,
-    String description,
-    int version,
-  ) {
+      String id,
+      String vendorId,
+      String name,
+      String description,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'vendorId', vendorId);
     RealmObjectBase.set(this, 'name', name);
@@ -391,10 +391,10 @@ class JobType extends _JobType with RealmEntity, RealmObjectBase, RealmObject {
 class DocumentStatus extends _DocumentStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   DocumentStatus(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -440,10 +440,10 @@ class DocumentStatus extends _DocumentStatus
 class RequestType extends _RequestType
     with RealmEntity, RealmObjectBase, RealmObject {
   RequestType(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -489,10 +489,10 @@ class RequestType extends _RequestType
 class MmsStatus extends _MmsStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   MmsStatus(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -537,11 +537,11 @@ class MmsStatus extends _MmsStatus
 class Provider extends _Provider
     with RealmEntity, RealmObjectBase, RealmObject {
   Provider(
-    String id,
-    String vendorId,
-    String name,
-    int version,
-  ) {
+      String id,
+      String vendorId,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'vendorId', vendorId);
     RealmObjectBase.set(this, 'name', name);
@@ -593,12 +593,12 @@ class Provider extends _Provider
 
 class EdcType extends _EdcType with RealmEntity, RealmObjectBase, RealmObject {
   EdcType(
-    String id,
-    String vendorId,
-    String name,
-    int version,
-    int flag_android,
-  ) {
+      String id,
+      String vendorId,
+      String name,
+      int version,
+      int flag_android,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'vendorId', vendorId);
     RealmObjectBase.set(this, 'name', name);
@@ -659,14 +659,14 @@ class EdcType extends _EdcType with RealmEntity, RealmObjectBase, RealmObject {
 class AppVersion extends _AppVersion
     with RealmEntity, RealmObjectBase, RealmObject {
   AppVersion(
-    int id_primary,
-    int id_versi_aplikasi,
-    String versi_aplikasi,
-    int id_tipe_dc,
-    int android,
-    int vendor_id,
-    int version,
-  ) {
+      int id_primary,
+      int id_versi_aplikasi,
+      String versi_aplikasi,
+      int id_tipe_dc,
+      int android,
+      int vendor_id,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id_primary', id_primary);
     RealmObjectBase.set(this, 'id_versi_aplikasi', id_versi_aplikasi);
     RealmObjectBase.set(this, 'versi_aplikasi', versi_aplikasi);
@@ -743,13 +743,13 @@ class AppVersion extends _AppVersion
 
 class OsPatch extends _OsPatch with RealmEntity, RealmObjectBase, RealmObject {
   OsPatch(
-    int id_os_patch,
-    String os_patch_name,
-    int id_versi_aplikasi,
-    int id_tipe_edc,
-    int vendor_id,
-    int version,
-  ) {
+      int id_os_patch,
+      String os_patch_name,
+      int id_versi_aplikasi,
+      int id_tipe_edc,
+      int vendor_id,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id_os_patch', id_os_patch);
     RealmObjectBase.set(this, 'os_patch_name', os_patch_name);
     RealmObjectBase.set(this, 'id_versi_aplikasi', id_versi_aplikasi);
@@ -819,11 +819,11 @@ class OsPatch extends _OsPatch with RealmEntity, RealmObjectBase, RealmObject {
 class StickerBank extends _StickerBank
     with RealmEntity, RealmObjectBase, RealmObject {
   StickerBank(
-    int idx,
-    String nama_sticker_bank,
-    int vendor_id,
-    int version,
-  ) {
+      int idx,
+      String nama_sticker_bank,
+      int vendor_id,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'idx', idx);
     RealmObjectBase.set(this, 'nama_sticker_bank', nama_sticker_bank);
     RealmObjectBase.set(this, 'vendor_id', vendor_id);
@@ -878,10 +878,10 @@ class StickerBank extends _StickerBank
 class EdcCommunicationType extends _EdcCommunicationType
     with RealmEntity, RealmObjectBase, RealmObject {
   EdcCommunicationType(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -928,10 +928,10 @@ class EdcCommunicationType extends _EdcCommunicationType
 class ReplacementType extends _ReplacementType
     with RealmEntity, RealmObjectBase, RealmObject {
   ReplacementType(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -978,12 +978,12 @@ class ReplacementType extends _ReplacementType
 class JobStatus extends _JobStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   JobStatus(
-    String id,
-    String aliasId,
-    String vendorId,
-    String name,
-    int version,
-  ) {
+      String id,
+      String aliasId,
+      String vendorId,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'aliasId', aliasId);
     RealmObjectBase.set(this, 'vendorId', vendorId);
@@ -1043,14 +1043,14 @@ class JobStatus extends _JobStatus
 class JobStatusCategory extends _JobStatusCategory
     with RealmEntity, RealmObjectBase, RealmObject {
   JobStatusCategory(
-    String id,
-    String jobStatusId,
-    String jobStatusAliasId,
-    String vendorId,
-    String name,
-    int version, {
-    String? jobTypeId,
-  }) {
+      String id,
+      String jobStatusId,
+      String jobStatusAliasId,
+      String vendorId,
+      String name,
+      int version, {
+        String? jobTypeId,
+      }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'jobStatusId', jobStatusId);
     RealmObjectBase.set(this, 'jobStatusAliasId', jobStatusAliasId);
@@ -1130,10 +1130,10 @@ class JobStatusCategory extends _JobStatusCategory
 
 class Note extends _Note with RealmEntity, RealmObjectBase, RealmObject {
   Note(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1178,10 +1178,10 @@ class Note extends _Note with RealmEntity, RealmObjectBase, RealmObject {
 class QrisMenu extends _QrisMenu
     with RealmEntity, RealmObjectBase, RealmObject {
   QrisMenu(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1226,9 +1226,9 @@ class QrisMenu extends _QrisMenu
 class EdcEquipment extends _EdcEquipment
     with RealmEntity, RealmObjectBase, RealmObject {
   EdcEquipment(
-    String name,
-    String vendorId,
-  ) {
+      String name,
+      String vendorId,
+      ) {
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'vendorId', vendorId);
   }
@@ -1268,11 +1268,11 @@ class EdcEquipment extends _EdcEquipment
 class EdcFeatureTestCase extends _EdcFeatureTestCase
     with RealmEntity, RealmObjectBase, RealmObject {
   EdcFeatureTestCase(
-    String id,
-    String name,
-    String type,
-    int version,
-  ) {
+      String id,
+      String name,
+      String type,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'type', type);
@@ -1326,11 +1326,11 @@ class EdcFeatureTestCase extends _EdcFeatureTestCase
 class JobCategory extends _JobCategory
     with RealmEntity, RealmObjectBase, RealmObject {
   JobCategory(
-    String id,
-    String vendorId,
-    String name,
-    int version,
-  ) {
+      String id,
+      String vendorId,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'vendorId', vendorId);
     RealmObjectBase.set(this, 'name', name);
@@ -1384,12 +1384,12 @@ class JobCategory extends _JobCategory
 class TransactionTestCase extends _TransactionTestCase
     with RealmEntity, RealmObjectBase, RealmObject {
   TransactionTestCase(
-    String id,
-    String jobTypeId,
-    String name,
-    String amount,
-    int version,
-  ) {
+      String id,
+      String jobTypeId,
+      String name,
+      String amount,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'jobTypeId', jobTypeId);
     RealmObjectBase.set(this, 'name', name);
@@ -1451,10 +1451,10 @@ class TransactionTestCase extends _TransactionTestCase
 class OtherBankEdc extends _OtherBankEdc
     with RealmEntity, RealmObjectBase, RealmObject {
   OtherBankEdc(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1499,10 +1499,10 @@ class OtherBankEdc extends _OtherBankEdc
 
 class DorMenu extends _DorMenu with RealmEntity, RealmObjectBase, RealmObject {
   DorMenu(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1547,10 +1547,10 @@ class DorMenu extends _DorMenu with RealmEntity, RealmObjectBase, RealmObject {
 class MarcollUpdateStatus extends _MarcollUpdateStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   MarcollUpdateStatus(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1597,10 +1597,10 @@ class MarcollUpdateStatus extends _MarcollUpdateStatus
 class EosUpdateStatus extends _EosUpdateStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   EosUpdateStatus(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1647,10 +1647,10 @@ class EosUpdateStatus extends _EosUpdateStatus
 class TrainingMaterial extends _TrainingMaterial
     with RealmEntity, RealmObjectBase, RealmObject {
   TrainingMaterial(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1697,10 +1697,10 @@ class TrainingMaterial extends _TrainingMaterial
 class DamageType extends _DamageType
     with RealmEntity, RealmObjectBase, RealmObject {
   DamageType(
-    String id,
-    String name,
-    int version,
-  ) {
+      String id,
+      String name,
+      int version,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'version', version);
@@ -1745,14 +1745,14 @@ class DamageType extends _DamageType
 
 class SnStock extends _SnStock with RealmEntity, RealmObjectBase, RealmObject {
   SnStock(
-    String serialNumber,
-    String category,
-    String productId,
-    String productName,
-    String servicePointId,
-    String servicePointName,
-    bool used,
-  ) {
+      String serialNumber,
+      String category,
+      String productId,
+      String productName,
+      String servicePointId,
+      String servicePointName,
+      bool used,
+      ) {
     RealmObjectBase.set(this, 'serialNumber', serialNumber);
     RealmObjectBase.set(this, 'category', category);
     RealmObjectBase.set(this, 'productId', productId);
@@ -1835,13 +1835,13 @@ class SnStock extends _SnStock with RealmEntity, RealmObjectBase, RealmObject {
 class NonSnStock extends _NonSnStock
     with RealmEntity, RealmObjectBase, RealmObject {
   NonSnStock(
-    String id,
-    String servicePointId,
-    String servicePointName,
-    String category,
-    String productName,
-    int quantity,
-  ) {
+      String id,
+      String servicePointId,
+      String servicePointName,
+      String category,
+      String productName,
+      int quantity,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'servicePointId', servicePointId);
     RealmObjectBase.set(this, 'servicePointName', servicePointName);
@@ -1915,9 +1915,9 @@ class NonSnStock extends _NonSnStock
 class JobOrderDocumentStatus extends _JobOrderDocumentStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderDocumentStatus(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -1948,18 +1948,18 @@ class JobOrderDocumentStatus extends _JobOrderDocumentStatus
     RealmObjectBase.registerFactory(JobOrderDocumentStatus._);
     return const SchemaObject(ObjectType.realmObject, JobOrderDocumentStatus,
         'JobOrderDocumentStatus', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+        ]);
   }
 }
 
 class JobOrderDamageType extends _JobOrderDamageType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderDamageType(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -1999,9 +1999,9 @@ class JobOrderDamageType extends _JobOrderDamageType
 class JobOrderBaseOffice extends _JobOrderBaseOffice
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderBaseOffice(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2041,9 +2041,9 @@ class JobOrderBaseOffice extends _JobOrderBaseOffice
 class JobOrderServicePoint extends _JobOrderServicePoint
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderServicePoint(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2083,9 +2083,9 @@ class JobOrderServicePoint extends _JobOrderServicePoint
 class JobOrderJobType extends _JobOrderJobType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderJobType(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2323,9 +2323,9 @@ class JobOrderStatus extends _JobOrderStatus
 class JobOrderRequestType extends _JobOrderRequestType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderRequestType(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2365,20 +2365,20 @@ class JobOrderRequestType extends _JobOrderRequestType
 class JobOrderMerchant extends _JobOrderMerchant
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderMerchant(
-    String id,
-    String name,
-    String shortName,
-    String city,
-    String address,
-    String phoneNumber,
-    String assignedPicName,
-    int invoiceCount, {
-    String? picName,
-    String? picPhoneNumber,
-    String? note,
-    ImageFile? signature,
-    Iterable<ImageFile> images = const [],
-  }) {
+      String id,
+      String name,
+      String shortName,
+      String city,
+      String address,
+      String phoneNumber,
+      String assignedPicName,
+      int invoiceCount, {
+        String? picName,
+        String? picPhoneNumber,
+        String? note,
+        ImageFile? signature,
+        Iterable<ImageFile> images = const [],
+      }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'shortName', shortName);
@@ -2512,9 +2512,9 @@ class JobOrderMerchant extends _JobOrderMerchant
 class JobOrderProvider extends _JobOrderProvider
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderProvider(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2554,10 +2554,10 @@ class JobOrderProvider extends _JobOrderProvider
 class JobOrderEdcType extends _JobOrderEdcType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderEdcType(
-    String id,
-    String name,
-    String flag_android,
-  ) {
+      String id,
+      String name,
+      String flag_android,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'flag_android', flag_android);
@@ -2606,9 +2606,9 @@ class JobOrderEdcType extends _JobOrderEdcType
 class JobOrderEdcCommunicationType extends _JobOrderEdcCommunicationType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderEdcCommunicationType(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2639,9 +2639,9 @@ class JobOrderEdcCommunicationType extends _JobOrderEdcCommunicationType
     RealmObjectBase.registerFactory(JobOrderEdcCommunicationType._);
     return const SchemaObject(ObjectType.realmObject,
         JobOrderEdcCommunicationType, 'JobOrderEdcCommunicationType', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+        ]);
   }
 }
 
@@ -2679,10 +2679,10 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
     RealmObjectBase.set(this, 'edcType', edcType);
     RealmObjectBase.set(this, 'edcCommunicationType', edcCommunicationType);
     RealmObjectBase.set<RealmList<ImageFile>>(
-        this, 'images', RealmList<ImageFile>(images),
+      this, 'images', RealmList<ImageFile>(images),
     );
     RealmObjectBase.set<RealmList<ImageFile>>(
-        this, 'serialNumberPhotos', RealmList<ImageFile>(serialNumberPhotos),
+      this, 'serialNumberPhotos', RealmList<ImageFile>(serialNumberPhotos),
     );
     RealmObjectBase.set<RealmList<ImageFile>>(
       this, 'picMerchantImages', RealmList<ImageFile>(picMerchantImages),
@@ -2712,7 +2712,7 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
   @override
   JobOrderProvider? get provider =>
       RealmObjectBase.get<JobOrderProvider>(this, 'provider')
-          as JobOrderProvider?;
+      as JobOrderProvider?;
   @override
   set provider(covariant JobOrderProvider? value) =>
       RealmObjectBase.set(this, 'provider', value);
@@ -2777,7 +2777,7 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
   @override
   RealmList<ImageFile> get serialNumberPhotos =>
       RealmObjectBase.get<ImageFile>(this, 'serialNumberPhotos')
-          as RealmList<ImageFile>;
+      as RealmList<ImageFile>;
   @override
   set serialNumberPhotos(covariant RealmList<ImageFile> value) =>
       throw RealmUnsupportedSetError();
@@ -2880,9 +2880,9 @@ class JobOrderMachineAndCard extends _JobOrderMachineAndCard
 class JobOrderReplacementType extends _JobOrderReplacementType
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderReplacementType(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -2913,24 +2913,24 @@ class JobOrderReplacementType extends _JobOrderReplacementType
     RealmObjectBase.registerFactory(JobOrderReplacementType._);
     return const SchemaObject(ObjectType.realmObject, JobOrderReplacementType,
         'JobOrderReplacementType', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+        ]);
   }
 }
 
 class JobOrderReplacement extends _JobOrderReplacement
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderReplacement(
-    String category,
-    String productId,
-    String name,
-    String oldSerialNumber,
-    String newSerialNumber,
-    int quantity,
-    String reason, {
-    JobOrderReplacementType? type,
-  }) {
+      String category,
+      String productId,
+      String name,
+      String oldSerialNumber,
+      String newSerialNumber,
+      int quantity,
+      String reason, {
+        JobOrderReplacementType? type,
+      }) {
     RealmObjectBase.set(this, 'type', type);
     RealmObjectBase.set(this, 'category', category);
     RealmObjectBase.set(this, 'productId', productId);
@@ -2946,7 +2946,7 @@ class JobOrderReplacement extends _JobOrderReplacement
   @override
   JobOrderReplacementType? get type =>
       RealmObjectBase.get<JobOrderReplacementType>(this, 'type')
-          as JobOrderReplacementType?;
+      as JobOrderReplacementType?;
   @override
   set type(covariant JobOrderReplacementType? value) =>
       RealmObjectBase.set(this, 'type', value);
@@ -3022,12 +3022,12 @@ class JobOrderReplacement extends _JobOrderReplacement
 class JobOrderInputPeripheral extends _JobOrderInputPeripheral
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderInputPeripheral(
-    String id,
-    String servicePoint,
-    String category,
-    String productName,
-    int quantity,
-  ) {
+      String id,
+      String servicePoint,
+      String category,
+      String productName,
+      int quantity,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'servicePoint', servicePoint);
     RealmObjectBase.set(this, 'category', category);
@@ -3081,22 +3081,22 @@ class JobOrderInputPeripheral extends _JobOrderInputPeripheral
     RealmObjectBase.registerFactory(JobOrderInputPeripheral._);
     return const SchemaObject(ObjectType.realmObject, JobOrderInputPeripheral,
         'JobOrderInputPeripheral', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('servicePoint', RealmPropertyType.string),
-      SchemaProperty('category', RealmPropertyType.string),
-      SchemaProperty('productName', RealmPropertyType.string),
-      SchemaProperty('quantity', RealmPropertyType.int),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('servicePoint', RealmPropertyType.string),
+          SchemaProperty('category', RealmPropertyType.string),
+          SchemaProperty('productName', RealmPropertyType.string),
+          SchemaProperty('quantity', RealmPropertyType.int),
+        ]);
   }
 }
 
 class JobOrderNote extends _JobOrderNote
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderNote(
-    String id,
-    String name,
-    bool value,
-  ) {
+      String id,
+      String name,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'value', value);
@@ -3142,10 +3142,10 @@ class JobOrderNote extends _JobOrderNote
 class JobOrderQrisMenu extends _JobOrderQrisMenu
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderQrisMenu(
-    String id,
-    String name,
-    bool value,
-  ) {
+      String id,
+      String name,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'value', value);
@@ -3192,12 +3192,12 @@ class JobOrderQrisMenu extends _JobOrderQrisMenu
 class JobOrderQris extends _JobOrderQris
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderQris(
-    bool exist,
-    bool testResult, {
-    Iterable<JobOrderQrisMenu> menus = const [],
-    Iterable<ImageFile> qrisReceiptImages = const [],
-    Iterable<ImageFile> brizziInstallmentReceiptImages = const [],
-  }) {
+      bool exist,
+      bool testResult, {
+        Iterable<JobOrderQrisMenu> menus = const [],
+        Iterable<ImageFile> qrisReceiptImages = const [],
+        Iterable<ImageFile> brizziInstallmentReceiptImages = const [],
+      }) {
     RealmObjectBase.set(this, 'exist', exist);
     RealmObjectBase.set(this, 'testResult', testResult);
     RealmObjectBase.set<RealmList<JobOrderQrisMenu>>(
@@ -3225,7 +3225,7 @@ class JobOrderQris extends _JobOrderQris
   @override
   RealmList<JobOrderQrisMenu> get menus =>
       RealmObjectBase.get<JobOrderQrisMenu>(this, 'menus')
-          as RealmList<JobOrderQrisMenu>;
+      as RealmList<JobOrderQrisMenu>;
   @override
   set menus(covariant RealmList<JobOrderQrisMenu> value) =>
       throw RealmUnsupportedSetError();
@@ -3233,7 +3233,7 @@ class JobOrderQris extends _JobOrderQris
   @override
   RealmList<ImageFile> get qrisReceiptImages =>
       RealmObjectBase.get<ImageFile>(this, 'qrisReceiptImages')
-          as RealmList<ImageFile>;
+      as RealmList<ImageFile>;
   @override
   set qrisReceiptImages(covariant RealmList<ImageFile> value) =>
       throw RealmUnsupportedSetError();
@@ -3241,7 +3241,7 @@ class JobOrderQris extends _JobOrderQris
   @override
   RealmList<ImageFile> get brizziInstallmentReceiptImages =>
       RealmObjectBase.get<ImageFile>(this, 'brizziInstallmentReceiptImages')
-          as RealmList<ImageFile>;
+      as RealmList<ImageFile>;
   @override
   set brizziInstallmentReceiptImages(covariant RealmList<ImageFile> value) =>
       throw RealmUnsupportedSetError();
@@ -3275,9 +3275,9 @@ class JobOrderQris extends _JobOrderQris
 class JobOrderEdcEquipment extends _JobOrderEdcEquipment
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderEdcEquipment(
-    String name,
-    int quantity,
-  ) {
+      String name,
+      int quantity,
+      ) {
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'quantity', quantity);
   }
@@ -3317,11 +3317,11 @@ class JobOrderEdcEquipment extends _JobOrderEdcEquipment
 class JobOrderEdcFeatureTestCase extends _JobOrderEdcFeatureTestCase
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderEdcFeatureTestCase(
-    String id,
-    String name,
-    bool value, {
-    String? type,
-  }) {
+      String id,
+      String name,
+      bool value, {
+        String? type,
+      }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'type', type);
@@ -3364,21 +3364,21 @@ class JobOrderEdcFeatureTestCase extends _JobOrderEdcFeatureTestCase
     RealmObjectBase.registerFactory(JobOrderEdcFeatureTestCase._);
     return const SchemaObject(ObjectType.realmObject,
         JobOrderEdcFeatureTestCase, 'JobOrderEdcFeatureTestCase', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('type', RealmPropertyType.string, optional: true),
-      SchemaProperty('value', RealmPropertyType.bool),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+          SchemaProperty('type', RealmPropertyType.string, optional: true),
+          SchemaProperty('value', RealmPropertyType.bool),
+        ]);
   }
 }
 
 class JobOrderJobCategory extends _JobOrderJobCategory
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderJobCategory(
-    String id,
-    String name,
-    bool value,
-  ) {
+      String id,
+      String name,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'value', value);
@@ -3425,11 +3425,11 @@ class JobOrderJobCategory extends _JobOrderJobCategory
 class JobOrderTransactionTestCase extends _JobOrderTransactionTestCase
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderTransactionTestCase(
-    String id,
-    String name,
-    String amount,
-    bool value,
-  ) {
+      String id,
+      String name,
+      String amount,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'amount', amount);
@@ -3472,11 +3472,11 @@ class JobOrderTransactionTestCase extends _JobOrderTransactionTestCase
     RealmObjectBase.registerFactory(JobOrderTransactionTestCase._);
     return const SchemaObject(ObjectType.realmObject,
         JobOrderTransactionTestCase, 'JobOrderTransactionTestCase', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('amount', RealmPropertyType.string),
-      SchemaProperty('value', RealmPropertyType.bool),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+          SchemaProperty('amount', RealmPropertyType.string),
+          SchemaProperty('value', RealmPropertyType.bool),
+        ]);
   }
 }
 
@@ -3505,7 +3505,7 @@ class JobOrderTransactionTest extends _JobOrderTransactionTest
   @override
   RealmList<JobOrderTransactionTestCase> get cases =>
       RealmObjectBase.get<JobOrderTransactionTestCase>(this, 'cases')
-          as RealmList<JobOrderTransactionTestCase>;
+      as RealmList<JobOrderTransactionTestCase>;
   @override
   set cases(covariant RealmList<JobOrderTransactionTestCase> value) =>
       throw RealmUnsupportedSetError();
@@ -3531,23 +3531,23 @@ class JobOrderTransactionTest extends _JobOrderTransactionTest
     RealmObjectBase.registerFactory(JobOrderTransactionTest._);
     return const SchemaObject(ObjectType.realmObject, JobOrderTransactionTest,
         'JobOrderTransactionTest', [
-      SchemaProperty('date', RealmPropertyType.timestamp, optional: true),
-      SchemaProperty('cases', RealmPropertyType.object,
-          linkTarget: 'JobOrderTransactionTestCase',
-          collectionType: RealmCollectionType.list),
-      SchemaProperty('images', RealmPropertyType.object,
-          linkTarget: 'ImageFile', collectionType: RealmCollectionType.list),
-    ]);
+          SchemaProperty('date', RealmPropertyType.timestamp, optional: true),
+          SchemaProperty('cases', RealmPropertyType.object,
+              linkTarget: 'JobOrderTransactionTestCase',
+              collectionType: RealmCollectionType.list),
+          SchemaProperty('images', RealmPropertyType.object,
+              linkTarget: 'ImageFile', collectionType: RealmCollectionType.list),
+        ]);
   }
 }
 
 class JobOrderOtherBankEdc extends _JobOrderOtherBankEdc
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderOtherBankEdc(
-    String id,
-    String name,
-    bool value,
-  ) {
+      String id,
+      String name,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'value', value);
@@ -3594,9 +3594,9 @@ class JobOrderOtherBankEdc extends _JobOrderOtherBankEdc
 class JobOrderDorMenu extends _JobOrderDorMenu
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderDorMenu(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3636,9 +3636,9 @@ class JobOrderDorMenu extends _JobOrderDorMenu
 class JobOrderMarcollUpdateStatus extends _JobOrderMarcollUpdateStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderMarcollUpdateStatus(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3669,18 +3669,18 @@ class JobOrderMarcollUpdateStatus extends _JobOrderMarcollUpdateStatus
     RealmObjectBase.registerFactory(JobOrderMarcollUpdateStatus._);
     return const SchemaObject(ObjectType.realmObject,
         JobOrderMarcollUpdateStatus, 'JobOrderMarcollUpdateStatus', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+        ]);
   }
 }
 
 class JobOrderEosUpdateStatus extends _JobOrderEosUpdateStatus
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderEosUpdateStatus(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3711,19 +3711,19 @@ class JobOrderEosUpdateStatus extends _JobOrderEosUpdateStatus
     RealmObjectBase.registerFactory(JobOrderEosUpdateStatus._);
     return const SchemaObject(ObjectType.realmObject, JobOrderEosUpdateStatus,
         'JobOrderEosUpdateStatus', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+        ]);
   }
 }
 
 class JobOrderAppVersion extends _JobOrderAppVersion
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderAppVersion(
-    String id,
-    String name,
-    String id_tipe_edc,
-  ) {
+      String id,
+      String name,
+      String id_tipe_edc,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'id_tipe_edc', id_tipe_edc);
@@ -3772,9 +3772,9 @@ class JobOrderAppVersion extends _JobOrderAppVersion
 class JobOrderOsPatch extends _JobOrderOsPatch
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderOsPatch(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3814,9 +3814,9 @@ class JobOrderOsPatch extends _JobOrderOsPatch
 class JobOrderStickerBank extends _JobOrderStickerBank
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderStickerBank(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3856,9 +3856,9 @@ class JobOrderStickerBank extends _JobOrderStickerBank
 class JobOrderCleaningEdc extends _JobOrderCleaningEdc
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderCleaningEdc(
-    String id,
-    String name,
-  ) {
+      String id,
+      String name,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
   }
@@ -3935,7 +3935,7 @@ class JobOrderEdcUpdate extends _JobOrderEdcUpdate
   @override
   JobOrderEosUpdateStatus? get eosUpdateStatus =>
       RealmObjectBase.get<JobOrderEosUpdateStatus>(this, 'eosUpdateStatus')
-          as JobOrderEosUpdateStatus?;
+      as JobOrderEosUpdateStatus?;
   @override
   set eosUpdateStatus(covariant JobOrderEosUpdateStatus? value) =>
       RealmObjectBase.set(this, 'eosUpdateStatus', value);
@@ -3943,7 +3943,7 @@ class JobOrderEdcUpdate extends _JobOrderEdcUpdate
   @override
   JobOrderAppVersion? get appVersion =>
       RealmObjectBase.get<JobOrderAppVersion>(this, 'appVersion')
-          as JobOrderAppVersion?;
+      as JobOrderAppVersion?;
   @override
   set appVersion(covariant JobOrderAppVersion? value) =>
       RealmObjectBase.set(this, 'appVersion', value);
@@ -3958,7 +3958,7 @@ class JobOrderEdcUpdate extends _JobOrderEdcUpdate
   @override
   JobOrderStickerBank? get stickerBank =>
       RealmObjectBase.get<JobOrderStickerBank>(this, 'stickerBank')
-          as JobOrderStickerBank?;
+      as JobOrderStickerBank?;
   @override
   set stickerBank(covariant JobOrderStickerBank? value) =>
       RealmObjectBase.set(this, 'stickerBank', value);
@@ -3966,7 +3966,7 @@ class JobOrderEdcUpdate extends _JobOrderEdcUpdate
   @override
   JobOrderCleaningEdc? get cleaningEdc =>
       RealmObjectBase.get<JobOrderCleaningEdc>(this, 'cleaningEdc')
-          as JobOrderCleaningEdc?;
+      as JobOrderCleaningEdc?;
   @override
   set cleaningEdc(covariant JobOrderCleaningEdc? value) =>
       RealmObjectBase.set(this, 'cleaningEdc', value);
@@ -4006,10 +4006,10 @@ class JobOrderEdcUpdate extends _JobOrderEdcUpdate
 class JobOrderTrainingMaterial extends _JobOrderTrainingMaterial
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrderTrainingMaterial(
-    String id,
-    String name,
-    bool value,
-  ) {
+      String id,
+      String name,
+      bool value,
+      ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'value', value);
@@ -4046,78 +4046,91 @@ class JobOrderTrainingMaterial extends _JobOrderTrainingMaterial
     RealmObjectBase.registerFactory(JobOrderTrainingMaterial._);
     return const SchemaObject(ObjectType.realmObject, JobOrderTrainingMaterial,
         'JobOrderTrainingMaterial', [
-      SchemaProperty('id', RealmPropertyType.string),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('value', RealmPropertyType.bool),
-    ]);
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+          SchemaProperty('value', RealmPropertyType.bool),
+        ]);
   }
 }
 
 class JobOrder extends _JobOrder
     with RealmEntity, RealmObjectBase, RealmObject {
   JobOrder(
-    String id,
-    int version,
-    String serialNumberMaxDigit,
-    bool synced,
-    bool machineConditionNormal,
-    String serialNumberMandatoryType,
-    String serialNumberValidationType,
-    String imageMandatoryType,
-    String? latitude,
-    String? longitude,
-    String? jamBukaToko,
-    String? jamTutupToko,
-    int? edcCount,
-    bool sent, {
-    JobOrderTransactionTest? transactionTest,
-    String? parentId,
-    String? vendorId,
-    String? caseId,
-    String? mid,
-    String? tid,
-    String? poi,
-    String? iccid,
-    String? msisdn,
-    String? provider,
-    String? simCard,
-    JobOrderBaseOffice? baseOffice,
-    JobOrderStatus? status,
-    JobOrderMerchant? merchant,
-    String? serialNumber,
-    DateTime? receivedDate,
-    JobOrderEdcUpdate? edcUpdate,
-    DateTime? visitDate,
-    JobOrderTiming? timing,
-    JobOrderRequestType? requestType,
-    String? scannedSerialNumber,
-    JobOrderMachineAndCard? machineAndCard,
-    JobOrderQris? qris,
-    DateTime? uploadDate,
-    String? sam,
-    DateTime? endSla,
-    String? sam2,
-    String? description,
-    String? requiredThermalCount,
-    String? sam3,
-    String? sam4,
-    String? sam5,
-    String? sam6,
-    JobOrderDocumentStatus? documentStatus,
-    JobOrderDamageType? damageType,
-    String? sam7,
-    JobOrderServicePoint? servicePoint,
-    String? cmRemark,
-    JobOrderJobType? jobType,
-    Iterable<JobOrderNote> notes = const [],
-    Iterable<JobOrderEdcEquipment> edcEquipments = const [],
-    Iterable<JobOrderOtherBankEdc> otherBankEdcs = const [],
-    Iterable<JobOrderTrainingMaterial> trainingMaterials = const [],
-    Iterable<JobOrderInputPeripheral> inputPeripherals = const [],
-    Iterable<JobOrderEdcFeatureTestCase> edcFeatureTestCases = const [],
-    Iterable<JobOrderReplacement> replacements = const [],
-    Iterable<JobOrderJobCategory> jobCategories = const [],
-  }) {
+      String id,
+      int version,
+      String serialNumberMaxDigit,
+      bool synced,
+      bool machineConditionNormal,
+      String serialNumberMandatoryType,
+      String serialNumberValidationType,
+      String imageMandatoryType,
+      String? latitude,
+      String? longitude,
+      String? jamBukaToko,
+      String? jamTutupToko,
+      int? edcCount,
+      bool sent, {
+        JobOrderTransactionTest? transactionTest,
+        String? parentId,
+        String? vendorId,
+        String? caseId,
+        String? mid,
+        String? tid,
+        String? poi,
+        String? iccid,
+        String? msisdn,
+        String? provider,
+        String? simCard,
+        JobOrderBaseOffice? baseOffice,
+        JobOrderStatus? status,
+        JobOrderMerchant? merchant,
+        String? serialNumber,
+        DateTime? receivedDate,
+        JobOrderEdcUpdate? edcUpdate,
+        DateTime? visitDate,
+        JobOrderTiming? timing,
+        JobOrderRequestType? requestType,
+        String? scannedSerialNumber,
+        JobOrderMachineAndCard? machineAndCard,
+        JobOrderQris? qris,
+        DateTime? uploadDate,
+        String? sam,
+        DateTime? endSla,
+        String? sam2,
+        String? description,
+        String? requiredThermalCount,
+        String? sam3,
+        String? sam4,
+        String? sam5,
+        String? sam6,
+        JobOrderDocumentStatus? documentStatus,
+        JobOrderDamageType? damageType,
+        String? sam7,
+        JobOrderServicePoint? servicePoint,
+        String? cmRemark,
+        JobOrderJobType? jobType,
+        Iterable<JobOrderNote> notes = const [],
+        Iterable<JobOrderEdcEquipment> edcEquipments = const [],
+        Iterable<JobOrderOtherBankEdc> otherBankEdcs = const [],
+        Iterable<JobOrderTrainingMaterial> trainingMaterials = const [],
+        Iterable<JobOrderInputPeripheral> inputPeripherals = const [],
+        Iterable<JobOrderEdcFeatureTestCase> edcFeatureTestCases = const [],
+        Iterable<JobOrderReplacement> replacements = const [],
+        Iterable<JobOrderJobCategory> jobCategories = const [],
+        // New values
+        String? edcCleaning,
+        String? edcProblem,
+        String? comLine,
+        String? settlement,
+        String? signalBar,
+        String? priorityEdc,
+        String? merchantComment,
+        String? mostUsedEdc,
+        String? otherEdc,
+        String? merchantRequest,
+        String? promoMaterial,
+        String? position,
+      }) {
     RealmObjectBase.set(this, 'transactionTest', transactionTest);
     RealmObjectBase.set(this, 'parentId', parentId);
     RealmObjectBase.set(this, 'vendorId', vendorId);
@@ -4196,6 +4209,19 @@ class JobOrder extends _JobOrder
         this, 'replacements', RealmList<JobOrderReplacement>(replacements));
     RealmObjectBase.set<RealmList<JobOrderJobCategory>>(
         this, 'jobCategories', RealmList<JobOrderJobCategory>(jobCategories));
+    // New values
+    RealmObjectBase.set(this, 'edcCleaning', edcCleaning);
+    RealmObjectBase.set(this, 'edcProblem', edcProblem);
+    RealmObjectBase.set(this, 'comLine', comLine);
+    RealmObjectBase.set(this, 'settlement', settlement);
+    RealmObjectBase.set(this, 'signalBar', signalBar);
+    RealmObjectBase.set(this, 'priorityEdc', priorityEdc);
+    RealmObjectBase.set(this, 'merchantComment', merchantComment);
+    RealmObjectBase.set(this, 'mostUsedEdc', mostUsedEdc);
+    RealmObjectBase.set(this, 'otherEdc', otherEdc);
+    RealmObjectBase.set(this, 'merchantRequest', merchantRequest);
+    RealmObjectBase.set(this, 'promoMaterial', promoMaterial);
+    RealmObjectBase.set(this, 'position', position);
   }
 
   JobOrder._();
@@ -4203,7 +4229,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderTransactionTest? get transactionTest =>
       RealmObjectBase.get<JobOrderTransactionTest>(this, 'transactionTest')
-          as JobOrderTransactionTest?;
+      as JobOrderTransactionTest?;
 
   @override
   set transactionTest(covariant JobOrderTransactionTest? value) =>
@@ -4297,7 +4323,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderBaseOffice? get baseOffice =>
       RealmObjectBase.get<JobOrderBaseOffice>(this, 'baseOffice')
-          as JobOrderBaseOffice?;
+      as JobOrderBaseOffice?;
   @override
   set baseOffice(covariant JobOrderBaseOffice? value) =>
       RealmObjectBase.set(this, 'baseOffice', value);
@@ -4312,7 +4338,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderMerchant? get merchant =>
       RealmObjectBase.get<JobOrderMerchant>(this, 'merchant')
-          as JobOrderMerchant?;
+      as JobOrderMerchant?;
   @override
   set merchant(covariant JobOrderMerchant? value) =>
       RealmObjectBase.set(this, 'merchant', value);
@@ -4320,7 +4346,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderNote> get notes =>
       RealmObjectBase.get<JobOrderNote>(this, 'notes')
-          as RealmList<JobOrderNote>;
+      as RealmList<JobOrderNote>;
   @override
   set notes(covariant RealmList<JobOrderNote> value) =>
       throw RealmUnsupportedSetError();
@@ -4328,7 +4354,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderEdcEquipment> get edcEquipments =>
       RealmObjectBase.get<JobOrderEdcEquipment>(this, 'edcEquipments')
-          as RealmList<JobOrderEdcEquipment>;
+      as RealmList<JobOrderEdcEquipment>;
   @override
   set edcEquipments(covariant RealmList<JobOrderEdcEquipment> value) =>
       throw RealmUnsupportedSetError();
@@ -4336,7 +4362,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderOtherBankEdc> get otherBankEdcs =>
       RealmObjectBase.get<JobOrderOtherBankEdc>(this, 'otherBankEdcs')
-          as RealmList<JobOrderOtherBankEdc>;
+      as RealmList<JobOrderOtherBankEdc>;
   @override
   set otherBankEdcs(covariant RealmList<JobOrderOtherBankEdc> value) =>
       throw RealmUnsupportedSetError();
@@ -4344,7 +4370,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderTrainingMaterial> get trainingMaterials =>
       RealmObjectBase.get<JobOrderTrainingMaterial>(this, 'trainingMaterials')
-          as RealmList<JobOrderTrainingMaterial>;
+      as RealmList<JobOrderTrainingMaterial>;
   @override
   set trainingMaterials(covariant RealmList<JobOrderTrainingMaterial> value) =>
       throw RealmUnsupportedSetError();
@@ -4371,7 +4397,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderEdcUpdate? get edcUpdate =>
       RealmObjectBase.get<JobOrderEdcUpdate>(this, 'edcUpdate')
-          as JobOrderEdcUpdate?;
+      as JobOrderEdcUpdate?;
   @override
   set edcUpdate(covariant JobOrderEdcUpdate? value) =>
       RealmObjectBase.set(this, 'edcUpdate', value);
@@ -4398,7 +4424,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderRequestType? get requestType =>
       RealmObjectBase.get<JobOrderRequestType>(this, 'requestType')
-          as JobOrderRequestType?;
+      as JobOrderRequestType?;
   @override
   set requestType(covariant JobOrderRequestType? value) =>
       RealmObjectBase.set(this, 'requestType', value);
@@ -4413,7 +4439,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderMachineAndCard? get machineAndCard =>
       RealmObjectBase.get<JobOrderMachineAndCard>(this, 'machineAndCard')
-          as JobOrderMachineAndCard?;
+      as JobOrderMachineAndCard?;
   @override
   set machineAndCard(covariant JobOrderMachineAndCard? value) =>
       RealmObjectBase.set(this, 'machineAndCard', value);
@@ -4421,7 +4447,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderInputPeripheral> get inputPeripherals =>
       RealmObjectBase.get<JobOrderInputPeripheral>(this, 'inputPeripherals')
-          as RealmList<JobOrderInputPeripheral>;
+      as RealmList<JobOrderInputPeripheral>;
   @override
   set inputPeripherals(covariant RealmList<JobOrderInputPeripheral> value) =>
       throw RealmUnsupportedSetError();
@@ -4446,7 +4472,7 @@ class JobOrder extends _JobOrder
           this, 'edcFeatureTestCases') as RealmList<JobOrderEdcFeatureTestCase>;
   @override
   set edcFeatureTestCases(
-          covariant RealmList<JobOrderEdcFeatureTestCase> value) =>
+      covariant RealmList<JobOrderEdcFeatureTestCase> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -4487,7 +4513,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderReplacement> get replacements =>
       RealmObjectBase.get<JobOrderReplacement>(this, 'replacements')
-          as RealmList<JobOrderReplacement>;
+      as RealmList<JobOrderReplacement>;
   @override
   set replacements(covariant RealmList<JobOrderReplacement> value) =>
       throw RealmUnsupportedSetError();
@@ -4526,7 +4552,7 @@ class JobOrder extends _JobOrder
   @override
   RealmList<JobOrderJobCategory> get jobCategories =>
       RealmObjectBase.get<JobOrderJobCategory>(this, 'jobCategories')
-          as RealmList<JobOrderJobCategory>;
+      as RealmList<JobOrderJobCategory>;
   @override
   set jobCategories(covariant RealmList<JobOrderJobCategory> value) =>
       throw RealmUnsupportedSetError();
@@ -4558,7 +4584,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderDocumentStatus? get documentStatus =>
       RealmObjectBase.get<JobOrderDocumentStatus>(this, 'documentStatus')
-          as JobOrderDocumentStatus?;
+      as JobOrderDocumentStatus?;
   @override
   set documentStatus(covariant JobOrderDocumentStatus? value) =>
       RealmObjectBase.set(this, 'documentStatus', value);
@@ -4571,7 +4597,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderDamageType? get damageType =>
       RealmObjectBase.get<JobOrderDamageType>(this, 'damageType')
-          as JobOrderDamageType?;
+      as JobOrderDamageType?;
   @override
   set damageType(covariant JobOrderDamageType? value) =>
       RealmObjectBase.set(this, 'damageType', value);
@@ -4584,7 +4610,7 @@ class JobOrder extends _JobOrder
   @override
   JobOrderServicePoint? get servicePoint =>
       RealmObjectBase.get<JobOrderServicePoint>(this, 'servicePoint')
-          as JobOrderServicePoint?;
+      as JobOrderServicePoint?;
   @override
   set servicePoint(covariant JobOrderServicePoint? value) =>
       RealmObjectBase.set(this, 'servicePoint', value);
@@ -4605,6 +4631,56 @@ class JobOrder extends _JobOrder
   @override
   Stream<RealmObjectChanges<JobOrder>> get changes =>
       RealmObjectBase.getChanges<JobOrder>(this);
+
+  // New value
+  @override
+  String? get edcCleaning => RealmObjectBase.get<String>(this, 'edcCleaning') as String?;
+  @override
+  set edcCleaning(String? value) => RealmObjectBase.set(this, 'edcCleaning', value);
+  @override
+  String? get edcProblem => RealmObjectBase.get<String>(this, 'edcProblem') as String?;
+  @override
+  set edcProblem(String? value) => RealmObjectBase.set(this, 'edcProblem', value);
+  @override
+  String? get comLine => RealmObjectBase.get<String>(this, 'comLine') as String?;
+  @override
+  set comLine(String? value) => RealmObjectBase.set(this, 'comLine', value);
+  @override
+  String? get settlement => RealmObjectBase.get<String>(this, 'settlement') as String?;
+  @override
+  set settlement(String? value) => RealmObjectBase.set(this, 'settlement', value);
+  @override
+  String? get signalBar => RealmObjectBase.get<String>(this, 'signalBar') as String?;
+  @override
+  set signalBar(String? value) => RealmObjectBase.set(this, 'signalBar', value);
+  @override
+  String? get priorityEdc => RealmObjectBase.get<String>(this, 'priorityEdc') as String?;
+  @override
+  set priorityEdc(String? value) => RealmObjectBase.set(this, 'priorityEdc', value);
+  @override
+  String? get merchantComment => RealmObjectBase.get<String>(this, 'merchantComment') as String?;
+  @override
+  set merchantComment(String? value) => RealmObjectBase.set(this, 'merchantComment', value);
+  @override
+  String? get mostUsedEdc => RealmObjectBase.get<String>(this, 'mostUsedEdc') as String?;
+  @override
+  set mostUsedEdc(String? value) => RealmObjectBase.set(this, 'mostUsedEdc', value);
+  @override
+  String? get otherEdc => RealmObjectBase.get<String>(this, 'otherEdc') as String?;
+  @override
+  set otherEdc(String? value) => RealmObjectBase.set(this, 'otherEdc', value);
+  @override
+  String? get merchantRequest => RealmObjectBase.get<String>(this, 'merchantRequest') as String?;
+  @override
+  set merchantRequest(String? value) => RealmObjectBase.set(this, 'merchantRequest', value);
+  @override
+  String? get promoMaterial => RealmObjectBase.get<String>(this, 'promoMaterial') as String?;
+  @override
+  set promoMaterial(String? value) => RealmObjectBase.set(this, 'promoMaterial', value);
+  @override
+  String? get position => RealmObjectBase.get<String>(this, 'position') as String?;
+  @override
+  set position(String? value) => RealmObjectBase.set(this, 'position', value);
 
   @override
   JobOrder freeze() => RealmObjectBase.freezeObject<JobOrder>(this);
@@ -4705,7 +4781,20 @@ class JobOrder extends _JobOrder
           optional: true, linkTarget: 'JobOrderServicePoint'),
       SchemaProperty('cmRemark', RealmPropertyType.string, optional: true),
       SchemaProperty('jobType', RealmPropertyType.object,
-          optional: true, linkTarget: 'JobOrderJobType',),
+        optional: true, linkTarget: 'JobOrderJobType',),
+      // New Value
+      SchemaProperty('edcCleaning', RealmPropertyType.string, optional: true),
+      SchemaProperty('edcProblem', RealmPropertyType.string, optional: true),
+      SchemaProperty('comLine', RealmPropertyType.string, optional: true),
+      SchemaProperty('settlement', RealmPropertyType.string, optional: true),
+      SchemaProperty('signalBar', RealmPropertyType.string, optional: true),
+      SchemaProperty('priorityEdc', RealmPropertyType.string, optional: true),
+      SchemaProperty('merchantComment', RealmPropertyType.string, optional: true),
+      SchemaProperty('mostUsedEdc', RealmPropertyType.string, optional: true),
+      SchemaProperty('otherEdc', RealmPropertyType.string, optional: true),
+      SchemaProperty('merchantRequest', RealmPropertyType.string, optional: true),
+      SchemaProperty('promoMaterial', RealmPropertyType.string, optional: true),
+      SchemaProperty('position', RealmPropertyType.string, optional: true),
     ]);
   }
 }

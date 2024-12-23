@@ -274,7 +274,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
         rollSalesDraftImages: rollSalesDraftImages,
         trainingStatementLetterImages: trainingStatementLetterImages,
         edcAppImages: edcAppImages,
-        otherImages: otherImages
+        otherImages: otherImages,
       );
 
       if (response.statusCode == 200) {

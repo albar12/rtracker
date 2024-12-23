@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/dialogs.dart';
 import 'package:rtracker/helper/navigators.dart';
@@ -26,6 +27,21 @@ class SignInPageState extends State<SignInPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _passwordVisible = false;
+  String appVersion = "";
+
+  void initAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      appVersion = packageInfo.version;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initAppVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +76,9 @@ class SignInPageState extends State<SignInPage> {
                   top: MediaQuery.of(context).size.height * 0.08,
                   bottom: 10,
                 ),
-                child: Center(
+                child: const Center(
                   child: Column(
-                    children: const [
+                    children: [
                       TextSheet(
                         'FMS',
                         fontWeight: FontWeight.bold,
@@ -83,9 +99,9 @@ class SignInPageState extends State<SignInPage> {
               Padding(
                 padding:
                     EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children:  [
                     TextSheet(
                       'Sign in',
                       fontSize: 24,
@@ -203,9 +219,9 @@ class SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                child: const Text(
-                  'v1.2.12',
-                  style: TextStyle(
+                child: Text(
+                  'v$appVersion',
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),

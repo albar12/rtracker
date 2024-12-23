@@ -14,6 +14,7 @@ import 'package:rtracker/api/endpoint/transaction/send_job_order_timing.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_training_material.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_transaction_test.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_transaction_test_case.dart';
+import 'package:rtracker/constant.dart';
 import 'package:rtracker/realm/schemas.dart';
 
 class SendJobOrder {
@@ -41,6 +42,18 @@ class SendJobOrder {
   final String? jamBukaToko;
   final String? jamTutupToko;
   final int? edcCount;
+  final String? edcCleaning;
+  final String? edcProblem;
+  final String? comLine;
+  final String? settlement;
+  final String? signalBar;
+  final String? priorityEdc;
+  final String? merchantComment;
+  final String? mostUsedEdc;
+  final String? otherEdc;
+  final String? merchantRequest;
+  final String? promoMaterial;
+  final String? position;
 
   SendJobOrder(
       {required this.id,
@@ -66,7 +79,19 @@ class SendJobOrder {
       required this.trainingMaterials,
       this.jamBukaToko,
       this.jamTutupToko,
-      this.edcCount});
+      this.edcCount,
+      this.edcCleaning,
+      this.edcProblem,
+      this.comLine,
+      this.settlement,
+      this.signalBar,
+      this.priorityEdc,
+      this.merchantComment,
+      this.mostUsedEdc,
+      this.otherEdc,
+      this.merchantRequest,
+      this.promoMaterial,
+      this.position,});
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -100,6 +125,18 @@ class SendJobOrder {
         "jamBukaToko": jamBukaToko,
         "jamTutupToko": jamTutupToko,
         "edcCount": edcCount,
+        "edcCleaning": edcCleaning,
+    "edcProblem": edcProblem,
+    "comLine": comLine,
+    "settlement": settlement,
+    "signalBar": signalBar,
+    "priorityEdc": priorityEdc,
+    "merchantComment": merchantComment,
+    "mostUsedEdc": mostUsedEdc,
+    "otherEdc": otherEdc,
+    "merchantRequest": merchantRequest,
+    "promoMaterial": promoMaterial,
+    "position": position,
       };
 
   static SendJobOrder build(JobOrder jobOrder) {
@@ -414,6 +451,18 @@ class SendJobOrder {
       jamBukaToko: jobOrder.jamBukaToko,
       jamTutupToko: jobOrder.jamTutupToko,
       edcCount: jobOrder.edcCount,
+      edcCleaning: jobOrder.edcCleaning ?? SwitchValues.no,
+      edcProblem: jobOrder.edcProblem ?? SwitchValues.no,
+      settlement: jobOrder.settlement ?? SwitchValues.no,
+      otherEdc: jobOrder.otherEdc ?? SwitchValues.no,
+      comLine: jobOrder.comLine,
+      signalBar: jobOrder.signalBar,
+      priorityEdc: jobOrder.priorityEdc,
+      merchantComment: jobOrder.merchantComment,
+      mostUsedEdc: jobOrder.mostUsedEdc,
+      merchantRequest: jobOrder.merchantRequest ?? "",
+      promoMaterial: jobOrder.promoMaterial ?? "",
+      position: jobOrder.position,
     );
 
     return sendJobOrder;

@@ -76,12 +76,7 @@ class Realms {
         JobOrder.schema,
         Inbox.schema,
       ],
-        schemaVersion: 2,
-        migrationCallback: (migration, oldVersion) {
-          if (oldVersion < 2){
-
-          }
-        },
+        schemaVersion: 3,
       ),
     );
 

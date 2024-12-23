@@ -81,6 +81,8 @@ class JobFormPageState extends State<JobFormPage>
 
   late TabController tabController;
 
+  var isLoading = false;
+
   @override
   void initState() {
     context.read<JobFormBloc>().add(
@@ -89,6 +91,7 @@ class JobFormPageState extends State<JobFormPage>
             widget.jobOrder,
           ),
         );
+
 
     tabController = TabController(length: 7, vsync: this);
 

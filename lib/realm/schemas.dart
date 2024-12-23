@@ -626,4 +626,17 @@ class _JobOrder {
   late String? longitude;
   late String? jamBukaToko;
   late String? jamTutupToko;
+  // Add new values
+  late String? edcCleaning;
+  late String? edcProblem;
+  late String? comLine;
+  late String? settlement;
+  late String? signalBar;
+  late String? priorityEdc;
+  late String? merchantComment;
+  late String? mostUsedEdc;
+  late String? otherEdc;
+  late String? merchantRequest;
+  late String? promoMaterial;
+  late String? position;
 }

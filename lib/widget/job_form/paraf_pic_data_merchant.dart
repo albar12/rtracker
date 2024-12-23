@@ -1,12 +1,16 @@
 import 'dart:typed_data';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/app_colors.dart';
+import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/widgets.dart';
 import 'package:rtracker/module/job_form/job_form_page.dart';
 import 'package:rtracker/realm/realms.dart';
 import 'package:rtracker/realm/schemas.dart';
+import 'package:rtracker/widget/custom_spinner_field.dart';
+import 'package:rtracker/widget/custom_switch.dart';
 import 'package:rtracker/widget/custom_text_area.dart';
 import 'package:rtracker/widget/custom_text_field.dart';
 import 'package:rtracker/widget/information/custom_information.dart';
@@ -28,9 +32,17 @@ class ParafPicDataMerchant extends StatefulWidget {
 class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
     with AutomaticKeepAliveClientMixin {
   final TextEditingController tecPicName = TextEditingController();
+  final TextEditingController tecPicPosition = TextEditingController();
   final TextEditingController tecPicPhoneNumber = TextEditingController();
   final TextEditingController tecInvoiceCount = TextEditingController();
   final TextEditingController tecNote = TextEditingController();
+
+  final TextEditingController tecComLine = TextEditingController();
+  final TextEditingController tecPriorityEDC = TextEditingController();
+  final TextEditingController tecMerchantComment = TextEditingController();
+  final TextEditingController tecMostUsedEDC = TextEditingController();
+  final TextEditingController tecMerchantRequest = TextEditingController();
+  final TextEditingController tecPromoMaterial = TextEditingController();
 
   final GlobalKey<SfSignaturePadState> gkSignaturePadState = GlobalKey();
 
@@ -58,6 +70,34 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
       Widgets.fill(
         textEditingController: tecNote,
         value: jobOrder.merchant!.note,
+      );
+      Widgets.fill(
+        textEditingController: tecComLine,
+        value: jobOrder.comLine,
+      );
+      Widgets.fill(
+        textEditingController: tecPriorityEDC,
+        value: jobOrder.priorityEdc,
+      );
+      Widgets.fill(
+        textEditingController: tecMerchantComment,
+        value: jobOrder.merchantComment,
+      );
+      Widgets.fill(
+        textEditingController: tecMostUsedEDC,
+        value: jobOrder.mostUsedEdc,
+      );
+      Widgets.fill(
+        textEditingController: tecMerchantRequest,
+        value: jobOrder.merchantRequest,
+      );
+      Widgets.fill(
+        textEditingController: tecPromoMaterial,
+        value: jobOrder.promoMaterial,
+      );
+      Widgets.fill(
+        textEditingController: tecPicPosition,
+        value: jobOrder.position,
       );
     }
   }
@@ -95,6 +135,25 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                 if (jobOrder.merchant != null) {
                   jobOrder.merchant!.picName = value;
                 }
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecPicPosition,
+            label: 'PIC Jabatan',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            validator: (value) {
+              if (StringUtils.isNullOrEmpty(value)) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.position = value;
               });
             },
           ),
@@ -181,6 +240,212 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                   }
                 });
               }
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomSwitch(
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            title: "EDC Cleaning",
+            value: SwitchValues.valueToStatus(jobOrder.edcCleaning),
+            onChanged: (status){
+              Realms.get().write(() {
+                jobOrder.edcCleaning = SwitchValues.statusToValue(status);
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomSwitch(
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            title: "EDC Problem",
+            value: SwitchValues.valueToStatus(jobOrder.edcProblem),
+            onChanged: (status){
+              Realms.get().write(() {
+                jobOrder.edcProblem = SwitchValues.statusToValue(status);
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomSwitch(
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            title: "Settlement",
+            value: SwitchValues.valueToStatus(jobOrder.settlement),
+            onChanged: (status){
+              Realms.get().write(() {
+                jobOrder.settlement = SwitchValues.statusToValue(status);
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomSpinnerField(
+            labelText: 'Signal Bar',
+            initialValue: jobOrder.signalBar != null
+                ? SpinnerItem(
+              identity: '',
+              description: jobOrder.signalBar!,
+            )
+                : null,
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            validator: (value) {
+              if (value == null) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              if (value != null) {
+                Realms.get().write(() {
+                  jobOrder.signalBar = value.description;
+                });
+              }
+            },
+            spinnerItems: Parameter.signalBars
+                .map(
+                  (e) => SpinnerItem(
+                identity: '',
+                description: e,
+              ),
+            ).toList(),
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecComLine,
+            label: 'Com Line',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (StringUtils.isNullOrEmpty(value)) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.comLine = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecPriorityEDC,
+            label: 'Priority EDC',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (StringUtils.isNullOrEmpty(value)) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.priorityEdc = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecMerchantComment,
+            label: 'Merchant Comment',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (StringUtils.isNullOrEmpty(value)) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.merchantComment = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          const TextSheet(
+            'OTHER INFORMATION',
+            fontWeight: FontWeight.bold,
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecMostUsedEDC,
+            label: 'EDC yang sering digunakan',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (StringUtils.isNullOrEmpty(value)) {
+                return "Kolom ini harus diisi.";
+              }
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.mostUsedEdc = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomSwitch(
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            title: "Other EDC",
+            value: SwitchValues.valueToStatus(jobOrder.otherEdc),
+            onChanged: (status){
+              Realms.get().write(() {
+                jobOrder.otherEdc = SwitchValues.statusToValue(status);
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecMerchantRequest,
+            label: 'Merchant Request',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.merchantRequest = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecPromoMaterial,
+            label: 'Promo Material',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.promoMaterial = value;
+              });
             },
           ),
           SizedBox(

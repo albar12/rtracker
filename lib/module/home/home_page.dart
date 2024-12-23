@@ -382,12 +382,12 @@ class HomePageState extends State<HomePage> {
                       if (snapshot.hasData) {
                         return Text(
                           'v${snapshot.data!.version}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         );
                       } else {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       }
                     },
                   ),
@@ -447,8 +447,8 @@ class HomePageState extends State<HomePage> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(Dimensions.height5),
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               Icon(
                                 Icons.error_outline,
                                 size: 18,
