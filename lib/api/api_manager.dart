@@ -753,16 +753,6 @@ class ApiManager {
       ),
     );
 
-    // Log form data manually for debugging (use this for large logs)
-    for (var field in formData.fields) {
-      print('Body Field: ${field.key} = ${field.value}');
-    }
-
-    for (var file in formData.files) {
-      print('File Field: ${file.key} = ${file.value.filename}');
-    }
-
-
     Response response = await dio.post(
       ApiUrl.JOB_ORDERS,
       data: formData,
