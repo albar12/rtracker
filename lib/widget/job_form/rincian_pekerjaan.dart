@@ -52,6 +52,11 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
 
   String? versiEdcAndroid;
 
+  List<Map<String, dynamic>> cleanEdc = [
+    {"id": 1, "name": "Yes"},
+    {"id": 2, "name": "No"},
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -77,10 +82,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     }
 
     if (jobOrder.edcCount != null) {
-      // Widgets.fill(
-      //   textEditingController: edcCount,
-      //   value: int.parse(jobOrder.edcCount),
-      // );
       edcCount.text = jobOrder.edcCount.toString();
     }
 
@@ -91,16 +92,11 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             jobOrder.edcUpdate!.appVersion!.id_tipe_edc.toString();
       });
     }
-
-    print("widget.jobFormPageState.osPatch");
-    print(widget.jobFormPageState.osPatch);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print("widget.jobFormPageState.appVersionx");
-    print(widget.jobFormPageState.dorMenus);
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
 
     return Padding(
@@ -273,7 +269,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             height: Dimensions.height15,
           ),
           Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3"]),
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
             child: CustomTimeField(
               labelText: "Jam Buka Toko",
               initialValue:
@@ -299,7 +295,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             ),
           ),
           Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3"]),
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
             child: CustomTimeField(
               labelText: "Jam Tutup Toko",
               initialValue:
@@ -324,7 +320,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             ),
           ),
           Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3"]),
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
             child: CustomTextField(
               controller: edcCount,
               label: 'EDC Count',
@@ -484,7 +480,8 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           ),
           ...trainingMaterial(),
           ...otherBankEdc(),
-          ...edcUpdate()
+          ...edcUpdate(),
+          ...vendorMtiOnly(),
         ],
       ),
     );
@@ -870,7 +867,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                   : false,
             );
           }).toList(),
-        )
+        ),
       ];
     }
 
@@ -881,7 +878,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
 
     if (jobOrder.jobType != null) {
-      if (Strings.equalsAny(jobOrder.jobType!.id, ["6", "20"])) {
+      if (Strings.equalsAny(jobOrder.vendorId, ["2"])) {
         return [
           SizedBox(
             height: Dimensions.height15,
@@ -936,7 +933,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                     : false,
               );
             }).toList(),
-          )
+          ),
         ];
       }
     }
@@ -946,11 +943,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
 
   List<Widget> edcUpdate() {
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
-
-    List<Map<String, dynamic>> cleanEdc = [
-      {"id": 1, "name": "Yes"},
-      {"id": 2, "name": "No"}
-    ];
 
     List<Map<String, dynamic>> versiEdc = [
       {"id": 1, "name": "data1"},
@@ -978,8 +970,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
 
     if (jobOrder.jobType != null) {
       if (Strings.equalsAny(jobOrder.jobType!.id, ["6", "20"])) {
-        print("widget.jobFormPageState.appVersions");
-        print(widget.jobFormPageState.dorMenus);
         return [
           SizedBox(
             height: Dimensions.height15,
@@ -1178,9 +1168,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                       versiEdcAndroid.toString(),
                     );
                   } else {
-                    // jobOrder.edcUpdate!.appVersion!.id =
-                    //     value.identity.toString();
-                    // jobOrder.edcUpdate!.appVersion!.name = value.description;
                     jobOrder.edcUpdate!.appVersion = JobOrderAppVersion(
                       value.identity.toString(),
                       value.description,
@@ -1195,12 +1182,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 versiEdcId = newValue.identity.toString();
                 versiEdcAndroid =
                     (newValue.tag as AppVersion).id_tipe_dc.toString();
-                print("versiEdcId");
-                print(versiEdcId);
-                print((newValue.tag as AppVersion).android);
-                print(widget.jobFormPageState.widget.jobOrder.machineAndCard!
-                    .edcType!.id
-                    .toString());
                 if (ffsPatchOs.currentState != null) {
                   tecPatchOs.clear();
                   ffsPatchOs.currentState!.setValue(null);
@@ -1221,7 +1202,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                       identity: e.id_versi_aplikasi,
                       description: e.versi_aplikasi,
                       tag: e,
-                    ))
+                    ),)
                 .toList(),
           ),
           SizedBox(
@@ -1289,106 +1270,122 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                     ))
                 .toList(),
           ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomSpinnerField(
-            labelText: "Sticker Bank",
-            initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.stickerBank != null
-                ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.stickerBank!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.stickerBank!.name,
-                    ),
-                  )
-                : null,
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
-              }
-
-              return null;
-            },
-            onSaved: (value) {
-              if (value != null) {
-                Realms.get().write(() {
-                  jobOrder.edcUpdate ??= JobOrderEdcUpdate();
-
-                  if (jobOrder.edcUpdate!.stickerBank == null) {
-                    jobOrder.edcUpdate!.stickerBank = JobOrderStickerBank(
-                      value.identity.toString(),
-                      value.description,
-                    );
-                  } else {
-                    jobOrder.edcUpdate!.stickerBank!.id =
-                        value.identity.toString();
-                    jobOrder.edcUpdate!.stickerBank!.name = value.description;
-                  }
-                });
-              }
-            },
-            spinnerItems: widget.jobFormPageState.stickerBank
-                .map((e) => SpinnerItem(
-                      identity: e.idx,
-                      description: e.nama_sticker_bank,
-                      tag: e,
-                    ))
-                .toList(),
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomSpinnerField(
-            labelText: "Cleaning EDC",
-            initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.cleaningEdc != null
-                ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.cleaningEdc!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.cleaningEdc!.name,
-                    ),
-                  )
-                : null,
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
-              }
-
-              return null;
-            },
-            onSaved: (value) {
-              if (value != null) {
-                Realms.get().write(() {
-                  jobOrder.edcUpdate ??= JobOrderEdcUpdate();
-
-                  if (jobOrder.edcUpdate!.cleaningEdc == null) {
-                    jobOrder.edcUpdate!.cleaningEdc = JobOrderCleaningEdc(
-                      value.identity.toString(),
-                      value.description,
-                    );
-                  } else {
-                    jobOrder.edcUpdate!.cleaningEdc!.id =
-                        value.identity.toString();
-                    jobOrder.edcUpdate!.cleaningEdc!.name = value.description;
-                  }
-                });
-              }
-            },
-            spinnerItems: cleanEdc
-                .map((e) => SpinnerItem(
-                      identity: e['id'],
-                      description: e['name'],
-                      tag: e,
-                    ))
-                .toList(),
-          ),
         ];
       }
     }
 
     return [];
+  }
+
+  List<Widget> vendorMtiOnly() {
+    JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
+    List<Widget> widgets = [];
+    if (Strings.equalsAny(jobOrder.vendorId, ["2"])) {
+      widgets.add(
+        SizedBox(
+          height: Dimensions.height15,
+        ),
+      );
+      widgets.add(
+        CustomSpinnerField(
+          labelText: "Cleaning EDC",
+          initialValue: jobOrder.edcUpdate != null &&
+              jobOrder.edcUpdate!.cleaningEdc != null
+              ? SpinnerItem(
+            identity: jobOrder.edcUpdate!.cleaningEdc!.id,
+            description: StringUtils.defaultString(
+              jobOrder.edcUpdate!.cleaningEdc!.name,
+            ),
+          )
+              : null,
+          readOnly: widget.jobFormPageState.widget.readOnly,
+          validator: (value) {
+            if (value == null) {
+              return "Kolom ini harus diisi.";
+            }
+
+            return null;
+          },
+          onSaved: (value) {
+            if (value != null) {
+              Realms.get().write(() {
+                jobOrder.edcUpdate ??= JobOrderEdcUpdate();
+
+                if (jobOrder.edcUpdate!.cleaningEdc == null) {
+                  jobOrder.edcUpdate!.cleaningEdc = JobOrderCleaningEdc(
+                    value.identity.toString(),
+                    value.description,
+                  );
+                } else {
+                  jobOrder.edcUpdate!.cleaningEdc!.id =
+                      value.identity.toString();
+                  jobOrder.edcUpdate!.cleaningEdc!.name = value.description;
+                }
+              });
+            }
+          },
+          spinnerItems: cleanEdc
+              .map((e) => SpinnerItem(
+            identity: e['id'],
+            description: e['name'],
+            tag: e,
+          ))
+              .toList(),
+        ),
+      );
+      widgets.add(
+        SizedBox(
+          height: Dimensions.height15,
+        ),
+      );
+      widgets.add(
+        CustomSpinnerField(
+          labelText: "Sticker Bank",
+          initialValue: jobOrder.edcUpdate != null &&
+              jobOrder.edcUpdate!.stickerBank != null
+              ? SpinnerItem(
+            identity: jobOrder.edcUpdate!.stickerBank!.id,
+            description: StringUtils.defaultString(
+              jobOrder.edcUpdate!.stickerBank!.name,
+            ),
+          )
+              : null,
+          readOnly: widget.jobFormPageState.widget.readOnly,
+          validator: (value) {
+            if (value == null) {
+              return "Kolom ini harus diisi.";
+            }
+
+            return null;
+          },
+          onSaved: (value) {
+            if (value != null) {
+              Realms.get().write(() {
+                jobOrder.edcUpdate ??= JobOrderEdcUpdate();
+
+                if (jobOrder.edcUpdate!.stickerBank == null) {
+                  jobOrder.edcUpdate!.stickerBank = JobOrderStickerBank(
+                    value.identity.toString(),
+                    value.description,
+                  );
+                } else {
+                  jobOrder.edcUpdate!.stickerBank!.id =
+                      value.identity.toString();
+                  jobOrder.edcUpdate!.stickerBank!.name = value.description;
+                }
+              });
+            }
+          },
+          spinnerItems: widget.jobFormPageState.stickerBank
+              .map((e) => SpinnerItem(
+            identity: e.idx,
+            description: e.nama_sticker_bank,
+            tag: e,
+          ))
+              .toList(),
+        ),
+      );
+    }
+    return widgets;
   }
 }
