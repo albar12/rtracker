@@ -16,6 +16,7 @@ class CustomImageField extends StatefulWidget {
   final List<Uint8List>? initialValue;
   final FormFieldSetter<List<Uint8List>>? onSaved;
   final bool allowGallery;
+  final bool isMultiple;
 
   const CustomImageField({
     Key? key,
@@ -26,6 +27,7 @@ class CustomImageField extends StatefulWidget {
     this.initialValue,
     this.onSaved,
     this.allowGallery = false,
+    this.isMultiple = false,
   }) : super(key: key);
 
   @override
@@ -71,7 +73,7 @@ class CustomImageFieldState extends State<CustomImageField> {
                   ),
                   SizedBox(height: Dimensions.height10),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: isMultiple() ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                     children: fileWidgets(field),
                   ),
                   Visibility(
@@ -93,12 +95,12 @@ class CustomImageFieldState extends State<CustomImageField> {
                                 color: AppColors.primaryDark,
                                 fontWeight: FontWeight.bold,
                               ),
-                            )
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -141,12 +143,17 @@ class CustomImageFieldState extends State<CustomImageField> {
           // ignore: invalid_use_of_protected_member
           formFieldState.setValue([]);
         }
-
-        setState(() {
-          for (Uint8List file in files) {
-            formFieldState.value.add(file);
-          }
-        });
+        if (isMultiple()) {
+          setState(() {
+            for (Uint8List file in files) {
+              formFieldState.value.add(file);
+            }
+          });
+        } else {
+          setState(() {
+            formFieldState.setValue([files.first]);
+          });
+        }
       },
     );
   }
@@ -175,7 +182,7 @@ class CustomImageFieldState extends State<CustomImageField> {
               ),
               const Text(
                 "UNGGAH GAMBAR",
-              )
+              ),
             ],
           ),
         ),
@@ -189,98 +196,130 @@ class CustomImageFieldState extends State<CustomImageField> {
         ),
       );
 
-      widgets.add(
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: formFieldState.value!.map((file) {
-              Widget widget = Stack(
-                children: [
-                  Image.memory(
-                    file,
-                    width: 92,
-                    height: 92,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned.fill(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          BottomSheets.imagePreview(
-                            context: context,
-                            title: this.widget.title,
-                            bytes: file,
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              );
-
-              return Container(
-                margin: EdgeInsets.only(right: Dimensions.width10),
-                child: Column(
+      if (isMultiple()) {
+        widgets.add(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: formFieldState.value!.map((file) {
+                Widget widget = Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        Dimensions.radius10,
-                      ),
-                      child: widget,
+                    Image.memory(
+                      file,
+                      width: 92,
+                      height: 92,
+                      fit: BoxFit.cover,
                     ),
-                    Visibility(
-                      visible: !isReadOnly(),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: Dimensions.height5,
-                          ),
-                          OutlinedButton(
-                            onPressed: () {
-                              Dialogs.confirmation(
-                                context: context,
-                                title:
-                                    "Apakah anda yakin ingin menghapus gambar yang dipilih?",
-                                positive: "HAPUS",
-                                positiveCallback: () {
-                                  setState(() {
-                                    if (formFieldState.value!.contains(file)) {
-                                      formFieldState.value!.remove(file);
-                                    }
-                                  });
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.delete,
-                                  size: 16,
-                                ),
-                                SizedBox(
-                                  width: Dimensions.width5,
-                                ),
-                                const Text(
-                                  "HAPUS",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            BottomSheets.imagePreview(
+                              context: context,
+                              title: this.widget.title,
+                              bytes: file,
+                            );
+                          },
+                        ),
                       ),
-                    )
+                    ),
                   ],
-                ),
-              );
-            }).toList(),
+                );
+
+                return Container(
+                  margin: EdgeInsets.only(right: Dimensions.width10),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          Dimensions.radius10,
+                        ),
+                        child: widget,
+                      ),
+                      Visibility(
+                        visible: !isReadOnly(),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: Dimensions.height5,
+                            ),
+                            OutlinedButton(
+                              onPressed: () {
+                                Dialogs.confirmation(
+                                  context: context,
+                                  title:
+                                      "Apakah anda yakin ingin menghapus gambar yang dipilih?",
+                                  positive: "HAPUS",
+                                  positiveCallback: () {
+                                    setState(() {
+                                      if (formFieldState.value!
+                                          .contains(file)) {
+                                        formFieldState.value!.remove(file);
+                                      }
+                                    });
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.delete,
+                                    size: 16,
+                                  ),
+                                  SizedBox(
+                                    width: Dimensions.width5,
+                                  ),
+                                  const Text(
+                                    "HAPUS",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        Uint8List file = formFieldState.value!.first;
+        widgets.add(
+          Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Image.memory(
+                file,
+                width: 200,
+                height: 200,
+                fit: BoxFit.fill,
+              ),
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      BottomSheets.imagePreview(
+                        context: context,
+                        title: widget.title,
+                        bytes: file,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
 
     return widgets;
@@ -288,5 +327,9 @@ class CustomImageFieldState extends State<CustomImageField> {
 
   bool isReadOnly() {
     return widget.readOnly;
+  }
+
+  bool isMultiple() {
+    return widget.isMultiple;
   }
 }

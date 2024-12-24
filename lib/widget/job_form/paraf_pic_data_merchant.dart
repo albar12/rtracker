@@ -37,7 +37,6 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
   final TextEditingController tecInvoiceCount = TextEditingController();
   final TextEditingController tecNote = TextEditingController();
 
-  final TextEditingController tecComLine = TextEditingController();
   final TextEditingController tecPriorityEDC = TextEditingController();
   final TextEditingController tecMerchantComment = TextEditingController();
   final TextEditingController tecMostUsedEDC = TextEditingController();
@@ -72,10 +71,6 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
         value: jobOrder.merchant!.note,
       );
       Widgets.fill(
-        textEditingController: tecComLine,
-        value: jobOrder.comLine,
-      );
-      Widgets.fill(
         textEditingController: tecPriorityEDC,
         value: jobOrder.priorityEdc,
       );
@@ -101,6 +96,12 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
       );
     }
   }
+
+  List<Map<String, dynamic>> comLine = [
+    {"id": 1, "name": "Gprs"},
+    {"id": 2, "name": "Dial"},
+    {"id": 3, "name": "Lan"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +229,10 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                   if (value!.length < 70) {
                     return "Silahkan isi dengan minimal 70 karakter.";
                   }
+                } else {
+                  if (value!.length < 15) {
+                    return "Silahkan isi dengan minimal 15 karakter.";
+                  }
                 }
               }
               return null;
@@ -240,19 +245,6 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                   }
                 });
               }
-            },
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomSwitch(
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            title: "EDC Cleaning",
-            value: SwitchValues.valueToStatus(jobOrder.edcCleaning),
-            onChanged: (status){
-              Realms.get().write(() {
-                jobOrder.edcCleaning = SwitchValues.statusToValue(status);
-              });
             },
           ),
           SizedBox(
@@ -317,22 +309,38 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomTextField(
-            controller: tecComLine,
-            label: 'Com Line',
+          CustomSpinnerField(
+            labelText: "Com Line",
+            initialValue: jobOrder.comLine != null
+                ? SpinnerItem(
+              identity: jobOrder.edcUpdate!.cleaningEdc!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.cleaningEdc!.name,
+              ),
+            )
+                : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
-            keyboardType: TextInputType.text,
             validator: (value) {
-              if (StringUtils.isNullOrEmpty(value)) {
+              if (value == null) {
                 return "Kolom ini harus diisi.";
               }
+
               return null;
             },
             onSaved: (value) {
-              Realms.get().write(() {
-                jobOrder.comLine = value;
-              });
+              if (value != null) {
+                Realms.get().write(() {
+                  jobOrder.comLine = value.description;
+                });
+              }
             },
+            spinnerItems: comLine
+                .map((e) => SpinnerItem(
+              identity: e['id'],
+              description: e['name'],
+              tag: e,
+            ),)
+                .toList(),
           ),
           SizedBox(
             height: Dimensions.height15,
@@ -357,11 +365,10 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomTextField(
+          CustomTextArea(
             controller: tecMerchantComment,
             label: 'Merchant Comment',
             readOnly: widget.jobFormPageState.widget.readOnly,
-            keyboardType: TextInputType.text,
             validator: (value) {
               if (StringUtils.isNullOrEmpty(value)) {
                 return "Kolom ini harus diisi.";
@@ -404,24 +411,10 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomSwitch(
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            title: "Other EDC",
-            value: SwitchValues.valueToStatus(jobOrder.otherEdc),
-            onChanged: (status){
-              Realms.get().write(() {
-                jobOrder.otherEdc = SwitchValues.statusToValue(status);
-              });
-            },
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomTextField(
+          CustomTextArea(
             controller: tecMerchantRequest,
             label: 'Merchant Request',
             readOnly: widget.jobFormPageState.widget.readOnly,
-            keyboardType: TextInputType.text,
             validator: (value) {
               return null;
             },

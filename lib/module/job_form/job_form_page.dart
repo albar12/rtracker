@@ -128,10 +128,6 @@ class JobFormPageState extends State<JobFormPage>
           transactionTestCases = state.transactionTestCases;
 
           setState(() {});
-          print("alif jobFormSteps");
-          print(jobFormSteps[0].title);
-          print(jobFormSteps[0].form);
-          print(jobFormSteps[0].globalKey);
         } else if (state is JobFormJobStatusCategorySuccess) {
           jobStatusCategories = state.jobStatusCategories;
 

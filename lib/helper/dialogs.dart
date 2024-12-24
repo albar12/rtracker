@@ -112,7 +112,7 @@ class Dialogs {
         TextButton(
           child: const Text('Tutup'),
           onPressed: () => Navigator.of(context).pop(),
-        )
+        ),
       ];
 
       BoxDecoration boxDecoration = BoxDecoration(
@@ -158,12 +158,12 @@ class Dialogs {
 
                         callback.call(files);
                       },
-                      child: Center(
+                      child: const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.photo),
-                            TextSheet('Gallery')
+                            TextSheet('Gallery'),
                           ],
                         ),
                       ),

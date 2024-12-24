@@ -102,8 +102,6 @@ class CameraPageState extends State<CameraPage> {
                               setState(
                                 () => rearCameraSelected = !rearCameraSelected,
                               );
-                              print("rearCameraSelected");
-                              print(rearCameraSelected);
 
                               setState(() {
                                 flashOn = false;
@@ -149,11 +147,11 @@ class CameraPageState extends State<CameraPage> {
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                             icon: flashOn
-                                ? Icon(
+                                ? const Icon(
                                     Icons.flash_on,
                                     color: Colors.white,
                                   )
-                                : Icon(
+                                : const Icon(
                                     Icons.flash_off,
                                     color: Colors.white,
                                   ),
@@ -165,7 +163,7 @@ class CameraPageState extends State<CameraPage> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
