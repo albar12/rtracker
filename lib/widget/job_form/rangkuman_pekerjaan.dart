@@ -211,7 +211,7 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
           ),
           CustomImageField(
             title: "FOTO MERCHANT",
-            subtitle: "Silahkan unggah foto merchant (maksimal 3)",
+            subtitle: "Silahkan unggah foto merchant",
             allowGallery: Preferences.getInstance().getBool(
                   SharedPreferenceKey.MERCHANT_IMAGE_ALLOW_GALLERY,
                 ) ??

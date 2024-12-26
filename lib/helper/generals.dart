@@ -87,7 +87,27 @@ class Generals {
       loginResponse.sendJobOrderInterval ?? 30,
     );
     Preferences.getInstance().setInt(SharedPreferenceKey.PAUSE_MAX, loginResponse.pauseMax ?? 5);
-
+    // New Allow Gallery
+    Preferences.getInstance().setBool(
+      SharedPreferenceKey.PIC_MERCHANT_IMAGE_ALLOW_GALLERY,
+      loginResponse.picMerchantImagesAllowGallery,
+    );
+    Preferences.getInstance().setBool(
+      SharedPreferenceKey.ROLL_SALES_DRAFT_IMAGE_ALLOW_GALLERY,
+      loginResponse.rollSalesDraftImagesAllowGallery,
+    );
+    Preferences.getInstance().setBool(
+      SharedPreferenceKey.TRAINING_STATEMENT_LETTER_IMAGE_ALLOW_GALLERY,
+      loginResponse.trainingStatementLetterImagesAllowGallery,
+    );
+    Preferences.getInstance().setBool(
+      SharedPreferenceKey.EDC_APP_IMAGE_ALLOW_GALLERY,
+      loginResponse.edcAppImagesAllowGallery,
+    );
+    Preferences.getInstance().setBool(
+      SharedPreferenceKey.OTHER_IMAGE_ALLOW_GALLERY,
+      loginResponse.otherImagesAllowGallery,
+    );
     if (StringUtils.isNotNullOrEmpty(loginResponse.webPortalUrl)) {
       Preferences.getInstance().setString(
         SharedPreferenceKey.WEB_PORTAL_URL,

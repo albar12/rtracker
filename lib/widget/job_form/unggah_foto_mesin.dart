@@ -96,7 +96,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
         children: [
           CustomImageField(
             title: "FOTO MESIN",
-            subtitle: "Silahkan unggah foto mesin (maksimal 3)",
+            subtitle: "Silahkan unggah foto mesin",
             allowGallery: Preferences.getInstance().getBool(SharedPreferenceKey.MACHINE_IMAGE_ALLOW_GALLERY) ?? false,
             validator: (value) {
               if (jobOrder.imageMandatoryType[2] == "1") {
@@ -133,7 +133,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO NOMOR SERI",
-            subtitle: "Silahkan unggah foto nomor seri (maksimal 3)",
+            subtitle: "Silahkan unggah foto nomor seri",
             allowGallery: Preferences.getInstance().getBool(
                   SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
                 ) ??
@@ -173,13 +173,13 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO PIC MERCHANT",
-            subtitle: "Silahkan unggah foto pic merchant (maksimal 3)",
+            subtitle: "Silahkan unggah foto pic merchant",
             allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+              SharedPreferenceKey.PIC_MERCHANT_IMAGE_ALLOW_GALLERY,
             ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
+              if (jobOrder.imageMandatoryType[7] == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
@@ -213,13 +213,13 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO ROLL SALES DRAFT",
-            subtitle: "Silahkan unggah foto roll sales draft (maksimal 3)",
+            subtitle: "Silahkan unggah foto roll sales draft",
             allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+              SharedPreferenceKey.ROLL_SALES_DRAFT_IMAGE_ALLOW_GALLERY,
             ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
+              if (jobOrder.imageMandatoryType[8] == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
@@ -253,13 +253,13 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO SURAT PERNYATAAN TRAINING",
-            subtitle: "Silahkan unggah foto surat pernyataan training (maksimal 3)",
+            subtitle: "Silahkan unggah foto surat pernyataan training",
             allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+              SharedPreferenceKey.TRAINING_STATEMENT_LETTER_IMAGE_ALLOW_GALLERY,
             ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
+              if (jobOrder.imageMandatoryType[9] == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
@@ -293,13 +293,13 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO APLIKASI EDC",
-            subtitle: "Silahkan unggah foto aplikasi edc (maksimal 3)",
+            subtitle: "Silahkan unggah foto aplikasi edc",
             allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+              SharedPreferenceKey.EDC_APP_IMAGE_ALLOW_GALLERY,
             ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
+              if (jobOrder.imageMandatoryType[10] == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
@@ -333,13 +333,13 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
           ),
           CustomImageField(
             title: "FOTO SURAT LAMPIRAN",
-            subtitle: "Silahkan unggah foto surat lampiran (maksimal 3)",
+            subtitle: "Silahkan unggah foto surat lampiran",
             allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+              SharedPreferenceKey.OTHER_IMAGE_ALLOW_GALLERY,
             ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
+              if (jobOrder.imageMandatoryType[11] == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }

@@ -142,8 +142,12 @@ class Dialogs {
                         //   imageQuality: 20,
                         // );
 
-                        List<XFile> xFiles =
-                            await ImagePicker().pickMultiImage();
+                        List<XFile> xFiles = [];
+                        if (multiple){
+                          await ImagePicker().pickMultiImage();
+                        } else {
+                          await ImagePicker().pickImage(source: ImageSource.gallery);
+                        }
 
                         for (XFile xFile in xFiles) {
                           Uint8List bytesFile =
@@ -199,18 +203,18 @@ class Dialogs {
                           );
                         });
                       },
-                      child: Center(
+                      child: const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.camera_alt),
-                            TextSheet('Kamera')
+                            TextSheet('Kamera'),
                           ],
                         ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             actions: actions,

@@ -509,9 +509,16 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
             jobOrder.merchant!.signature != null &&
             jobOrder.merchant!.signature!.file.isNotEmpty)) {
       widgets.add(
-        SizedBox(
+        Container(
           width: double.infinity,
           height: 300,
+          decoration: BoxDecoration(
+            color: Colors.blue[50],
+            border: Border.all(
+              color: Colors.blue, // Border color
+              width: 3.0, // Border width
+            ),
+          ),
           child: Image.memory(
             Uint8List.fromList(jobOrder.merchant!.signature!.file),
             fit: BoxFit.cover,
@@ -553,9 +560,17 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                 SizedBox(
                   height: Dimensions.height15,
                 ),
-                SizedBox(
+                Container(
                   width: double.infinity,
                   height: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    border: Border.all(
+                      color: Colors.blue, // Border color
+                      width: 3.0, // Border width
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                   child: SfSignaturePad(
                     key: gkSignaturePadState,
                     onDrawEnd: () => hasSign = true,

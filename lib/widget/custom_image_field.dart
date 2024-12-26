@@ -136,7 +136,7 @@ class CustomImageFieldState extends State<CustomImageField> {
     Dialogs.image(
       context: context,
       title: widget.title,
-      multiple: true,
+      multiple: isMultiple(),
       allowGallery: widget.allowGallery,
       callback: (files) {
         if (formFieldState.value == null) {

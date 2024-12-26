@@ -184,7 +184,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
           ),
           CustomImageField(
             title: "FOTO STRUK",
-            subtitle: "Silahkan unggah foto struk (maksimal 3)",
+            subtitle: "Silahkan unggah foto struk",
             allowGallery: Preferences.getInstance().getBool(
                   SharedPreferenceKey.TRANSACTION_TEST_IMAGE_ALLOW_GALLERY,
                 ) ??
@@ -241,7 +241,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
         ),
         CustomImageField(
           title: "FOTO STRUK QRIS",
-          subtitle: "Silahkan unggah foto struk QRIS (maksimal 3)",
+          subtitle: "Silahkan unggah foto struk QRIS",
           allowGallery: Preferences.getInstance().getBool(
                 SharedPreferenceKey.QRIS_RECEIPT_IMAGE_ALLOW_GALLERY,
               ) ??
@@ -284,7 +284,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
         ),
         CustomImageField(
           title: "FOTO STRUK CICILAN BRIZZI",
-          subtitle: "Silahkan unggah foto struk cicilan Brizzi (maksimal 3)",
+          subtitle: "Silahkan unggah foto struk cicilan Brizzi",
           allowGallery: Preferences.getInstance().getBool(
                 SharedPreferenceKey
                     .BRIZZI_INSTALLMENT_RECEIPT_IMAGE_ALLOW_GALLERY,
