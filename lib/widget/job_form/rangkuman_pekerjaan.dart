@@ -210,8 +210,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
             height: Dimensions.height15,
           ),
           CustomImageField(
-            title: "FOTO MERCHANT",
-            subtitle: "Silahkan unggah foto merchant",
+            title: "FOTO PLANG MERCHANT",
+            subtitle: "Silahkan unggah foto plang merchant",
             allowGallery: Preferences.getInstance().getBool(
                   SharedPreferenceKey.MERCHANT_IMAGE_ALLOW_GALLERY,
                 ) ??

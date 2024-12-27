@@ -1,13 +1,18 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/preferences.dart';
+import 'package:rtracker/module/job_form/image_load_bloc/image_load_bloc.dart';
+import 'package:rtracker/module/job_form/image_load_bloc/image_load_event.dart';
+import 'package:rtracker/module/job_form/image_load_bloc/image_load_state.dart';
 import 'package:rtracker/module/job_form/job_form_page.dart';
 import 'package:rtracker/realm/realms.dart';
 import 'package:rtracker/realm/schemas.dart';
 import 'package:rtracker/widget/custom_image_field.dart';
+import 'package:rtracker/widget/custom_shimmer.dart';
 
 class UnggahFotoMesin extends StatefulWidget {
   final JobFormPageState jobFormPageState;
@@ -22,63 +27,52 @@ class UnggahFotoMesin extends StatefulWidget {
 }
 
 class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliveClientMixin {
-  List<Uint8List> machineImages = [];
-  List<Uint8List> machineSerialNumberPhotos = [];
-  List<Uint8List> picMerchantImages = [];
-  List<Uint8List> rollSalesDraftImages = [];
-  List<Uint8List> trainingStatementLetterImages = [];
-  List<Uint8List> edcAppImages = [];
-  List<Uint8List> otherImages = [];
+  late ImageLoadBloc machineImageBloc;
+  late ImageLoadBloc machineSerialNumberImageBloc;
+  late ImageLoadBloc picMerchantImageBloc;
+  late ImageLoadBloc rollSalesDraftImageBloc;
+  late ImageLoadBloc trainingStatementLetterImageBloc;
+  late ImageLoadBloc edcAppImageBloc;
+  late ImageLoadBloc otherImageBloc;
 
   @override
   void initState() {
     super.initState();
-
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
-
+    machineImageBloc = ImageLoadBloc();
+    machineSerialNumberImageBloc = ImageLoadBloc();
+    picMerchantImageBloc = ImageLoadBloc();
+    rollSalesDraftImageBloc = ImageLoadBloc();
+    trainingStatementLetterImageBloc = ImageLoadBloc();
+    edcAppImageBloc = ImageLoadBloc();
+    otherImageBloc = ImageLoadBloc();
     if (jobOrder.machineAndCard != null) {
-      for (ImageFile imageFile in jobOrder.machineAndCard!.images) {
-        machineImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.serialNumberPhotos) {
-        machineSerialNumberPhotos.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.picMerchantImages) {
-        picMerchantImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.rollSalesDraftImages) {
-        rollSalesDraftImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.trainingStatementLetterImages) {
-        trainingStatementLetterImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.edcAppImages) {
-        edcAppImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
-
-      for (ImageFile imageFile in jobOrder.machineAndCard!.otherImages) {
-        otherImages.add(
-          Uint8List.fromList(imageFile.file),
-        );
-      }
+      initBlocEvents(jobOrder);
     }
+  }
+
+  Future<void> initBlocEvents(JobOrder jobOrder) async {
+    await Future.wait([
+    machineImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.images)),
+    machineSerialNumberImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.serialNumberPhotos)),
+    picMerchantImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.picMerchantImages)),
+    rollSalesDraftImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.rollSalesDraftImages)),
+    trainingStatementLetterImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.trainingStatementLetterImages)),
+    edcAppImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.edcAppImages)),
+    otherImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.otherImages)),
+    ] as Iterable<Future>,);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    machineImageBloc.close();
+    machineSerialNumberImageBloc.close();
+    picMerchantImageBloc.close();
+    rollSalesDraftImageBloc.close();
+    trainingStatementLetterImageBloc.close();
+    edcAppImageBloc.close();
+    otherImageBloc.close();
   }
 
   @override
@@ -94,280 +88,343 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomImageField(
-            title: "FOTO MESIN",
-            subtitle: "Silahkan unggah foto mesin",
-            allowGallery: Preferences.getInstance().getBool(SharedPreferenceKey.MACHINE_IMAGE_ALLOW_GALLERY) ?? false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[2] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: machineImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO MESIN",
+                  subtitle: "Silahkan unggah foto mesin",
+                  allowGallery: Preferences.getInstance().getBool(SharedPreferenceKey.MACHINE_IMAGE_ALLOW_GALLERY) ?? false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[2] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
 
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
 
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.images.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.images.clear();
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.images.clear();
 
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.images.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
-              }
-            },
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomImageField(
-            title: "FOTO NOMOR SERI",
-            subtitle: "Silahkan unggah foto nomor seri",
-            allowGallery: Preferences.getInstance().getBool(
-                  SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
-                ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[3] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
-
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
-
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.serialNumberPhotos.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.serialNumberPhotos.clear();
-
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.serialNumberPhotos.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.images.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
               }
             },
           ),
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomImageField(
-            title: "FOTO PIC MERCHANT",
-            subtitle: "Silahkan unggah foto pic merchant",
-            allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.PIC_MERCHANT_IMAGE_ALLOW_GALLERY,
-            ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[7] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: machineSerialNumberImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO SIM CARD + SN EDC + SAM CARD",
+                  subtitle: "Silahkan unggah foto sim card + sn edc + sam card",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.MACHINE_SERIAL_NUMBER_PHOTO_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[3] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
 
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
 
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.picMerchantImages.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.picMerchantImages.clear();
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.serialNumberPhotos.clear();
 
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.picMerchantImages.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
-              }
-            },
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomImageField(
-            title: "FOTO ROLL SALES DRAFT",
-            subtitle: "Silahkan unggah foto roll sales draft",
-            allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.ROLL_SALES_DRAFT_IMAGE_ALLOW_GALLERY,
-            ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[8] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
-
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
-
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.rollSalesDraftImages.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.rollSalesDraftImages.clear();
-
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.rollSalesDraftImages.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.serialNumberPhotos.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
               }
             },
           ),
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomImageField(
-            title: "FOTO SURAT PERNYATAAN TRAINING",
-            subtitle: "Silahkan unggah foto surat pernyataan training",
-            allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.TRAINING_STATEMENT_LETTER_IMAGE_ALLOW_GALLERY,
-            ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[9] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: picMerchantImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO PIC MERCHANT",
+                  subtitle: "Silahkan unggah foto pic merchant",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.PIC_MERCHANT_IMAGE_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[7] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
 
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
 
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.trainingStatementLetterImages.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.trainingStatementLetterImages.clear();
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.picMerchantImages.clear();
 
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.trainingStatementLetterImages.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
-              }
-            },
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomImageField(
-            title: "FOTO APLIKASI EDC",
-            subtitle: "Silahkan unggah foto aplikasi edc",
-            allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.EDC_APP_IMAGE_ALLOW_GALLERY,
-            ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[10] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
-
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
-
-              return null;
-            },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.edcAppImages.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.edcAppImages.clear();
-
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.edcAppImages.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.picMerchantImages.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
               }
             },
           ),
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomImageField(
-            title: "FOTO SURAT LAMPIRAN",
-            subtitle: "Silahkan unggah foto surat lampiran",
-            allowGallery: Preferences.getInstance().getBool(
-              SharedPreferenceKey.OTHER_IMAGE_ALLOW_GALLERY,
-            ) ??
-                false,
-            validator: (value) {
-              if (jobOrder.imageMandatoryType[11] == "1") {
-                if (value == null || value.isEmpty) {
-                  return "Kolom ini harus diisi.";
-                }
-              }
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: rollSalesDraftImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO ROLL SALES DRAFT",
+                  subtitle: "Silahkan unggah foto roll sales draft",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.ROLL_SALES_DRAFT_IMAGE_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[8] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
 
-              if (value != null && value.length > 3) {
-                return "Gambar maksimal 3";
-              }
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
 
-              return null;
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.rollSalesDraftImages.clear();
+
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.rollSalesDraftImages.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
+              }
             },
-            initialValue: jobOrder.machineAndCard != null ? jobOrder.machineAndCard!.otherImages.map((e) => Uint8List.fromList(e.file)).toList() : [],
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            onSaved: (newValue) {
-              if (newValue != null) {
-                Realms.get().write(() {
-                  jobOrder.machineAndCard ??= JobOrderMachineAndCard();
-                  jobOrder.machineAndCard!.otherImages.clear();
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: trainingStatementLetterImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO SURAT PERNYATAAN TRAINING",
+                  subtitle: "Silahkan unggah foto surat pernyataan training",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.TRAINING_STATEMENT_LETTER_IMAGE_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[9] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
 
-                  for (Uint8List uint8List in newValue) {
-                    jobOrder.machineAndCard!.otherImages.add(
-                      ImageFile(file: uint8List),
-                    );
-                  }
-                });
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
+
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.trainingStatementLetterImages.clear();
+
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.trainingStatementLetterImages.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
               }
             },
-          )
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: edcAppImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO APLIKASI EDC",
+                  subtitle: "Silahkan unggah foto aplikasi edc",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.EDC_APP_IMAGE_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[10] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
+
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
+
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.edcAppImages.clear();
+
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.edcAppImages.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
+              }
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          BlocBuilder<ImageLoadBloc, ImageLoadState>(
+            bloc: otherImageBloc,
+            builder: (context, state){
+              if (state is ImageLoadSuccess){
+                return CustomImageField(
+                  title: "FOTO SURAT LAMPIRAN",
+                  subtitle: "Silahkan unggah foto surat lampiran",
+                  allowGallery: Preferences.getInstance().getBool(
+                    SharedPreferenceKey.OTHER_IMAGE_ALLOW_GALLERY,
+                  ) ??
+                      false,
+                  validator: (value) {
+                    if (jobOrder.imageMandatoryType[11] == "1") {
+                      if (value == null || value.isEmpty) {
+                        return "Kolom ini harus diisi.";
+                      }
+                    }
+
+                    if (value != null && value.length > 3) {
+                      return "Gambar maksimal 3";
+                    }
+
+                    return null;
+                  },
+                  initialValue: state.listImages,
+                  readOnly: widget.jobFormPageState.widget.readOnly,
+                  onSaved: (newValue) {
+                    if (newValue != null) {
+                      Realms.get().write(() {
+                        jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                        jobOrder.machineAndCard!.otherImages.clear();
+
+                        for (Uint8List uint8List in newValue) {
+                          jobOrder.machineAndCard!.otherImages.add(
+                            ImageFile(file: uint8List),
+                          );
+                        }
+                      });
+                    }
+                  },
+                );
+              } else {
+                return CustomShimmer.customImageShimmer(context);
+              }
+            },
+          ),
         ],
       ),
     );

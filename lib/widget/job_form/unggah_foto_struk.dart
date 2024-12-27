@@ -183,8 +183,8 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
             height: Dimensions.height15,
           ),
           CustomImageField(
-            title: "FOTO STRUK",
-            subtitle: "Silahkan unggah foto struk",
+            title: "FOTO SALES DRAFT",
+            subtitle: "Silahkan unggah foto sales draft",
             allowGallery: Preferences.getInstance().getBool(
                   SharedPreferenceKey.TRANSACTION_TEST_IMAGE_ALLOW_GALLERY,
                 ) ??

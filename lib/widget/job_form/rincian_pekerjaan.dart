@@ -969,7 +969,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     ];
 
     if (jobOrder.jobType != null) {
-      if (Strings.equalsAny(jobOrder.jobType!.id, ["6", "20","26"])) {
+      if (Strings.equalsAny(jobOrder.jobType!.id, ["6", "20","26","27"])) {
         return [
           SizedBox(
             height: Dimensions.height15,

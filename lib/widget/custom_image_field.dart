@@ -7,6 +7,7 @@ import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dialogs.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/widget/text_sheet.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomImageField extends StatefulWidget {
   final String title;
@@ -293,30 +294,33 @@ class CustomImageFieldState extends State<CustomImageField> {
       } else {
         Uint8List file = formFieldState.value!.first;
         widgets.add(
-          Stack(
-            alignment: AlignmentDirectional.center,
-            children: [
-              Image.memory(
-                file,
-                width: 200,
-                height: 200,
-                fit: BoxFit.fill,
-              ),
-              Positioned.fill(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      BottomSheets.imagePreview(
-                        context: context,
-                        title: widget.title,
-                        bytes: file,
-                      );
-                    },
+          SizedBox(
+            width: double.infinity,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Image.memory(
+                  file,
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.fill,
+                ),
+                Positioned.fill(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        BottomSheets.imagePreview(
+                          context: context,
+                          title: widget.title,
+                          bytes: file,
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }

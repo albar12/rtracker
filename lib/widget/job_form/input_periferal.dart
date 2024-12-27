@@ -1,17 +1,21 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
 import "package:rtracker/helper/dialogs.dart";
 import "package:rtracker/helper/dimensions.dart";
 import "package:rtracker/helper/extensions.dart";
 import "package:rtracker/helper/strings.dart";
 import "package:rtracker/module/job_form/job_form_page.dart";
+import "package:rtracker/module/job_form/thermal_count_bloc/thermal_count_bloc.dart";
 import "package:rtracker/realm/non_sn_stock_dao.dart";
 import "package:rtracker/realm/realms.dart";
 import "package:rtracker/realm/schemas.dart";
 import "package:rtracker/realm/service_point_dao.dart";
 import "package:rtracker/widget/text_sheet.dart";
+
+import "../information/dual_information.dart";
 
 class InputPeriferal extends StatefulWidget {
   final JobFormPageState jobFormPageState;
@@ -35,6 +39,11 @@ class InputPeriferalState extends State<InputPeriferal> with AutomaticKeepAliveC
     for (JobOrderInputPeripheral jobOrderInputPeripheral in widget.jobFormPageState.widget.jobOrder.inputPeripherals) {
       jobOrderInputPeripherals.add(jobOrderInputPeripheral);
     }
+    updateThermalCount();
+  }
+
+  void updateThermalCount() {
+    context.read<ThermalCountBloc>().add(UpdateThermalCount(jobOrderInputPeripherals));
   }
 
   @override
@@ -54,11 +63,38 @@ class InputPeriferalState extends State<InputPeriferal> with AutomaticKeepAliveC
             Visibility(
               visible: !Strings.equalsAny(
                 widget.jobFormPageState.widget.jobOrder.jobType!.id,
-                ["21"],
+                ["21","18"],
               ),
               child: Padding(
-                padding: EdgeInsets.all(
-                  Dimensions.width15,
+                padding: EdgeInsets.symmetric(
+                  vertical: Dimensions.height10,
+                  horizontal: Dimensions.height15,
+                ),
+                child: BlocBuilder<ThermalCountBloc, ThermalCountState>(
+                  builder: (context, state) {
+                    if (state is ThermalCountInitial){
+                      return DualInformation(
+                        firstTitle: 'THERMAL YANG DIBUTUHKAN',
+                        firstSubtitle: widget.jobFormPageState.widget.jobOrder.requiredThermalCount ?? '0',
+                        secondTitle: 'THERMAL YANG DIBERIKAN',
+                        secondSubtitle: state.total.toString(),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ),
+            ),
+            Visibility(
+              visible: !Strings.equalsAny(
+                widget.jobFormPageState.widget.jobOrder.jobType!.id,
+                ["21","18"],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: Dimensions.width15,
                 ),
                 child: FilledButton(
                   style: FilledButton.styleFrom(
@@ -97,17 +133,18 @@ class InputPeriferalState extends State<InputPeriferal> with AutomaticKeepAliveC
                                   field.value!.add(jobOrderInputPeripheral);
                                 });
                               });
+                              updateThermalCount();
                             },
                           );
                         },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.add),
                       SizedBox(
                         width: 10,
                       ),
-                      TextSheet("TAMBAH INPUT PERIFERAL")
+                      TextSheet("TAMBAH INPUT PERIFERAL"),
                     ],
                   ),
                 ),
