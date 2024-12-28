@@ -141,3 +141,18 @@ enum SharedPreferenceKey {
 }
 
 enum SnStockCategory { MESIN, PROVIDER, SAMCARD }
+
+enum ImageMandatoryKey {
+  signature,
+  merchant,
+  machine,
+  serialNumber,
+  picMerchant,
+  rollSalesDraft,
+  trainingStatementLetter,
+  edcApp,
+  other,
+  struck,
+  struckQris,
+  struckBrizzi
+}

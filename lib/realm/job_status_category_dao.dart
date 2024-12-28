@@ -67,8 +67,6 @@ class JobStatusCategoryDao {
     required String vendorId,
     String? jobTypeId,
   }) {
-    print("alif jobTypeId");
-    print(jobTypeId);
     if (jobTypeId != null) {
       return List<JobStatusCategory>.from(
         Realms.get().query<JobStatusCategory>(

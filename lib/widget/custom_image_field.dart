@@ -41,7 +41,7 @@ class CustomImageFieldState extends State<CustomImageField> {
     return FormField<List<Uint8List>?>(
       validator: widget.validator,
       initialValue: widget.initialValue,
-      onSaved: widget.onSaved,
+      onSaved: widget.isMultiple ? widget.onSaved : null,
       builder: (field) {
         return SizedBox(
           width: double.infinity,
@@ -151,6 +151,7 @@ class CustomImageFieldState extends State<CustomImageField> {
             }
           });
         } else {
+          widget.onSaved!(files);
           setState(() {
             formFieldState.setValue([files.first]);
           });

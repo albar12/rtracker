@@ -5,6 +5,7 @@ import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/app_colors.dart';
 import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dimensions.dart';
+import 'package:rtracker/helper/image_mandatory.dart';
 import 'package:rtracker/helper/widgets.dart';
 import 'package:rtracker/module/job_form/job_form_page.dart';
 import 'package:rtracker/realm/realms.dart';
@@ -529,7 +530,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
       widgets.add(
         FormField(
           validator: (value) {
-            if (!hasSign && jobOrder.imageMandatoryType[0] == "1") {
+            if (!hasSign && ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.signature) == "1") {
               return "Tanda tangan harus diisi.";
             }
             return null;

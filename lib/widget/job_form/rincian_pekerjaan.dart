@@ -3,12 +3,14 @@
 import "package:basic_utils/basic_utils.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get/get.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
 import "package:rtracker/helper/dimensions.dart";
 import "package:rtracker/helper/strings.dart";
 import "package:rtracker/helper/widgets.dart";
 import "package:rtracker/module/job_form/job_form_page.dart";
+import "package:rtracker/module/job_form/thermal_count_bloc/thermal_count_bloc.dart";
 import "package:rtracker/realm/realms.dart";
 import "package:rtracker/realm/schemas.dart";
 import "package:rtracker/widget/custom_checklist_field.dart";
@@ -60,7 +62,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
   @override
   void initState() {
     super.initState();
-
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
 
     if (jobOrder.status != null) {
@@ -92,192 +93,54 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             jobOrder.edcUpdate!.appVersion!.id_tipe_edc.toString();
       });
     }
+
+    context.read<ThermalCountBloc>().add(UpdateThermalCount(jobOrder.inputPeripherals));
   }
+
+  int totalThermal = 0;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
 
-    return Padding(
-      padding: EdgeInsets.all(
-        Dimensions.width15,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const TextSheet(
-            "RINCIAN STATUS PEKERJAAN",
-            fontWeight: FontWeight.bold,
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomSpinnerField(
-            labelText: "Status Pekerjaan",
-            initialValue: widget.jobFormPageState.selectedJobStatus,
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
-              }
-
-              return null;
-            },
-            onSaved: (value) {
-              if (value != null) {
-                Realms.get().write(() {
-                  jobOrder.status ??= JobOrderStatus();
-                  jobOrder.status!.id = value.identity;
-                  jobOrder.status!.name = value.description;
-                });
-              }
-            },
-            onChanged: (newValue) {
-              setState(() {
-                widget.jobFormPageState.selectedJobStatus = newValue;
-
-                if (ffsJobStatusCategory.currentState != null) {
-                  tecJobStatusCategory.text = "";
-                  ffsJobStatusCategory.currentState!.setValue(null);
+    return BlocListener<ThermalCountBloc, ThermalCountState>(
+      listener: (context, state) {
+        if (state is ThermalCountInitial){
+          totalThermal = state.total;
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.all(
+          Dimensions.width15,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const TextSheet(
+              "RINCIAN STATUS PEKERJAAN",
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            CustomSpinnerField(
+              labelText: "Status Pekerjaan",
+              initialValue: widget.jobFormPageState.selectedJobStatus,
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              validator: (value) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
                 }
 
-                if (ffsNewVisitDate.currentState != null) {
-                  tecNewVisitDate.text = "";
-                  ffsNewVisitDate.currentState!.setValue(null);
-                }
-
-                widget.jobFormPageState.reloadJobStatusCategory(
-                  jobStatusId: newValue.identity,
-                  vendorId: widget.jobFormPageState.widget.jobOrder.vendorId!,
-                  jobTypeId:
-                      widget.jobFormPageState.widget.jobOrder.jobType!.id,
-                );
-              });
-            },
-            spinnerItems: widget.jobFormPageState.jobStatuses
-                .map(
-                  (e) => SpinnerItem(
-                    identity: e.id,
-                    description: e.name,
-                    tag: e,
-                  ),
-                )
-                .toList(),
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomSpinnerField(
-            textEditingController: tecJobStatusCategory,
-            fieldKey: ffsJobStatusCategory,
-            labelText: "Kategori Status Pekerjaan",
-            initialValue: jobOrder.status != null
-                ? SpinnerItem(
-                    identity: jobOrder.status!.categoryId,
-                    description: StringUtils.defaultString(
-                      jobOrder.status!.categoryName,
-                    ),
-                  )
-                : null,
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
-              }
-
-              return null;
-            },
-            onSaved: (value) {
-              if (value != null) {
-                Realms.get().write(() {
-                  jobOrder.status ??= JobOrderStatus();
-                  jobOrder.status!.categoryId = value.identity;
-                  jobOrder.status!.categoryName = value.description;
-                });
-              }
-            },
-            spinnerItems: widget.jobFormPageState.jobStatusCategories
-                .where((element) {
-                  if (widget.jobFormPageState.selectedJobStatus != null) {
-                    if (element.jobStatusAliasId ==
-                        (widget.jobFormPageState.selectedJobStatus!.tag
-                                as JobStatus)
-                            .aliasId) {
-                      return true;
+                if (value.identity == "9"){
+                  if (Strings.equalsAny(jobOrder.jobType!.id, ["20", "9", "27"])){
+                    int totalRequired = int.tryParse(jobOrder.requiredThermalCount!) ?? 0;
+                    int requirement = totalRequired - totalThermal;
+                    if (requirement > 0){
+                      return "Total thermal yang dibutuhkan kurang $requirement";
                     }
                   }
-
-                  return false;
-                })
-                .map(
-                  (e) => SpinnerItem(
-                    identity: e.id,
-                    description: e.name,
-                  ),
-                )
-                .toList(),
-          ),
-          Visibility(
-            visible: widget.jobFormPageState.selectedJobStatus != null &&
-                (widget.jobFormPageState.selectedJobStatus!.tag as JobStatus)
-                        .aliasId ==
-                    "2",
-            child: Column(
-              children: [
-                SizedBox(
-                  height: Dimensions.height15,
-                ),
-                CustomDateField(
-                  textEditingController: tecNewVisitDate,
-                  fieldKey: ffsNewVisitDate,
-                  labelText: "Tanggal Kunjungan Baru",
-                  initialValue: jobOrder.status != null &&
-                          jobOrder.status!.newVisitDate != null
-                      ? jobOrder.status!.newVisitDate
-                      : null,
-                  readOnly: widget.jobFormPageState.widget.readOnly,
-                  validator: (value) {
-                    if (value == null) {
-                      return "Kolom ini harus diisi.";
-                    }
-
-                    return null;
-                  },
-                  onSaved: (value) {
-                    if (value != null) {
-                      Realms.get().write(() {
-                        jobOrder.status ??= JobOrderStatus();
-                        jobOrder.status!.newVisitDate = value.toUtc();
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomInformation(
-            title: "KETERANGAN LANJUTAN",
-            content: TextSheet(
-              StringUtils.defaultString(jobOrder.description),
-            ),
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-            child: CustomTimeField(
-              labelText: "Jam Buka Toko",
-              initialValue:
-                  jobOrder.jamBukaToko != null ? jobOrder.jamBukaToko : null,
-              readOnly: widget.jobFormPageState.widget.readOnly,
-              validator: (value) {
-                if (value == null) {
-                  return "Kolom ini harus diisi.";
                 }
 
                 return null;
@@ -285,204 +148,363 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               onSaved: (value) {
                 if (value != null) {
                   Realms.get().write(() {
-                    // jobOrder.jamBukaToko ??= jamBukaToko();
-                    // if (jobOrder.jamBukaToko != null) {
-                    jobOrder.jamBukaToko = value.toString();
-                    // }
+                    jobOrder.status ??= JobOrderStatus();
+                    jobOrder.status!.id = value.identity;
+                    jobOrder.status!.name = value.description;
                   });
                 }
               },
-            ),
-          ),
-          Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-            child: CustomTimeField(
-              labelText: "Jam Tutup Toko",
-              initialValue:
-                  jobOrder.jamTutupToko != null ? jobOrder.jamTutupToko : null,
-              readOnly: widget.jobFormPageState.widget.readOnly,
-              validator: (value) {
-                if (value == null) {
-                  return "Kolom ini harus diisi.";
-                }
+              onChanged: (newValue) {
+                setState(() {
+                  widget.jobFormPageState.selectedJobStatus = newValue;
 
-                return null;
-              },
-              onSaved: (value) {
-                if (value != null) {
-                  Realms.get().write(() {
-                    // if (jobOrder.jamTutupToko != null) {
-                    jobOrder.jamTutupToko = value.toString();
-                    // }
-                  });
-                }
-              },
-            ),
-          ),
-          Visibility(
-            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-            child: CustomTextField(
-              controller: edcCount,
-              label: 'EDC Count',
-              readOnly: widget.jobFormPageState.widget.readOnly,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (StringUtils.isNullOrEmpty(value)) {
-                  return "Kolom ini harus diisi.";
-                }
+                  if (ffsJobStatusCategory.currentState != null) {
+                    tecJobStatusCategory.text = "";
+                    ffsJobStatusCategory.currentState!.setValue(null);
+                  }
 
-                if (value!.length > 2) {
-                  return "Maksimal 2 digit.";
-                }
-                return null;
-              },
-              onSaved: (value) {
-                Realms.get().write(() {
-                  jobOrder.edcCount = int.parse(value!);
+                  if (ffsNewVisitDate.currentState != null) {
+                    tecNewVisitDate.text = "";
+                    ffsNewVisitDate.currentState!.setValue(null);
+                  }
+
+                  widget.jobFormPageState.reloadJobStatusCategory(
+                    jobStatusId: newValue.identity,
+                    vendorId: widget.jobFormPageState.widget.jobOrder.vendorId!,
+                    jobTypeId:
+                    widget.jobFormPageState.widget.jobOrder.jobType!.id,
+                  );
                 });
               },
+              spinnerItems: widget.jobFormPageState.jobStatuses
+                  .map(
+                    (e) => SpinnerItem(
+                  identity: e.id,
+                  description: e.name,
+                  tag: e,
+                ),
+              )
+                  .toList(),
             ),
-          ),
-          ...requiredThermalCount(),
-          ...checklistNotes(),
-          ...qris(),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomInformation(
-            title: "KELENGKAPAN EDC",
-            content: CustomNumberListField(
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            CustomSpinnerField(
+              textEditingController: tecJobStatusCategory,
+              fieldKey: ffsJobStatusCategory,
+              labelText: "Kategori Status Pekerjaan",
+              initialValue: jobOrder.status != null
+                  ? SpinnerItem(
+                identity: jobOrder.status!.categoryId,
+                description: StringUtils.defaultString(
+                  jobOrder.status!.categoryName,
+                ),
+              )
+                  : null,
               readOnly: widget.jobFormPageState.widget.readOnly,
+              validator: (value) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
+
+                return null;
+              },
               onSaved: (value) {
                 if (value != null) {
                   Realms.get().write(() {
-                    jobOrder.edcEquipments.clear();
+                    jobOrder.status ??= JobOrderStatus();
+                    jobOrder.status!.categoryId = value.identity;
+                    jobOrder.status!.categoryName = value.description;
+                  });
+                }
+              },
+              spinnerItems: widget.jobFormPageState.jobStatusCategories
+                  .where((element) {
+                if (widget.jobFormPageState.selectedJobStatus != null) {
+                  if (element.jobStatusAliasId ==
+                      (widget.jobFormPageState.selectedJobStatus!.tag
+                      as JobStatus)
+                          .aliasId) {
+                    return true;
+                  }
+                }
 
-                    for (NumberItem numberItem in value) {
-                      jobOrder.edcEquipments.add(
-                        JobOrderEdcEquipment(
-                          numberItem.identity,
-                          numberItem.value,
+                return false;
+              })
+                  .map(
+                    (e) => SpinnerItem(
+                  identity: e.id,
+                  description: e.name,
+                ),
+              )
+                  .toList(),
+            ),
+            Visibility(
+              visible: widget.jobFormPageState.selectedJobStatus != null &&
+                  (widget.jobFormPageState.selectedJobStatus!.tag as JobStatus)
+                      .aliasId ==
+                      "2",
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Dimensions.height15,
+                  ),
+                  CustomDateField(
+                    textEditingController: tecNewVisitDate,
+                    fieldKey: ffsNewVisitDate,
+                    labelText: "Tanggal Kunjungan Baru",
+                    initialValue: jobOrder.status != null &&
+                        jobOrder.status!.newVisitDate != null
+                        ? jobOrder.status!.newVisitDate
+                        : null,
+                    readOnly: widget.jobFormPageState.widget.readOnly,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Kolom ini harus diisi.";
+                      }
+
+                      return null;
+                    },
+                    onSaved: (value) {
+                      if (value != null) {
+                        Realms.get().write(() {
+                          jobOrder.status ??= JobOrderStatus();
+                          jobOrder.status!.newVisitDate = value.toUtc();
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            CustomInformation(
+              title: "KETERANGAN LANJUTAN",
+              content: TextSheet(
+                StringUtils.defaultString(jobOrder.description),
+              ),
+            ),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            Visibility(
+              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+              child: CustomTimeField(
+                labelText: "Jam Buka Toko",
+                initialValue:
+                jobOrder.jamBukaToko != null ? jobOrder.jamBukaToko : null,
+                readOnly: widget.jobFormPageState.widget.readOnly,
+                validator: (value) {
+                  if (value == null) {
+                    return "Kolom ini harus diisi.";
+                  }
+
+                  return null;
+                },
+                onSaved: (value) {
+                  if (value != null) {
+                    Realms.get().write(() {
+                      // jobOrder.jamBukaToko ??= jamBukaToko();
+                      // if (jobOrder.jamBukaToko != null) {
+                      jobOrder.jamBukaToko = value.toString();
+                      // }
+                    });
+                  }
+                },
+              ),
+            ),
+            Visibility(
+              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+              child: CustomTimeField(
+                labelText: "Jam Tutup Toko",
+                initialValue:
+                jobOrder.jamTutupToko != null ? jobOrder.jamTutupToko : null,
+                readOnly: widget.jobFormPageState.widget.readOnly,
+                validator: (value) {
+                  if (value == null) {
+                    return "Kolom ini harus diisi.";
+                  }
+
+                  return null;
+                },
+                onSaved: (value) {
+                  if (value != null) {
+                    Realms.get().write(() {
+                      // if (jobOrder.jamTutupToko != null) {
+                      jobOrder.jamTutupToko = value.toString();
+                      // }
+                    });
+                  }
+                },
+              ),
+            ),
+            Visibility(
+              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+              child: CustomTextField(
+                controller: edcCount,
+                label: 'EDC Count',
+                readOnly: widget.jobFormPageState.widget.readOnly,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (StringUtils.isNullOrEmpty(value)) {
+                    return "Kolom ini harus diisi.";
+                  }
+
+                  if (value!.length > 2) {
+                    return "Maksimal 2 digit.";
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  Realms.get().write(() {
+                    jobOrder.edcCount = int.parse(value!);
+                  });
+                },
+              ),
+            ),
+            ...requiredThermalCount(),
+            ...checklistNotes(),
+            ...qris(),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            CustomInformation(
+              title: "KELENGKAPAN EDC",
+              content: CustomNumberListField(
+                readOnly: widget.jobFormPageState.widget.readOnly,
+                onSaved: (value) {
+                  if (value != null) {
+                    Realms.get().write(() {
+                      jobOrder.edcEquipments.clear();
+
+                      for (NumberItem numberItem in value) {
+                        jobOrder.edcEquipments.add(
+                          JobOrderEdcEquipment(
+                            numberItem.identity,
+                            numberItem.value,
+                          ),
+                        );
+                      }
+                    });
+                  }
+                },
+                numberItems: widget.jobFormPageState.edcEquipments.map((e) {
+                  JobOrderEdcEquipment? jobOrderEdcEquipment = jobOrder
+                      .edcEquipments
+                      .firstWhereOrNull((element) => element.name == e.name);
+
+                  return NumberItem(
+                    identity: e.name,
+                    description: Strings.pretty(e.name),
+                    tag: e,
+                    value: jobOrderEdcEquipment != null
+                        ? jobOrderEdcEquipment.quantity
+                        : 0,
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            // CustomInformation(
+            //   title: "Jml",
+            //   content: CustomNumberListField(
+            //     readOnly: widget.jobFormPageState.widget.readOnly,
+            //     onSaved: (value) {
+            //       if (value != null) {
+            //         // Realms.get().write(() {
+            //         //   jobOrder.edcEquipments.clear();
+
+            //         //   for (NumberItem numberItem in value) {
+            //         //     jobOrder.edcEquipments.add(
+            //         //       JobOrderEdcEquipment(
+            //         //         numberItem.identity,
+            //         //         numberItem.value,
+            //         //       ),
+            //         //     );
+            //         //   }
+            //         // });
+            //       }
+            //     },
+            //     numberItems: widget.jobFormPageState.edcEquipments.map((e) {
+            //       JobOrderEdcEquipment? jobOrderEdcEquipment = jobOrder
+            //           .edcEquipments
+            //           .firstWhereOrNull((element) => element.name == e.name);
+
+            //       return NumberItem(
+            //         identity: e.name,
+            //         description: Strings.pretty(e.name),
+            //         tag: e,
+            //         value: jobOrderEdcEquipment != null
+            //             ? jobOrderEdcEquipment.quantity
+            //             : 0,
+            //       );
+            //     }).toList(),
+            //   ),
+            // ),
+            ...edcFeatureTest(),
+            SizedBox(
+              height: Dimensions.height15,
+            ),
+            CustomCheckListField(
+              title: "DAFTAR PERIKSA KATEGORI PEKERJAAN",
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              validator: (value) {
+                if (value != null) {
+                  if (widget.jobFormPageState.selectedJobStatus != null &&
+                      widget.jobFormPageState.selectedJobStatus!.identity ==
+                          "9") {
+                    CheckItem? checkItem =
+                    value.firstWhereOrNull((element) => element.value);
+
+                    if (checkItem == null) {
+                      return "Silahkan pilih minimal satu.";
+                    }
+                  }
+                }
+
+                return null;
+              },
+              onSaved: (value) {
+                if (value != null) {
+                  Realms.get().write(() {
+                    jobOrder.jobCategories.clear();
+
+                    for (CheckItem checkItem in value) {
+                      jobOrder.jobCategories.add(
+                        JobOrderJobCategory(
+                          checkItem.identity,
+                          checkItem.description,
+                          checkItem.value,
                         ),
                       );
                     }
                   });
                 }
               },
-              numberItems: widget.jobFormPageState.edcEquipments.map((e) {
-                JobOrderEdcEquipment? jobOrderEdcEquipment = jobOrder
-                    .edcEquipments
-                    .firstWhereOrNull((element) => element.name == e.name);
+              checkItems: widget.jobFormPageState.jobCategories.map((e) {
+                JobOrderJobCategory? jobOrderJobCategory = jobOrder.jobCategories
+                    .firstWhereOrNull((element) => element.id == e.id);
 
-                return NumberItem(
-                  identity: e.name,
-                  description: Strings.pretty(e.name),
+                return CheckItem(
+                  identity: e.id,
+                  description: e.name,
                   tag: e,
-                  value: jobOrderEdcEquipment != null
-                      ? jobOrderEdcEquipment.quantity
-                      : 0,
+                  value: jobOrderJobCategory != null
+                      ? jobOrderJobCategory.value
+                      : false,
                 );
               }).toList(),
             ),
-          ),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          // CustomInformation(
-          //   title: "Jml",
-          //   content: CustomNumberListField(
-          //     readOnly: widget.jobFormPageState.widget.readOnly,
-          //     onSaved: (value) {
-          //       if (value != null) {
-          //         // Realms.get().write(() {
-          //         //   jobOrder.edcEquipments.clear();
-
-          //         //   for (NumberItem numberItem in value) {
-          //         //     jobOrder.edcEquipments.add(
-          //         //       JobOrderEdcEquipment(
-          //         //         numberItem.identity,
-          //         //         numberItem.value,
-          //         //       ),
-          //         //     );
-          //         //   }
-          //         // });
-          //       }
-          //     },
-          //     numberItems: widget.jobFormPageState.edcEquipments.map((e) {
-          //       JobOrderEdcEquipment? jobOrderEdcEquipment = jobOrder
-          //           .edcEquipments
-          //           .firstWhereOrNull((element) => element.name == e.name);
-
-          //       return NumberItem(
-          //         identity: e.name,
-          //         description: Strings.pretty(e.name),
-          //         tag: e,
-          //         value: jobOrderEdcEquipment != null
-          //             ? jobOrderEdcEquipment.quantity
-          //             : 0,
-          //       );
-          //     }).toList(),
-          //   ),
-          // ),
-          ...edcFeatureTest(),
-          SizedBox(
-            height: Dimensions.height15,
-          ),
-          CustomCheckListField(
-            title: "DAFTAR PERIKSA KATEGORI PEKERJAAN",
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            validator: (value) {
-              if (value != null) {
-                if (widget.jobFormPageState.selectedJobStatus != null &&
-                    widget.jobFormPageState.selectedJobStatus!.identity ==
-                        "9") {
-                  CheckItem? checkItem =
-                      value.firstWhereOrNull((element) => element.value);
-
-                  if (checkItem == null) {
-                    return "Silahkan pilih minimal satu.";
-                  }
-                }
-              }
-
-              return null;
-            },
-            onSaved: (value) {
-              if (value != null) {
-                Realms.get().write(() {
-                  jobOrder.jobCategories.clear();
-
-                  for (CheckItem checkItem in value) {
-                    jobOrder.jobCategories.add(
-                      JobOrderJobCategory(
-                        checkItem.identity,
-                        checkItem.description,
-                        checkItem.value,
-                      ),
-                    );
-                  }
-                });
-              }
-            },
-            checkItems: widget.jobFormPageState.jobCategories.map((e) {
-              JobOrderJobCategory? jobOrderJobCategory = jobOrder.jobCategories
-                  .firstWhereOrNull((element) => element.id == e.id);
-
-              return CheckItem(
-                identity: e.id,
-                description: e.name,
-                tag: e,
-                value: jobOrderJobCategory != null
-                    ? jobOrderJobCategory.value
-                    : false,
-              );
-            }).toList(),
-          ),
-          ...trainingMaterial(),
-          ...otherBankEdc(),
-          ...edcUpdate(),
-          ...vendorMtiOnly(),
-        ],
+            ...trainingMaterial(),
+            ...otherBankEdc(),
+            ...edcUpdate(),
+            ...vendorMtiOnly(),
+          ],
+        ),
       ),
     );
   }
@@ -528,7 +550,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
-                    value.firstWhereOrNull((element) => element.value);
+                value.firstWhereOrNull((element) => element.value);
 
                 if (checkItem == null) {
                   return "Silahkan pilih minimal satu.";
@@ -607,12 +629,12 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                       onChanged: widget.jobFormPageState.widget.readOnly
                           ? null
                           : (value) {
-                              setState(() {
-                                field.setValue(value);
+                        setState(() {
+                          field.setValue(value);
 
-                                hasQris = value;
-                              });
-                            },
+                          hasQris = value;
+                        });
+                      },
                       activeColor: Theme.of(context).colorScheme.primary,
                     ),
                   )
@@ -680,9 +702,9 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                       validator: (value) {
                         if (value != null) {
                           if (widget.jobFormPageState.selectedJobStatus !=
-                                  null &&
+                              null &&
                               widget.jobFormPageState.selectedJobStatus!
-                                      .identity ==
+                                  .identity ==
                                   "9") {
                             CheckItem? checkItem = value
                                 .firstWhereOrNull((element) => element.value);
@@ -719,8 +741,8 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                         if (jobOrder.qris != null) {
                           jobOrderQrisMenu =
                               jobOrder.qris!.menus.firstWhereOrNull(
-                            (element) => element.id == e.id,
-                          );
+                                    (element) => element.id == e.id,
+                              );
                         }
 
                         return CheckItem(
@@ -761,7 +783,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
-                    value.firstWhereOrNull((element) => element.value);
+                value.firstWhereOrNull((element) => element.value);
 
                 if (checkItem == null) {
                   return "Silahkan pilih minimal satu.";
@@ -826,7 +848,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
-                    value.firstWhereOrNull((element) => element.value);
+                value.firstWhereOrNull((element) => element.value);
 
                 if (checkItem == null) {
                   return "Silahkan pilih minimal satu.";
@@ -892,7 +914,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                     widget.jobFormPageState.selectedJobStatus!.identity ==
                         "9") {
                   CheckItem? checkItem =
-                      value.firstWhereOrNull((element) => element.value);
+                  value.firstWhereOrNull((element) => element.value);
 
                   if (checkItem == null) {
                     return "Silahkan pilih minimal satu.";
@@ -984,13 +1006,13 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           CustomSpinnerField(
             labelText: "Check Stiker EDC",
             initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.dorMenu != null
+                jobOrder.edcUpdate!.dorMenu != null
                 ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.dorMenu!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.dorMenu!.name,
-                    ),
-                  )
+              identity: jobOrder.edcUpdate!.dorMenu!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.dorMenu!.name,
+              ),
+            )
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
@@ -1020,11 +1042,11 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             spinnerItems: widget.jobFormPageState.dorMenus
                 .map(
                   (e) => SpinnerItem(
-                    identity: e.id,
-                    description: e.name,
-                    tag: e,
-                  ),
-                )
+                identity: e.id,
+                description: e.name,
+                tag: e,
+              ),
+            )
                 .toList(),
           ),
           SizedBox(
@@ -1033,13 +1055,13 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           CustomSpinnerField(
             labelText: "Update Marcoll",
             initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.marcollUpdateStatus != null
+                jobOrder.edcUpdate!.marcollUpdateStatus != null
                 ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.marcollUpdateStatus!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.marcollUpdateStatus!.name,
-                    ),
-                  )
+              identity: jobOrder.edcUpdate!.marcollUpdateStatus!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.marcollUpdateStatus!.name,
+              ),
+            )
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
@@ -1057,9 +1079,9 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                   if (jobOrder.edcUpdate!.marcollUpdateStatus == null) {
                     jobOrder.edcUpdate!.marcollUpdateStatus =
                         JobOrderMarcollUpdateStatus(
-                      value.identity,
-                      value.description,
-                    );
+                          value.identity,
+                          value.description,
+                        );
                   } else {
                     jobOrder.edcUpdate!.marcollUpdateStatus!.id =
                         value.identity;
@@ -1072,11 +1094,11 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             spinnerItems: widget.jobFormPageState.marcollUpdateStatuses
                 .map(
                   (e) => SpinnerItem(
-                    identity: e.id,
-                    description: e.name,
-                    tag: e,
-                  ),
-                )
+                identity: e.id,
+                description: e.name,
+                tag: e,
+              ),
+            )
                 .toList(),
           ),
           SizedBox(
@@ -1085,13 +1107,13 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           CustomSpinnerField(
             labelText: "Update EOS",
             initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.eosUpdateStatus != null
+                jobOrder.edcUpdate!.eosUpdateStatus != null
                 ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.eosUpdateStatus!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.eosUpdateStatus!.name,
-                    ),
-                  )
+              identity: jobOrder.edcUpdate!.eosUpdateStatus!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.eosUpdateStatus!.name,
+              ),
+            )
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
@@ -1109,9 +1131,9 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                   if (jobOrder.edcUpdate!.eosUpdateStatus == null) {
                     jobOrder.edcUpdate!.eosUpdateStatus =
                         JobOrderEosUpdateStatus(
-                      value.identity,
-                      value.description,
-                    );
+                          value.identity,
+                          value.description,
+                        );
                   } else {
                     jobOrder.edcUpdate!.eosUpdateStatus!.id = value.identity;
                     jobOrder.edcUpdate!.eosUpdateStatus!.name =
@@ -1123,11 +1145,11 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             spinnerItems: widget.jobFormPageState.eosUpdateStatuses
                 .map(
                   (e) => SpinnerItem(
-                    identity: e.id,
-                    description: e.name,
-                    tag: e,
-                  ),
-                )
+                identity: e.id,
+                description: e.name,
+                tag: e,
+              ),
+            )
                 .toList(),
           ),
           SizedBox(
@@ -1136,17 +1158,17 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           CustomSpinnerField(
             labelText: "App Version",
             initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.appVersion != null &&
-                    versiEdcAndroid ==
-                        widget.jobFormPageState.widget.jobOrder.machineAndCard!
-                            .edcType!.id
-                            .toString()
+                jobOrder.edcUpdate!.appVersion != null &&
+                versiEdcAndroid ==
+                    widget.jobFormPageState.widget.jobOrder.machineAndCard!
+                        .edcType!.id
+                        .toString()
                 ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.appVersion!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.appVersion!.name,
-                    ),
-                  )
+              identity: jobOrder.edcUpdate!.appVersion!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.appVersion!.name,
+              ),
+            )
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
@@ -1190,19 +1212,19 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             },
             spinnerItems: widget.jobFormPageState.appVersion
                 .where((element) {
-                  if (element.id_tipe_dc.toString() ==
-                      widget.jobFormPageState.widget.jobOrder.machineAndCard!
-                          .edcType!.id
-                          .toString()) {
-                    return true;
-                  }
-                  return false;
-                })
+              if (element.id_tipe_dc.toString() ==
+                  widget.jobFormPageState.widget.jobOrder.machineAndCard!
+                      .edcType!.id
+                      .toString()) {
+                return true;
+              }
+              return false;
+            })
                 .map((e) => SpinnerItem(
-                      identity: e.id_versi_aplikasi,
-                      description: e.versi_aplikasi,
-                      tag: e,
-                    ),)
+              identity: e.id_versi_aplikasi,
+              description: e.versi_aplikasi,
+              tag: e,
+            ),)
                 .toList(),
           ),
           SizedBox(
@@ -1213,17 +1235,17 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             fieldKey: ffsPatchOs,
             labelText: "OS Patch",
             initialValue: jobOrder.edcUpdate != null &&
-                    jobOrder.edcUpdate!.osPatch != null &&
-                    versiEdcAndroid ==
-                        widget.jobFormPageState.widget.jobOrder.machineAndCard!
-                            .edcType!.id
-                            .toString()
+                jobOrder.edcUpdate!.osPatch != null &&
+                versiEdcAndroid ==
+                    widget.jobFormPageState.widget.jobOrder.machineAndCard!
+                        .edcType!.id
+                        .toString()
                 ? SpinnerItem(
-                    identity: jobOrder.edcUpdate!.osPatch!.id,
-                    description: StringUtils.defaultString(
-                      jobOrder.edcUpdate!.osPatch!.name,
-                    ),
-                  )
+              identity: jobOrder.edcUpdate!.osPatch!.id,
+              description: StringUtils.defaultString(
+                jobOrder.edcUpdate!.osPatch!.name,
+              ),
+            )
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
@@ -1254,20 +1276,20 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             },
             spinnerItems: widget.jobFormPageState.osPatch
                 .where((element) {
-                  if (element.id_versi_aplikasi.toString() == versiEdcId &&
-                      element.id_tipe_edc.toString() ==
-                          widget.jobFormPageState.widget.jobOrder
-                              .machineAndCard!.edcType!.id
-                              .toString()) {
-                    return true;
-                  }
-                  return false;
-                })
+              if (element.id_versi_aplikasi.toString() == versiEdcId &&
+                  element.id_tipe_edc.toString() ==
+                      widget.jobFormPageState.widget.jobOrder
+                          .machineAndCard!.edcType!.id
+                          .toString()) {
+                return true;
+              }
+              return false;
+            })
                 .map((e) => SpinnerItem(
-                      identity: e.id_os_patch,
-                      description: e.os_patch_name,
-                      tag: e,
-                    ))
+              identity: e.id_os_patch,
+              description: e.os_patch_name,
+              tag: e,
+            ))
                 .toList(),
           ),
         ];

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/dimensions.dart';
+import 'package:rtracker/helper/image_mandatory.dart';
 import 'package:rtracker/helper/preferences.dart';
 import 'package:rtracker/module/job_form/image_load_bloc/image_load_bloc.dart';
 import 'package:rtracker/module/job_form/image_load_bloc/image_load_event.dart';
@@ -47,20 +48,14 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
     edcAppImageBloc = ImageLoadBloc();
     otherImageBloc = ImageLoadBloc();
     if (jobOrder.machineAndCard != null) {
-      initBlocEvents(jobOrder);
+      machineImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.images));
+      machineSerialNumberImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.serialNumberPhotos));
+      picMerchantImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.picMerchantImages));
+      rollSalesDraftImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.rollSalesDraftImages));
+      trainingStatementLetterImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.trainingStatementLetterImages));
+      edcAppImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.edcAppImages));
+      otherImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.otherImages));
     }
-  }
-
-  Future<void> initBlocEvents(JobOrder jobOrder) async {
-    await Future.wait([
-    machineImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.images)),
-    machineSerialNumberImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.serialNumberPhotos)),
-    picMerchantImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.picMerchantImages)),
-    rollSalesDraftImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.rollSalesDraftImages)),
-    trainingStatementLetterImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.trainingStatementLetterImages)),
-    edcAppImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.edcAppImages)),
-    otherImageBloc.add(ImageLoadFromRealm(jobOrder.machineAndCard!.otherImages)),
-    ] as Iterable<Future>,);
   }
 
   @override
@@ -97,7 +92,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   subtitle: "Silahkan unggah foto mesin",
                   allowGallery: Preferences.getInstance().getBool(SharedPreferenceKey.MACHINE_IMAGE_ALLOW_GALLERY) ?? false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[2] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.machine) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -146,7 +141,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[3] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.serialNumber) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -195,7 +190,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[7] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.picMerchant) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -244,7 +239,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[8] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.rollSalesDraft) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -293,7 +288,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[9] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.trainingStatementLetter) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -342,7 +337,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[10] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.edcApp) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }
@@ -391,7 +386,7 @@ class UnggahFotoMesinState extends State<UnggahFotoMesin> with AutomaticKeepAliv
                   ) ??
                       false,
                   validator: (value) {
-                    if (jobOrder.imageMandatoryType[11] == "1") {
+                    if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.other) == "1") {
                       if (value == null || value.isEmpty) {
                         return "Kolom ini harus diisi.";
                       }

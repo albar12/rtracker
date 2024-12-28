@@ -73,10 +73,17 @@ class InputPeriferalState extends State<InputPeriferal> with AutomaticKeepAliveC
                 child: BlocBuilder<ThermalCountBloc, ThermalCountState>(
                   builder: (context, state) {
                     if (state is ThermalCountInitial){
+                      String displayRequired = "0";
+                      String? inputRequired = widget.jobFormPageState.widget.jobOrder.requiredThermalCount;
+                      if (inputRequired != null){
+                        if (inputRequired.isNotEmpty){
+                          displayRequired = inputRequired;
+                        }
+                      }
                       return DualInformation(
-                        firstTitle: 'THERMAL YANG DIBUTUHKAN',
-                        firstSubtitle: widget.jobFormPageState.widget.jobOrder.requiredThermalCount ?? '0',
-                        secondTitle: 'THERMAL YANG DIBERIKAN',
+                        firstTitle: 'THERMAL DIBUTUHKAN',
+                        firstSubtitle: displayRequired,
+                        secondTitle: 'THERMAL DIBERIKAN',
                         secondSubtitle: state.total.toString(),
                       );
                     } else {

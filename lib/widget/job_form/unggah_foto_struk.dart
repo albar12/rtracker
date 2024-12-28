@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dimensions.dart';
+import 'package:rtracker/helper/image_mandatory.dart';
 import 'package:rtracker/helper/preferences.dart';
 import 'package:rtracker/helper/strings.dart';
 import 'package:rtracker/module/job_form/job_form_page.dart';
@@ -190,7 +191,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
                 ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[4] == "1") {
+              if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.struck) == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
@@ -247,7 +248,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
               ) ??
               false,
           validator: (value) {
-            if (jobOrder.imageMandatoryType[5] == "1") {
+            if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.struckQris) == "1") {
               if (value == null || value.isEmpty) {
                 return "Kolom ini harus diisi.";
               }
@@ -291,7 +292,7 @@ class UnggahFotoStrukState extends State<UnggahFotoStruk>
               ) ??
               false,
           validator: (value) {
-            if (jobOrder.imageMandatoryType[6] == "1") {
+            if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.struckBrizzi) == "1") {
               if (value == null || value.isEmpty) {
                 return "Kolom ini harus diisi.";
               }

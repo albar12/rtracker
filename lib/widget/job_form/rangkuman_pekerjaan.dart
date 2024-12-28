@@ -8,6 +8,7 @@ import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/formats.dart';
+import 'package:rtracker/helper/image_mandatory.dart';
 import 'package:rtracker/helper/navigators.dart';
 import 'package:rtracker/helper/preferences.dart';
 import 'package:rtracker/helper/strings.dart';
@@ -217,7 +218,7 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                 ) ??
                 false,
             validator: (value) {
-              if (jobOrder.imageMandatoryType[1] == "1") {
+              if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.merchant) == "1") {
                 if (value == null || value.isEmpty) {
                   return "Kolom ini harus diisi.";
                 }
