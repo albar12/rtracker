@@ -21,6 +21,7 @@ import "package:rtracker/module/job_form/bloc/job_form_bloc.dart";
 import "package:rtracker/module/job_form/bloc/job_form_event.dart";
 import "package:rtracker/module/job_form/bloc/job_form_state.dart";
 import "package:rtracker/realm/job_order_dao.dart";
+import "package:rtracker/realm/non_sn_stock_dao.dart";
 import "package:rtracker/realm/realms.dart";
 import "package:rtracker/realm/schemas.dart";
 import "package:rtracker/realm/sn_stock_dao.dart";
@@ -853,6 +854,16 @@ class JobFormPageState extends State<JobFormPage>
                               );
                             }
                           });
+                        } else {
+                          // Retur thermal jika status bukan selesai
+                          for (JobOrderInputPeripheral jobOrderInputPeripheral
+                              in widget.jobOrder.inputPeripherals){
+                            NonSnStockDao.increaseQuantity(
+                              id: jobOrderInputPeripheral.id,
+                              quantity: jobOrderInputPeripheral.quantity,
+                              servicePointId: jobOrderInputPeripheral.servicePoint,
+                            );
+                          }
                         }
 
                         ParafPicDataMerchantState parafPicDataMerchantState =

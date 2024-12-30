@@ -491,7 +491,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
           SizedBox(
             height: Dimensions.height15,
           ),
-          signature()
+          signature(),
         ],
       ),
     );
@@ -577,7 +577,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                     onDrawEnd: () => hasSign = true,
                     backgroundColor: Colors.white,
                   ),
-                )
+                ),
               ],
             );
           },
@@ -616,7 +616,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
               ),
               const Text(
                 "RESET TANDA TANGAN",
-              )
+              ),
             ],
           ),
         ),

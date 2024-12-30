@@ -6,6 +6,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get/get.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
+import "package:rtracker/helper/dialogs.dart";
 import "package:rtracker/helper/dimensions.dart";
 import "package:rtracker/helper/strings.dart";
 import "package:rtracker/helper/widgets.dart";
@@ -134,12 +135,24 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 }
 
                 if (value.identity == "9"){
+                  String errorMessage = "";
+                  int totalRequired = int.tryParse(jobOrder.requiredThermalCount!) ?? 0;
+                  int requirement = totalRequired - totalThermal;
                   if (Strings.equalsAny(jobOrder.jobType!.id, ["20", "9", "27"])){
-                    int totalRequired = int.tryParse(jobOrder.requiredThermalCount!) ?? 0;
-                    int requirement = totalRequired - totalThermal;
-                    if (requirement > 0){
-                      return "Total thermal yang dibutuhkan kurang $requirement";
+                    if (totalRequired <= 0){
+                      errorMessage = "Jumlah thermal yang dibutuhkan 0, silahkan hubungi admin untuk menambahkan data thermal yang dibutuhkan";
                     }
+                  }
+
+                  if (totalRequired > 0 && errorMessage.isEmpty) {
+                    if (requirement > 0) {
+                      errorMessage = "Total thermal yang dibutuhkan kurang $requirement";
+                    }
+                  }
+
+                  if (errorMessage.isNotEmpty){
+                    Dialogs.message(context: context, title: errorMessage);
+                    return "";
                   }
                 }
 
