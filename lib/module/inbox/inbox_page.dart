@@ -50,7 +50,7 @@ class _InboxPageState extends State<InboxPage> {
           bottomWidget: [
             Container(
               height: 10,
-            )
+            ),
           ],
           controller: controller,
           onChanged: (p0) {

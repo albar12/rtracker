@@ -10,6 +10,7 @@ import 'package:rtracker/api/endpoint/send_location/send_location_request.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order.dart';
 import 'package:rtracker/api/interceptor/authorization_interceptor.dart';
 import 'package:rtracker/api/interceptor/custom_log_interceptor.dart';
+import 'package:rtracker/api/interceptor/logging_interceptor.dart';
 import 'package:rtracker/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:rtracker/helper/locations.dart';
@@ -81,7 +82,8 @@ class ApiManager {
     }
 
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
-    dio.interceptors.add(CustomLogInterceptor());
+    // dio.interceptors.add(CustomLogInterceptor());
+    dio.interceptors.add(LoggingInterceptor());
 
     (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
@@ -874,7 +876,23 @@ class ApiManager {
         "kondisi": condition,
         "productId": productId,
         "quantityRetur": quantity,
-        "keterangan": note
+        "keterangan": note,
+      },
+      options: await httpOptions(),
+    );
+
+    return response;
+  }
+
+  Future<Response> syncFinishedJo({
+    required List<String> ids,
+  }) async {
+    Dio dio = await getDio(plain: true);
+
+    Response response = await dio.post(
+      ApiUrl.SYNC_FINISHED_JO,
+      data: {
+        "data": ids,
       },
       options: await httpOptions(),
     );

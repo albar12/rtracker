@@ -36,6 +36,7 @@ import 'package:rtracker/module/stok_barang/stok_barang_bloc.dart';
 import 'package:rtracker/module/synchronization/synchronization_bloc.dart';
 import 'package:rtracker/module/terima_barang/terima_barang_bloc.dart';
 import 'package:rtracker/service/background_service.dart';
+import 'package:rtracker/widget/job_form/rincian_pekerjaan.dart';
 
 Future<void> firebaseCloudMessagingInitialization() async {
   try {

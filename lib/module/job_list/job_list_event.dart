@@ -13,3 +13,8 @@ class JobListLoad extends JobListEvent {
     required this.jobOrderFilter,
   });
 }
+
+class SyncFinishedJo extends JobListEvent {
+  final List<String> ids;
+  SyncFinishedJo({required this.ids});
+}

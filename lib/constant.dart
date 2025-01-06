@@ -112,6 +112,7 @@ class ApiUrl {
   static String NON_SN_STOCK_PORTAL = '/non_sn_stock_portal';
   static String SEND_SN_REQUEST_RETUR = '/send_sn_request_retur';
   static String SEND_NON_SN_REQUEST_RETUR = '/send_non_sn_request_retur';
+  static String SYNC_FINISHED_JO = "/send_check_id_job_selesai";
 }
 
 enum SharedPreferenceKey {

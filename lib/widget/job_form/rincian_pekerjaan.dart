@@ -8,6 +8,7 @@ import "package:get/get.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
 import "package:rtracker/helper/dialogs.dart";
 import "package:rtracker/helper/dimensions.dart";
+import "package:rtracker/helper/integers.dart";
 import "package:rtracker/helper/strings.dart";
 import "package:rtracker/helper/widgets.dart";
 import "package:rtracker/module/job_form/job_form_page.dart";
@@ -136,7 +137,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
 
                 if (value.identity == "9"){
                   String errorMessage = "";
-                  int totalRequired = int.tryParse(jobOrder.requiredThermalCount!) ?? 0;
+                  int totalRequired = IntUtils.parseToInt(jobOrder.requiredThermalCount)!;
                   int requirement = totalRequired - totalThermal;
                   if (Strings.equalsAny(jobOrder.jobType!.id, ["20", "9", "27"])){
                     if (totalRequired <= 0){
@@ -151,11 +152,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                   }
 
                   if (errorMessage.isNotEmpty){
-                    Dialogs.message(context: context, title: errorMessage);
-                    return "";
+                    widget.jobFormPageState.errorMessage = errorMessage;
+                    return "-";
                   }
                 }
-
                 return null;
               },
               onSaved: (value) {

@@ -51,6 +51,7 @@ class JobFormPage extends StatefulWidget {
 
 class JobFormPageState extends State<JobFormPage>
     with SingleTickerProviderStateMixin {
+  String errorMessage = "";
   List<Provider> providers = [];
   List<EdcType> edcTypes = [];
   List<AppVersion> appVersion = [];
@@ -684,8 +685,9 @@ class JobFormPageState extends State<JobFormPage>
           } else {
             Dialogs.message(
               context: context,
-              title: "Mohon pastikan data yang dimasukkan sudah sesuai.",
+              title: errorMessage.isEmpty ? "Mohon pastikan data yang dimasukkan sudah sesuai." : errorMessage,
             );
+            errorMessage = "";
           }
         }
       } else {
@@ -856,14 +858,16 @@ class JobFormPageState extends State<JobFormPage>
                           });
                         } else {
                           // Retur thermal jika status bukan selesai
-                          for (JobOrderInputPeripheral jobOrderInputPeripheral
-                              in widget.jobOrder.inputPeripherals){
-                            NonSnStockDao.increaseQuantity(
-                              id: jobOrderInputPeripheral.id,
-                              quantity: jobOrderInputPeripheral.quantity,
-                              servicePointId: jobOrderInputPeripheral.servicePoint,
-                            );
-                          }
+                          Realms.get().write(() {
+                            for (JobOrderInputPeripheral jobOrderInputPeripheral
+                            in widget.jobOrder.inputPeripherals){
+                              NonSnStockDao.increaseQuantity(
+                                id: jobOrderInputPeripheral.id,
+                                quantity: jobOrderInputPeripheral.quantity,
+                                servicePointId: jobOrderInputPeripheral.servicePoint,
+                              );
+                            }
+                          });
                         }
 
                         ParafPicDataMerchantState parafPicDataMerchantState =

@@ -233,6 +233,7 @@ class InputPeriferalState extends State<InputPeriferal> with AutomaticKeepAliveC
                                         field.value!.remove(jobOrderInputPeripheral);
                                       });
                                     });
+                                    updateThermalCount();
                                   },
                             style: FilledButton.styleFrom(
                               backgroundColor: Colors.red.lighten(20),

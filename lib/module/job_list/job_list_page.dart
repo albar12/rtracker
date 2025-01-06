@@ -6,6 +6,7 @@ import "package:dotted_line/dotted_line.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
+import "package:loader_overlay/loader_overlay.dart";
 import "package:maps_launcher/maps_launcher.dart";
 import "package:rtracker/constant.dart";
 import "package:rtracker/helper/app_colors.dart";
@@ -44,6 +45,7 @@ class JobListPage extends StatefulWidget {
 
 class JobListPageState extends State<JobListPage> {
   JobOrderFilter jobOrderFilter = JobOrderFilter();
+  JobListBloc syncJoBloc = JobListBloc();
 
   final TextEditingController textEditingController = TextEditingController();
   final List<JobOrder> jobOrders = [];
@@ -99,20 +101,39 @@ class JobListPageState extends State<JobListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<JobListBloc, JobListState>(
-      listener: (context, state) {
-        if (state is JobListLoaded) {
-          setState(() {
-            jobOrders.clear();
-            jobOrders.addAll(state.jobOrders);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<JobListBloc, JobListState>(
+          listener: (context, state) {
+            if (state is JobListLoaded) {
+              setState(() {
+                jobOrders.clear();
+                jobOrders.addAll(state.jobOrders);
 
-            Preferences.getInstance().setString(
-              SharedPreferenceKey.JOB_ORDER_FILTER,
-              json.encode(jobOrderFilter.toJson()),
-            );
-          });
-        }
-      },
+                Preferences.getInstance().setString(
+                  SharedPreferenceKey.JOB_ORDER_FILTER,
+                  json.encode(jobOrderFilter.toJson()),
+                );
+              });
+            }
+          },
+        ),
+        BlocListener(
+          bloc: syncJoBloc,
+          listener: (context, state){
+            if (state is LoadingSync){
+              context.loaderOverlay.show();
+            }
+            if (state is FailedSync){
+              context.loaderOverlay.hide();
+            }
+            if (state is FinishedSync){
+              context.loaderOverlay.hide();
+              reload();
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: SearchAppBar(
           title: Text("Daftar Pekerjaan ${widget.finished ? "Selesai" : ""}"),
@@ -188,8 +209,35 @@ class JobListPageState extends State<JobListPage> {
                         ),
                         const TextSheet(
                           "FILTER",
-                        )
+                        ),
                       ],
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  Visibility(
+                    visible: widget.finished,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        syncJoBloc.add(SyncFinishedJo(ids: jobOrders.map((e) => e.id).toList()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.sync,
+                          ),
+                          SizedBox(
+                            width: Dimensions.width5,
+                          ),
+                          const TextSheet(
+                            "SYNC",
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -218,7 +266,7 @@ class JobListPageState extends State<JobListPage> {
                           ),
                           const TextSheet(
                             "filter items activated",
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -308,13 +356,15 @@ class JobListPageState extends State<JobListPage> {
                 child: InkWell(
                   onTap: () async {
                     if (widget.finished) {
-                      await Navigators.push(
+                      Navigators.push(
                         context,
                         JobFormPage(
                           jobOrder: jobOrder,
                           readOnly: widget.finished,
                         ),
-                      );
+                      ).then((_) {
+                        reload();
+                      });
                     } else {
                       if (JobOrderDao.hasOngoingJob(jobOrder.id)) {
                         Dialogs.message(
@@ -421,7 +471,7 @@ class JobListPageState extends State<JobListPage> {
                                     );
                                   },
                                   icon: const Icon(Icons.info_outline),
-                                )
+                                ),
                               ],
                             )
                           ],

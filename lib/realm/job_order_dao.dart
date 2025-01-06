@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
+import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:realm/realm.dart';
 import 'package:rtracker/api/api_manager.dart';
@@ -863,5 +864,17 @@ class JobOrderDao {
       "id != parentId AND parentId = \$0",
       [id],
     ).length;
+  }
+
+  static void updateSyncList(List<String> ids) {
+    Realm realm = Realms.get();
+    realm.write(() {
+      for (String id in ids){
+        final jobOrder = realm.find<JobOrder>(id);
+        if (jobOrder != null){
+          jobOrder.synced = true;
+        }
+      }
+    });
   }
 }

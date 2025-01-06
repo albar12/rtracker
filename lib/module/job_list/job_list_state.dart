@@ -13,3 +13,9 @@ class JobListLoaded extends JobListState {
     required this.jobOrders,
   });
 }
+
+class LoadingSync extends JobListState {}
+
+class FinishedSync extends JobListState {}
+
+class FailedSync extends JobListState {}
