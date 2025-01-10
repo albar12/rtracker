@@ -60,6 +60,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     {"id": 1, "name": "Yes"},
     {"id": 2, "name": "No"},
   ];
+  bool done = false;
 
   @override
   void initState() {
@@ -170,7 +171,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               onChanged: (newValue) {
                 setState(() {
                   widget.jobFormPageState.selectedJobStatus = newValue;
-
+                  if (newValue.identity == "9") done = true;
                   if (ffsJobStatusCategory.currentState != null) {
                     tecJobStatusCategory.text = "";
                     ffsJobStatusCategory.currentState!.setValue(null);
@@ -307,7 +308,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               child: CustomTimeField(
                 labelText: "Jam Buka Toko",
                 initialValue:
-                jobOrder.jamBukaToko != null ? jobOrder.jamBukaToko : null,
+                jobOrder.jamBukaToko,
                 readOnly: widget.jobFormPageState.widget.readOnly,
                 validator: (value) {
                   if (value == null) {
@@ -333,7 +334,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               child: CustomTimeField(
                 labelText: "Jam Tutup Toko",
                 initialValue:
-                jobOrder.jamTutupToko != null ? jobOrder.jamTutupToko : null,
+                jobOrder.jamTutupToko,
                 readOnly: widget.jobFormPageState.widget.readOnly,
                 validator: (value) {
                   if (value == null) {
@@ -357,7 +358,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
               child: CustomTextField(
                 controller: edcCount,
-                label: 'EDC Count',
+                label: jobOrder.vendorId == "3" ? 'EDC Count' : 'Thermal Count',
                 readOnly: widget.jobFormPageState.widget.readOnly,
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -922,18 +923,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             title: "DAFTAR EDC BANK LAIN",
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value != null) {
-                if (widget.jobFormPageState.selectedJobStatus != null &&
-                    widget.jobFormPageState.selectedJobStatus!.identity ==
-                        "9") {
-                  CheckItem? checkItem =
-                  value.firstWhereOrNull((element) => element.value);
-
-                  if (checkItem == null) {
-                    return "Silahkan pilih minimal satu.";
-                  }
-                }
-              }
 
               return null;
             },
@@ -982,7 +971,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     List<Map<String, dynamic>> versiEdc = [
       {"id": 1, "name": "data1"},
       {"id": 2, "name": "data2"},
-      {"id": 3, "name": "data3"}
+      {"id": 3, "name": "data3"},
     ];
 
     List<Map<String, dynamic>> patchOS = [
@@ -1029,8 +1018,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
+              if (done) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
               }
 
               return null;
@@ -1078,8 +1069,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
+              if (done) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
               }
 
               return null;
@@ -1130,8 +1123,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
+              if (done) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
               }
 
               return null;
@@ -1185,8 +1180,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
+              if (done) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
               }
 
               return null;
@@ -1262,8 +1259,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (value == null) {
-                return "Kolom ini harus diisi.";
+              if (done) {
+                if (value == null) {
+                  return "Kolom ini harus diisi.";
+                }
               }
 
               return null;
@@ -1335,8 +1334,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               : null,
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (value == null) {
-              return "Kolom ini harus diisi.";
+            if (done) {
+              if (value == null) {
+                return "Kolom ini harus diisi.";
+              }
             }
 
             return null;
@@ -1387,8 +1388,10 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               : null,
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (value == null) {
-              return "Kolom ini harus diisi.";
+            if (done) {
+              if (value == null) {
+                return "Kolom ini harus diisi.";
+              }
             }
 
             return null;

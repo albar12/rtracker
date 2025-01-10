@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -34,14 +35,15 @@ class JobListBloc extends Bloc<JobListEvent, JobListState> {
         ids: event.ids,
       );
       if (response.statusCode == 200 && response.data != null){
-        List<dynamic> jsonResponse = response.data;
-        JobOrderDao.updateSyncList(List<String>.from(jsonResponse));
-        emit(FinishedSync());
+        List<dynamic> jsonResponse = jsonDecode(response.data);
+        List<String> data = jsonResponse.map((e) => e.toString()).toList();
+        JobOrderDao.updateSyncList(data);
+        emit(FinishedSync(data));
       } else {
-        emit(FailedSync());
+        emit(FailedSync("status code not 200"));
       }
     } catch (e){
-      emit(FailedSync());
+      emit(FailedSync(e.toString()));
     }
   }
 }

@@ -280,7 +280,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       if (response.statusCode == 200) {
         JobOrderDao.synced(event.jobOrder);
 
-        emit(JobFormSubmitSuccess());
+        emit(JobFormSubmitSuccess(response.data));
       } else {
         emit(JobFormSubmitFailed());
       }

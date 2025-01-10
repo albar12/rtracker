@@ -26,6 +26,8 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FocusNode focusNode = FocusNode();
+    focusNode.canRequestFocus = !readOnly;
     return TextFormField(
       key: fieldKey,
       validator: validator,
@@ -33,6 +35,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       controller: controller,
       readOnly: readOnly,
+      focusNode: focusNode,
       decoration: InputDecoration(
         helperText: helperText,
         labelText: label,

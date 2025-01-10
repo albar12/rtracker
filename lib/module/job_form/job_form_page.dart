@@ -6,9 +6,11 @@ import 'dart:ui' as ui;
 
 import "package:basic_utils/basic_utils.dart";
 import "package:datetime_setting/datetime_setting.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:loader_overlay/loader_overlay.dart";
+import "package:rtracker/constant.dart";
 import "package:rtracker/helper/app_colors.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
 import "package:rtracker/helper/dialogs.dart";
@@ -20,6 +22,7 @@ import "package:rtracker/helper/strings.dart";
 import "package:rtracker/module/job_form/bloc/job_form_bloc.dart";
 import "package:rtracker/module/job_form/bloc/job_form_event.dart";
 import "package:rtracker/module/job_form/bloc/job_form_state.dart";
+import "package:rtracker/module/job_form/start_job_bloc/start_job_bloc.dart";
 import "package:rtracker/realm/job_order_dao.dart";
 import "package:rtracker/realm/non_sn_stock_dao.dart";
 import "package:rtracker/realm/realms.dart";
@@ -94,7 +97,16 @@ class JobFormPageState extends State<JobFormPage>
           ),
         );
 
-
+    String progress = "";
+    if (widget.jobOrder.documentStatus != null){
+      progress = widget.jobOrder.documentStatus!.id;
+    }
+    context.read<StartJobBloc>().add(
+      ChangeStatus(
+        readOnly: widget.readOnly,
+        status: progress,
+      ),
+    );
     tabController = TabController(length: 7, vsync: this);
 
     super.initState();
@@ -137,16 +149,23 @@ class JobFormPageState extends State<JobFormPage>
         } else if (state is JobFormSubmitLoading) {
           context.loaderOverlay.show();
         } else if (state is JobFormSubmitSuccess) {
-          if (widget.readOnly) {
+          if (state.data.isNotEmpty){
             Dialogs.message(
               context: context,
-              title: "Data job order berhasil terkirim",
+              title: state.data,
             );
           } else {
-            Dialogs.message(
-              context: context,
-              title: "Data job order berhasil tersimpan dan terkirim",
-            ).whenComplete(() => Navigators.pop(context));
+            if (widget.readOnly) {
+              Dialogs.message(
+                context: context,
+                title: "Data job order berhasil terkirim",
+              );
+            } else {
+              Dialogs.message(
+                context: context,
+                title: "Data job order berhasil tersimpan dan terkirim",
+              ).whenComplete(() => Navigators.pop(context));
+            }
           }
         } else if (state is JobFormSubmitFailed) {
           if (widget.readOnly) {
@@ -269,7 +288,7 @@ class JobFormPageState extends State<JobFormPage>
                     },
                   ),
                 ),
-              )
+              ),
             ],
           ),
           body: Column(
@@ -335,7 +354,7 @@ class JobFormPageState extends State<JobFormPage>
                   SizedBox(
                     width: Dimensions.width10,
                   ),
-                  endButton()
+                  endButton(),
                 ],
               ),
             ),
@@ -513,14 +532,14 @@ class JobFormPageState extends State<JobFormPage>
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-            )
+            ),
           ],
         ),
       );
     } else {
       if (widget.jobOrder.documentStatus != null) {
-        if (widget.jobOrder.documentStatus!.id == "1" ||
-            widget.jobOrder.documentStatus!.id == "3") {
+        if (widget.jobOrder.documentStatus!.id == Progress.visit ||
+            widget.jobOrder.documentStatus!.id == Progress.pause) {
           return FilledButton(
             onPressed: () async {
               bool timeAuto = await DatetimeSetting.timeIsAuto();
@@ -533,8 +552,13 @@ class JobFormPageState extends State<JobFormPage>
                   positive: "Mulai",
                   positiveCallback: () async {
                     await JobOrderDao.start(widget.jobOrder);
-
                     setState(() {});
+                    context.read<StartJobBloc>().add(
+                      ChangeStatus(
+                        readOnly: widget.readOnly,
+                        status: Progress.start,
+                      ),
+                    );
                   },
                 );
               } else {
@@ -561,7 +585,7 @@ class JobFormPageState extends State<JobFormPage>
               ),
             ),
           );
-        } else if (widget.jobOrder.documentStatus!.id == "4") {
+        } else if (widget.jobOrder.documentStatus!.id == Progress.start) {
           return FilledButton(
             onPressed: () async {
               bool timeAuto = await DatetimeSetting.timeIsAuto();
@@ -575,8 +599,13 @@ class JobFormPageState extends State<JobFormPage>
                   positive: "Berhenti Sejenak",
                   positiveCallback: () async {
                     await JobOrderDao.pause(widget.jobOrder);
-
                     setState(() {});
+                    context.read<StartJobBloc>().add(
+                      ChangeStatus(
+                        readOnly: widget.readOnly,
+                        status: Progress.pause,
+                      ),
+                    );
                   },
                 );
               } else {
@@ -619,8 +648,13 @@ class JobFormPageState extends State<JobFormPage>
             positive: "Berkunjung",
             positiveCallback: () async {
               await JobOrderDao.visit(widget.jobOrder);
-
               setState(() {});
+              context.read<StartJobBloc>().add(
+                ChangeStatus(
+                  readOnly: widget.readOnly,
+                  status: Progress.visit,
+                ),
+              );
             },
           );
         } else {

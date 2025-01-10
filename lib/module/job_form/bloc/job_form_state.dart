@@ -64,7 +64,10 @@ class JobFormJobStatusCategorySuccess extends JobFormState {
 
 class JobFormSubmitLoading extends JobFormState {}
 
-class JobFormSubmitSuccess extends JobFormState {}
+class JobFormSubmitSuccess extends JobFormState {
+  final String data;
+  JobFormSubmitSuccess(this.data);
+}
 
 class JobFormSubmitFailed extends JobFormState {}
 

@@ -30,6 +30,7 @@ import "package:rtracker/realm/vendor_dao.dart";
 import "package:rtracker/widget/appbar/search_appbar.dart";
 import "package:rtracker/widget/custom_chips.dart";
 import "package:rtracker/widget/text_sheet.dart";
+import 'package:flutter/foundation.dart';
 
 class JobListPage extends StatefulWidget {
   final bool finished;
@@ -126,8 +127,20 @@ class JobListPageState extends State<JobListPage> {
             }
             if (state is FailedSync){
               context.loaderOverlay.hide();
+              if (kDebugMode) {
+                Dialogs.message(
+                  context: context,
+                  title: state.error,
+                );
+              }
             }
             if (state is FinishedSync){
+              if (kDebugMode) {
+                Dialogs.message(
+                  context: context,
+                  title: state.data.toString(),
+                );
+              }
               context.loaderOverlay.hide();
               reload();
             }
@@ -164,7 +177,6 @@ class JobListPageState extends State<JobListPage> {
                 onChanged: (value) {
                   setState(() {
                     jobOrderFilter.sortBy = value;
-
                     reload();
                   });
                 },
@@ -218,7 +230,12 @@ class JobListPageState extends State<JobListPage> {
                     visible: widget.finished,
                     child: ElevatedButton(
                       onPressed: () {
-                        syncJoBloc.add(SyncFinishedJo(ids: jobOrders.map((e) => e.id).toList()));
+                        List<String> ids = jobOrders
+                            .where((e) => !e.synced)
+                            .map((e) => e.id).toList();
+                        if (ids.isNotEmpty) {
+                          syncJoBloc.add(SyncFinishedJo(ids: ids));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -341,8 +358,6 @@ class JobListPageState extends State<JobListPage> {
                   widget.finished ? jobOrder.timing!.finish : DateTime.now(),
                   jobOrder.endSla);
 
-              print("list page alif");
-              print(due);
 
               return Card(
                 margin: EdgeInsets.zero,

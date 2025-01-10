@@ -157,3 +157,13 @@ enum ImageMandatoryKey {
   struckQris,
   struckBrizzi
 }
+
+class Progress {
+  static String commit = "6";
+  static String assign = "2";
+  static String visit = "1";
+  static String start = "4";
+  static String pause = "3";
+  static String retur = "7";
+  static String end = "0";
+}

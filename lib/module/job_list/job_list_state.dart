@@ -16,6 +16,12 @@ class JobListLoaded extends JobListState {
 
 class LoadingSync extends JobListState {}
 
-class FinishedSync extends JobListState {}
+class FinishedSync extends JobListState {
+  final List<String> data;
+  FinishedSync(this.data);
+}
 
-class FailedSync extends JobListState {}
+class FailedSync extends JobListState {
+  final String error;
+  FailedSync(this.error);
+}

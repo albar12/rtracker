@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:realm/realm.dart';
 import 'package:rtracker/api/api_manager.dart';
@@ -324,6 +323,7 @@ class JobOrderDao {
 
         JobOrder? jobOrder = realm.find<JobOrder>(getJobOrderResponseDetail.id);
 
+        // Update
         if (jobOrder != null) {
           jobOrder.id = getJobOrderResponseDetail.id;
           jobOrder.serialNumberMandatoryType =
@@ -356,6 +356,7 @@ class JobOrderDao {
           jobOrder.sam5 = getJobOrderResponseDetail.sam5;
           jobOrder.sam6 = getJobOrderResponseDetail.sam6;
           jobOrder.sam7 = getJobOrderResponseDetail.sam7;
+          jobOrder.requiredThermalCount = getJobOrderResponseDetail.requiredThermalCount;
           jobOrder.visitDate = getJobOrderResponseDetail.visitDate;
           jobOrder.endSla = getJobOrderResponseDetail.endSla;
           jobOrder.description = getJobOrderResponseDetail.description;
@@ -405,6 +406,7 @@ class JobOrderDao {
             jobOrder.merchant = jobOrderMerchant;
           }
         } else {
+          // Insert
           JobOrderMerchant? jobOrderMerchant;
 
           if (getJobOrderResponseDetail.merchant != null) {
@@ -728,8 +730,8 @@ class JobOrderDao {
 
   static Future<void> execute(JobOrder jobOrder) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == "2") {
-        DocumentStatus? documentStatus = DocumentStatusDao.find("6");
+      if (jobOrder.documentStatus!.id == Progress.assign) {
+        DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.commit);
 
         if (documentStatus != null) {
           LongLat? longLat = await Locations.lastPosition();
@@ -753,8 +755,8 @@ class JobOrderDao {
 
   static Future<void> visit(JobOrder jobOrder) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == "6") {
-        DocumentStatus? documentStatus = DocumentStatusDao.find("1");
+      if (jobOrder.documentStatus!.id == Progress.commit || jobOrder.documentStatus!.id == " 1") {
+        DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.visit);
 
         if (documentStatus != null) {
           LongLat? longLat = await Locations.lastPosition();
@@ -778,9 +780,9 @@ class JobOrderDao {
 
   static Future<void> start(JobOrder jobOrder) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == "1" ||
-          jobOrder.documentStatus!.id == "3") {
-        DocumentStatus? documentStatus = DocumentStatusDao.find("4");
+      if (jobOrder.documentStatus!.id == Progress.visit ||
+          jobOrder.documentStatus!.id == Progress.pause) {
+        DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.start);
 
         if (documentStatus != null) {
           LongLat? longLat = await Locations.lastPosition();
@@ -804,8 +806,8 @@ class JobOrderDao {
 
   static Future<void> pause(JobOrder jobOrder) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == "4") {
-        DocumentStatus? documentStatus = DocumentStatusDao.find("3");
+      if (jobOrder.documentStatus!.id == Progress.start) {
+        DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.pause);
 
         if (documentStatus != null) {
           LongLat? longLat = await Locations.lastPosition();
@@ -829,8 +831,8 @@ class JobOrderDao {
 
   static Future<void> finish(JobOrder jobOrder) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == "4") {
-        DocumentStatus? documentStatus = DocumentStatusDao.find("0");
+      if (jobOrder.documentStatus!.id == Progress.start) {
+        DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.end);
 
         if (documentStatus != null) {
           LongLat? longLat = await Locations.lastPosition();

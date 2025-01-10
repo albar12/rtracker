@@ -83,7 +83,7 @@ class ApiManager {
 
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
     // dio.interceptors.add(CustomLogInterceptor());
-    dio.interceptors.add(LoggingInterceptor());
+    // dio.interceptors.add(ApiLogInterceptor());
 
     (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {

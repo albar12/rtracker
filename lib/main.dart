@@ -15,6 +15,7 @@ import 'package:rtracker/module/inbox/bloc/inbox_bloc.dart';
 import 'package:rtracker/module/job_filter/bloc/job_filter_bloc.dart';
 import 'package:rtracker/module/job_form/bloc/job_form_bloc.dart';
 import 'package:rtracker/module/job_form/image_load_bloc/image_load_bloc.dart';
+import 'package:rtracker/module/job_form/start_job_bloc/start_job_bloc.dart';
 import 'package:rtracker/module/job_form/thermal_count_bloc/thermal_count_bloc.dart';
 import 'package:rtracker/module/job_list/job_list_bloc.dart';
 import 'package:rtracker/module/profile/profile_bloc.dart';
@@ -193,6 +194,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => StokBarangBloc()),
         BlocProvider(create: (context) => ImageLoadBloc()),
         BlocProvider(create: (context) => ThermalCountBloc()),
+        BlocProvider(create: (context) => StartJobBloc()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,

@@ -276,7 +276,7 @@ class HomePageState extends State<HomePage> {
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             SizedBox(width: Dimensions.width5),
-                            const Text("Sinkron Sekarang")
+                            const Text("Sinkron Sekarang"),
                           ],
                         ),
                       )
