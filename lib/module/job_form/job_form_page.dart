@@ -149,38 +149,17 @@ class JobFormPageState extends State<JobFormPage>
         } else if (state is JobFormSubmitLoading) {
           context.loaderOverlay.show();
         } else if (state is JobFormSubmitSuccess) {
-          if (state.data.isNotEmpty){
-            Dialogs.message(
-              context: context,
-              title: state.data,
-            );
-          } else {
-            if (widget.readOnly) {
-              Dialogs.message(
-                context: context,
-                title: "Data job order berhasil terkirim",
-              );
-            } else {
-              Dialogs.message(
-                context: context,
-                title: "Data job order berhasil tersimpan dan terkirim",
-              ).whenComplete(() => Navigators.pop(context));
-            }
-          }
+          Dialogs.message(
+            context: context,
+            title: "Berhasil",
+            message: state.data,
+          ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
         } else if (state is JobFormSubmitFailed) {
-          if (widget.readOnly) {
-            Dialogs.message(
-              context: context,
-              title: "Job order gagal terkirim",
-            );
-          } else {
-            Dialogs.message(
-              context: context,
-              title: "Job order berhasil tersimpan namun gagal terkirim",
-              message:
-                  "Aplikasi akan terus mencoba mengirim data job order yang belum terkirim ke server bahkan ketika aplikasi tidak sedang dibuka.",
-            ).whenComplete(() => Navigators.pop(context));
-          }
+          Dialogs.message(
+            context: context,
+            title: "Gagal",
+            message: state.message,
+          ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
         } else if (state is JobFormSubmitFinished) {
           context.loaderOverlay.hide();
         }
@@ -551,7 +530,16 @@ class JobFormPageState extends State<JobFormPage>
                   title: "Apakah anda yakin ingin memulai tugas ini?",
                   positive: "Mulai",
                   positiveCallback: () async {
-                    await JobOrderDao.start(widget.jobOrder);
+                    await JobOrderDao.start(widget.jobOrder, locationNull: (status, message) async {
+                      if (status){
+                        await Dialogs.message(
+                          context: context,
+                          title:
+                          message,
+                        );
+                        return;
+                      }
+                    });
                     setState(() {});
                     context.read<StartJobBloc>().add(
                       ChangeStatus(
@@ -598,7 +586,15 @@ class JobFormPageState extends State<JobFormPage>
                       "Apakah anda yakin ingin berhenti sejenak dari tugas ini?",
                   positive: "Berhenti Sejenak",
                   positiveCallback: () async {
-                    await JobOrderDao.pause(widget.jobOrder);
+                    await JobOrderDao.pause(widget.jobOrder, locationNull: (status, message) async {
+                      if (status){
+                        await Dialogs.message(
+                          context: context,
+                          title: message,
+                        );
+                        return;
+                      }
+                    });
                     setState(() {});
                     context.read<StartJobBloc>().add(
                       ChangeStatus(
@@ -647,7 +643,16 @@ class JobFormPageState extends State<JobFormPage>
             title: "Apakah anda yakin ingin berkunjung ke tugas ini?",
             positive: "Berkunjung",
             positiveCallback: () async {
-              await JobOrderDao.visit(widget.jobOrder);
+              await JobOrderDao.visit(widget.jobOrder, locationNull: (status, message) async {
+                if (status){
+                  await Dialogs.message(
+                    context: context,
+                    title:
+                    message,
+                  );
+                  return;
+                }
+              });
               setState(() {});
               context.read<StartJobBloc>().add(
                 ChangeStatus(
@@ -930,13 +935,20 @@ class JobFormPageState extends State<JobFormPage>
                           }
                         }
 
-                        await JobOrderDao.finish(widget.jobOrder);
-
-                        context.read<JobFormBloc>().add(
-                              JobFormSubmitted(
-                                jobOrder: widget.jobOrder,
-                              ),
+                        await JobOrderDao.finish(widget.jobOrder, locationNull: (status, message) async {
+                          if (status){
+                            await Dialogs.message(
+                              context: context,
+                              title: message,
                             );
+                            return;
+                          }
+                        });
+                        context.read<JobFormBloc>().add(
+                          JobFormSubmitted(
+                            jobOrder: widget.jobOrder,
+                          ),
+                        );
                       },
                     );
                   } else {

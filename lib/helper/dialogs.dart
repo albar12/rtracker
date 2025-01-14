@@ -4,6 +4,7 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rtracker/helper/app_colors.dart';
@@ -28,12 +29,23 @@ class Dialogs {
 
     if (message != null) {
       content = SingleChildScrollView(
-        child: Text(message),
+        child: Column(
+          children: [
+            Text(message),
+            if (message.length > 200) ElevatedButton(
+                onPressed: (){
+                  Clipboard.setData(ClipboardData(text: message));
+                },
+                child: const Text('Copy Message'),
+            ),
+          ],
+        ),
       );
     }
 
     return showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext buildContext) {
         return AlertDialog(
           title: Text(title),
@@ -42,7 +54,7 @@ class Dialogs {
             TextButton(
               child: Text(dismiss ?? "Mengerti"),
               onPressed: () => Navigators.pop(buildContext),
-            )
+            ),
           ],
         );
       },
@@ -93,7 +105,7 @@ class Dialogs {
                   positiveCallback.call();
                 }
               },
-            )
+            ),
           ],
         );
       },

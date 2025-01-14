@@ -8,8 +8,10 @@ import 'package:rtracker/api/endpoint/transaction/get_job_order_response.dart';
 import 'package:rtracker/api/endpoint/transaction/get_job_order_response_deleted.dart';
 import 'package:rtracker/api/endpoint/transaction/get_job_order_response_detail.dart';
 import 'package:rtracker/constant.dart';
+import 'package:rtracker/helper/exceptions.dart';
 import 'package:rtracker/helper/job_order_filter.dart';
 import 'package:rtracker/helper/locations.dart';
+import 'package:rtracker/helper/strings.dart';
 import 'package:rtracker/realm/document_status_dao.dart';
 import 'package:rtracker/realm/realms.dart';
 import 'package:rtracker/realm/schemas.dart';
@@ -728,128 +730,145 @@ class JobOrderDao {
     ).length;
   }
 
-  static Future<void> execute(JobOrder jobOrder) async {
+  static Future<void> execute(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == Progress.assign) {
+      if (Strings.equalsAny(jobOrder.documentStatus!.id, [Progress.assign,Progress.pause,Progress.commit,Progress.start, Progress.visit])) {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.commit);
 
         if (documentStatus != null) {
-          LongLat? longLat = await Locations.lastPosition();
+          try {
+            LongLat? longLat = await Locations.lastPosition();
+            Realms.get().write(() {
+              jobOrder.documentStatus!.id = documentStatus.id;
+              jobOrder.documentStatus!.name = documentStatus.name;
 
-          Realms.get().write(() {
-            jobOrder.documentStatus!.id = documentStatus.id;
-            jobOrder.documentStatus!.name = documentStatus.name;
+              jobOrder.timing ??= JobOrderTiming();
+              jobOrder.timing!.departure = DateTime.now();
 
-            jobOrder.timing ??= JobOrderTiming();
-            jobOrder.timing!.departure = DateTime.now();
-
-            if (longLat != null) {
               jobOrder.timing!.departureCoordinate =
-                  "${longLat.latitude},${longLat.longitude}";
-            }
-          });
+              "${longLat!.latitude},${longLat.longitude}";
+              if (locationNull != null) locationNull(false, "");
+            });
+          } on GeneralException catch (e){
+            if (locationNull != null) locationNull(true, e.message);
+          }
         }
       }
     }
   }
 
-  static Future<void> visit(JobOrder jobOrder) async {
+  static Future<void> visit(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
       if (jobOrder.documentStatus!.id == Progress.commit || jobOrder.documentStatus!.id == " 1") {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.visit);
 
         if (documentStatus != null) {
-          LongLat? longLat = await Locations.lastPosition();
+          try {
+            LongLat? longLat = await Locations.lastPosition();
 
-          Realms.get().write(() {
-            jobOrder.documentStatus!.id = documentStatus.id;
-            jobOrder.documentStatus!.name = documentStatus.name;
+            Realms.get().write(() {
+              jobOrder.documentStatus!.id = documentStatus.id;
+              jobOrder.documentStatus!.name = documentStatus.name;
 
-            jobOrder.timing ??= JobOrderTiming();
-            jobOrder.timing!.visit = DateTime.now();
+              jobOrder.timing ??= JobOrderTiming();
+              jobOrder.timing!.visit = DateTime.now();
 
-            if (longLat != null) {
-              jobOrder.timing!.visitCoordinate =
-                  "${longLat.latitude},${longLat.longitude}";
-            }
-          });
+              if (longLat != null) {
+                jobOrder.timing!.visitCoordinate =
+                "${longLat.latitude},${longLat.longitude}";
+              }
+            });
+          } on GeneralException catch(e){
+            if (locationNull != null) locationNull(true, e.message);
+          }
         }
       }
     }
   }
 
-  static Future<void> start(JobOrder jobOrder) async {
+  static Future<void> start(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
-      if (jobOrder.documentStatus!.id == Progress.visit ||
-          jobOrder.documentStatus!.id == Progress.pause) {
+      if (Strings.equalsAny(jobOrder.documentStatus!.id, [Progress.visit, Progress.pause])) {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.start);
 
         if (documentStatus != null) {
-          LongLat? longLat = await Locations.lastPosition();
+          try {
+            LongLat? longLat = await Locations.lastPosition();
 
-          Realms.get().write(() {
-            jobOrder.documentStatus!.id = documentStatus.id;
-            jobOrder.documentStatus!.name = documentStatus.name;
+            Realms.get().write(() {
+              jobOrder.documentStatus!.id = documentStatus.id;
+              jobOrder.documentStatus!.name = documentStatus.name;
 
-            jobOrder.timing ??= JobOrderTiming();
-            jobOrder.timing!.start = DateTime.now();
+              jobOrder.timing ??= JobOrderTiming();
+              jobOrder.timing!.start = DateTime.now();
 
-            if (longLat != null) {
-              jobOrder.timing!.startCoordinate =
-                  "${longLat.latitude},${longLat.longitude}";
-            }
-          });
+              if (longLat != null) {
+                jobOrder.timing!.startCoordinate =
+                "${longLat.latitude},${longLat.longitude}";
+              }
+            });
+          } on GeneralException catch(e){
+            if (locationNull != null) locationNull(true, e.message);
+          }
         }
       }
     }
   }
 
-  static Future<void> pause(JobOrder jobOrder) async {
+  static Future<void> pause(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
       if (jobOrder.documentStatus!.id == Progress.start) {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.pause);
 
         if (documentStatus != null) {
-          LongLat? longLat = await Locations.lastPosition();
+          try {
+            LongLat? longLat = await Locations.lastPosition();
 
-          Realms.get().write(() {
-            jobOrder.documentStatus!.id = documentStatus.id;
-            jobOrder.documentStatus!.name = documentStatus.name;
+            Realms.get().write(() {
+              jobOrder.documentStatus!.id = documentStatus.id;
+              jobOrder.documentStatus!.name = documentStatus.name;
 
-            jobOrder.timing ??= JobOrderTiming();
-            jobOrder.timing!.pause = DateTime.now();
+              jobOrder.timing ??= JobOrderTiming();
+              jobOrder.timing!.pause = DateTime.now();
 
-            if (longLat != null) {
-              jobOrder.timing!.pauseCoordinate =
-                  "${longLat.latitude},${longLat.longitude}";
-            }
-          });
+              if (longLat != null) {
+                jobOrder.timing!.pauseCoordinate =
+                "${longLat.latitude},${longLat.longitude}";
+              }
+            });
+          } on GeneralException catch(e){
+            if (locationNull != null) locationNull(true, e.message);
+          }
         }
       }
     }
   }
 
-  static Future<void> finish(JobOrder jobOrder) async {
+  static Future<void> finish(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
       if (jobOrder.documentStatus!.id == Progress.start) {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.end);
 
         if (documentStatus != null) {
-          LongLat? longLat = await Locations.lastPosition();
+          try {
+            LongLat? longLat = await Locations.lastPosition();
 
-          Realms.get().write(() {
-            jobOrder.synced = false;
-            jobOrder.documentStatus!.id = documentStatus.id;
-            jobOrder.documentStatus!.name = documentStatus.name;
+            Realms.get().write(() {
+              jobOrder.synced = false;
+              jobOrder.documentStatus!.id = documentStatus.id;
+              jobOrder.documentStatus!.name = documentStatus.name;
 
-            jobOrder.timing ??= JobOrderTiming();
-            jobOrder.timing!.finish = DateTime.now();
+              jobOrder.timing ??= JobOrderTiming();
+              jobOrder.timing!.finish = DateTime.now();
 
-            if (longLat != null) {
-              jobOrder.timing!.finishCoordinate =
-                  "${longLat.latitude},${longLat.longitude}";
-            }
-          });
+              if (longLat != null) {
+                jobOrder.timing!.finishCoordinate =
+                "${longLat.latitude},${longLat.longitude}";
+              }
+            });
+          } on GeneralException catch(e){
+            if (locationNull != null) locationNull(true, e.message);
+          }
         }
       }
     }

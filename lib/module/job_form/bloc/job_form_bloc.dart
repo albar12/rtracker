@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:rtracker/api/api_manager.dart';
+import 'package:rtracker/api/endpoint/submit/submit_response.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order.dart';
 import 'package:rtracker/module/job_form/bloc/job_form_event.dart';
 import 'package:rtracker/module/job_form/bloc/job_form_state.dart';
@@ -139,7 +141,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
     Emitter<JobFormState> emit,
   ) async {
     emit(JobFormSubmitLoading());
-
+    var messageError = "Aplikasi akan terus mencoba mengirim data job order yang belum terkirim ke server bahkan ketika aplikasi tidak sedang dibuka.";
     try {
       Uint8List? merchantSignature;
       List<Uint8List> merchantImages = [];
@@ -279,15 +281,19 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
 
       if (response.statusCode == 200) {
         JobOrderDao.synced(event.jobOrder);
-
-        emit(JobFormSubmitSuccess(response.data));
+        Map<String, dynamic> data = jsonDecode(response.data);
+        var submitResponse = SubmitResponse.fromJson(data);
+        String message = "${submitResponse.keteranganStatus}\n${submitResponse.keterangan}";
+        if (submitResponse.status == "success"){
+          emit(JobFormSubmitSuccess(message));
+        } else {
+          emit(JobFormSubmitFailed(message));
+        }
       } else {
-        emit(JobFormSubmitFailed());
+        emit(JobFormSubmitFailed(messageError));
       }
     } catch (e) {
-      print(e);
-
-      emit(JobFormSubmitFailed());
+      emit(JobFormSubmitFailed(messageError));
     } finally {
       emit(JobFormSubmitFinished());
     }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:basic_utils/basic_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/app_colors.dart';
@@ -227,7 +228,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
                     return "Kolom ini harus diisi.";
                   }
 
-                  if (value!.length < 70) {
+                  if (value!.length < 70 && !kDebugMode) {
                     return "Silahkan isi dengan minimal 70 karakter.";
                   }
                 } else {
@@ -314,9 +315,9 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
             labelText: "Com Line",
             initialValue: jobOrder.comLine != null
                 ? SpinnerItem(
-              identity: jobOrder.edcUpdate!.cleaningEdc!.id,
+              identity: 0,
               description: StringUtils.defaultString(
-                jobOrder.edcUpdate!.cleaningEdc!.name,
+                jobOrder.comLine,
               ),
             )
                 : null,

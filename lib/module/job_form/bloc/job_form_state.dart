@@ -69,6 +69,9 @@ class JobFormSubmitSuccess extends JobFormState {
   JobFormSubmitSuccess(this.data);
 }
 
-class JobFormSubmitFailed extends JobFormState {}
+class JobFormSubmitFailed extends JobFormState {
+  final String message;
+  JobFormSubmitFailed(this.message);
+}
 
 class JobFormSubmitFinished extends JobFormState {}

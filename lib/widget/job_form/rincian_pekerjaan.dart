@@ -171,7 +171,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               onChanged: (newValue) {
                 setState(() {
                   widget.jobFormPageState.selectedJobStatus = newValue;
-                  if (newValue.identity == "9") done = true;
+                  done = newValue.identity == "9";
                   if (ffsJobStatusCategory.currentState != null) {
                     tecJobStatusCategory.text = "";
                     ffsJobStatusCategory.currentState!.setValue(null);

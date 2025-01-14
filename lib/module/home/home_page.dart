@@ -7,7 +7,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_number/mobile_number.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rtracker/api/endpoint/login/login_response.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/app_colors.dart';
@@ -53,10 +55,27 @@ class HomePageState extends State<HomePage> {
   Timer? timer;
   DateTime? lastSynchronization;
 
+  void checkPhoneNumber() async {
+    var status = await Permission.phone.status;
+    if (!status.isGranted) {
+      status = await Permission.phone.request();
+    }
+
+    if (status.isGranted) {
+      MobileNumber.getSimCards?.then((value) {
+        for (SimCard simCard in value){
+          var number = simCard.number;
+          if (number != null){
+          }
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
+    checkPhoneNumber();
     try {
       if (Preferences.getInstance()
           .contain(SharedPreferenceKey.LAST_VERSIONING)) {
