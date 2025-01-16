@@ -732,7 +732,7 @@ class JobOrderDao {
 
   static Future<void> execute(JobOrder jobOrder, {Function? locationNull}) async {
     if (jobOrder.documentStatus != null) {
-      if (Strings.equalsAny(jobOrder.documentStatus!.id, [Progress.assign,Progress.pause,Progress.commit,Progress.start, Progress.visit])) {
+      if (Strings.equalsAny(jobOrder.documentStatus!.id, [Progress.assign])) {
         DocumentStatus? documentStatus = DocumentStatusDao.find(Progress.commit);
 
         if (documentStatus != null) {

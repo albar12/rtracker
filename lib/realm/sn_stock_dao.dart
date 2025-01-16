@@ -45,10 +45,7 @@ class SnStockDao {
     required String servicePointId,
   }) {
     List<SnStock> snStocks = List<SnStock>.from(
-      Realms.get().query<SnStock>(
-        "servicePointId == \$0",
-        [servicePointId],
-      ),
+      Realms.get().all<SnStock>(),
     );
 
     Map<String, List<SpinnerItem>> map = {};

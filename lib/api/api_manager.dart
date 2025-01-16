@@ -52,6 +52,8 @@ class ApiManager {
   static Future<Dio> getDio({
     bool withoutAuthorizationInterceptor = false,
     bool plain = false,
+    int connectTimeout = 15,
+    int receiveTimeout = 15,
   }) async {
     String baseUrl = ApiUrl.MAIN_BASE;
 
@@ -64,8 +66,8 @@ class ApiManager {
     Dio dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 15),
+        connectTimeout: Duration(seconds: connectTimeout),
+        receiveTimeout: Duration(seconds: receiveTimeout),
         contentType: Headers.jsonContentType,
         responseDecoder: (responseBytes, options, responseBody) {
           if (plain || responseBody.statusCode != 200) {
@@ -557,7 +559,10 @@ class ApiManager {
   Future<Response> getJobOrders({
     required int version,
   }) async {
-    Dio dio = await getDio();
+    Dio dio = await getDio(
+      connectTimeout: 60,
+      receiveTimeout: 60,
+    );
 
     Response response = await dio.get(
       ApiUrl.JOB_ORDERS,
@@ -583,7 +588,10 @@ class ApiManager {
     required List<Uint8List> edcAppImages,
     required List<Uint8List> otherImages,
   }) async {
-    Dio dio = await getDio();
+    Dio dio = await getDio(
+      connectTimeout: 60,
+      receiveTimeout: 60,
+    );
 
     FormData formData = FormData();
 

@@ -530,23 +530,30 @@ class JobFormPageState extends State<JobFormPage>
                   title: "Apakah anda yakin ingin memulai tugas ini?",
                   positive: "Mulai",
                   positiveCallback: () async {
+                    context.loaderOverlay.show();
+                    bool success = true;
                     await JobOrderDao.start(widget.jobOrder, locationNull: (status, message) async {
                       if (status){
+                        context.loaderOverlay.hide();
+                        success = false;
                         await Dialogs.message(
                           context: context,
                           title:
                           message,
                         );
-                        return;
+                      }
+                    }).whenComplete(() {
+                      if (success) {
+                        setState(() {});
+                        context.read<StartJobBloc>().add(
+                              ChangeStatus(
+                                readOnly: widget.readOnly,
+                                status: Progress.start,
+                              ),
+                            );
+                        context.loaderOverlay.hide();
                       }
                     });
-                    setState(() {});
-                    context.read<StartJobBloc>().add(
-                      ChangeStatus(
-                        readOnly: widget.readOnly,
-                        status: Progress.start,
-                      ),
-                    );
                   },
                 );
               } else {
@@ -586,22 +593,29 @@ class JobFormPageState extends State<JobFormPage>
                       "Apakah anda yakin ingin berhenti sejenak dari tugas ini?",
                   positive: "Berhenti Sejenak",
                   positiveCallback: () async {
+                    context.loaderOverlay.show();
+                    bool success = true;
                     await JobOrderDao.pause(widget.jobOrder, locationNull: (status, message) async {
                       if (status){
+                        context.loaderOverlay.hide();
+                        success = false;
                         await Dialogs.message(
                           context: context,
                           title: message,
                         );
-                        return;
+                      }
+                    }).whenComplete(() {
+                      if (success) {
+                        setState(() {});
+                        context.read<StartJobBloc>().add(
+                              ChangeStatus(
+                                readOnly: widget.readOnly,
+                                status: Progress.pause,
+                              ),
+                            );
+                        context.loaderOverlay.hide();
                       }
                     });
-                    setState(() {});
-                    context.read<StartJobBloc>().add(
-                      ChangeStatus(
-                        readOnly: widget.readOnly,
-                        status: Progress.pause,
-                      ),
-                    );
                   },
                 );
               } else {
@@ -643,23 +657,30 @@ class JobFormPageState extends State<JobFormPage>
             title: "Apakah anda yakin ingin berkunjung ke tugas ini?",
             positive: "Berkunjung",
             positiveCallback: () async {
+              context.loaderOverlay.show();
+              bool success = true;
               await JobOrderDao.visit(widget.jobOrder, locationNull: (status, message) async {
                 if (status){
+                  context.loaderOverlay.hide();
+                  success = false;
                   await Dialogs.message(
                     context: context,
                     title:
                     message,
                   );
-                  return;
+                }
+              }).whenComplete(() {
+                if (success) {
+                  setState(() {});
+                  context.read<StartJobBloc>().add(
+                        ChangeStatus(
+                          readOnly: widget.readOnly,
+                          status: Progress.visit,
+                        ),
+                      );
+                  context.loaderOverlay.hide();
                 }
               });
-              setState(() {});
-              context.read<StartJobBloc>().add(
-                ChangeStatus(
-                  readOnly: widget.readOnly,
-                  status: Progress.visit,
-                ),
-              );
             },
           );
         } else {
@@ -811,6 +832,7 @@ class JobFormPageState extends State<JobFormPage>
                           "Anda tidak bisa melakukan perubahan data setelah pekerjaan ini selesai.",
                       positive: "Selesai",
                       positiveCallback: () async {
+                        context.loaderOverlay.show();
                         formStates[tabController.index].currentState!.save();
 
                         if (widget.jobOrder.status != null &&
@@ -935,20 +957,26 @@ class JobFormPageState extends State<JobFormPage>
                           }
                         }
 
+                        bool success = true;
                         await JobOrderDao.finish(widget.jobOrder, locationNull: (status, message) async {
                           if (status){
+                            context.loaderOverlay.hide();
+                            success = false;
                             await Dialogs.message(
                               context: context,
                               title: message,
                             );
-                            return;
+                          }
+                        }).whenComplete(() {
+                          if (success) {
+                            context.loaderOverlay.hide();
+                            context.read<JobFormBloc>().add(
+                                  JobFormSubmitted(
+                                    jobOrder: widget.jobOrder,
+                                  ),
+                                );
                           }
                         });
-                        context.read<JobFormBloc>().add(
-                          JobFormSubmitted(
-                            jobOrder: widget.jobOrder,
-                          ),
-                        );
                       },
                     );
                   } else {

@@ -408,13 +408,20 @@ class JobListPageState extends State<JobListPage> {
                                 "Apakah anda yakin ingin mengerjakan tugas ini?",
                             positive: "Kerjakan",
                             positiveCallback: () async {
+                              context.loaderOverlay.show();
+                              bool success = true;
                               await JobOrderDao.execute(jobOrder, locationNull: (status, message) async {
                                 if (status){
+                                  context.loaderOverlay.hide();
+                                  success = false;
                                   await Dialogs.message(
                                     context: context,
                                     title: message,
                                   );
-                                } else {
+                                }
+                              }).whenComplete(() async {
+                                if (success) {
+                                  context.loaderOverlay.hide();
                                   await Navigators.push(
                                     context,
                                     JobFormPage(

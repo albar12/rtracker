@@ -8,6 +8,7 @@ import 'package:rtracker/helper/dialogs.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 import 'package:shimmer/shimmer.dart';
+import "package:loader_overlay/loader_overlay.dart";
 
 class CustomImageField extends StatefulWidget {
   final String title;
@@ -151,10 +152,12 @@ class CustomImageFieldState extends State<CustomImageField> {
             }
           });
         } else {
+          context.loaderOverlay.show();
           widget.onSaved!(files);
           setState(() {
             formFieldState.setValue([files.first]);
           });
+          context.loaderOverlay.hide();
         }
       },
     );

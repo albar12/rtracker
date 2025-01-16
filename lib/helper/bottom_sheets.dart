@@ -15,6 +15,7 @@ import 'package:rtracker/helper/dialogs.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/navigators.dart';
 import 'package:rtracker/helper/no_overscroll.dart';
+import 'package:rtracker/helper/strings.dart';
 import 'package:rtracker/module/scan_sn/scan_sn.dart';
 import 'package:rtracker/module/stok_barang/stok_barang_bloc.dart';
 import 'package:rtracker/module/stok_barang/stok_barang_event.dart';
@@ -273,7 +274,7 @@ class BottomSheets {
                         ),
                         CustomTextFieldOld(
                           controller: tecProduct,
-                          label: 'Produk',
+                          label: 'Produk SN Lama',
                           onTap: () {
                             List<SpinnerItem> spinnerItems = [];
 
@@ -286,7 +287,7 @@ class BottomSheets {
 
                             BottomSheets.spinner(
                               context: context,
-                              title: 'Produk',
+                              title: 'Produk SN Lama',
                               spinnerItems: spinnerItems,
                               onSelected: (selected) {
                                 tecProduct.text = selected.description;
@@ -367,6 +368,22 @@ class BottomSheets {
                 onPressed: () {
                   ReplacementType? replacementType = replacementTypes
                       .firstWhereOrNull((element) => element.id == "1");
+
+                  if (Strings.isZero(tecOldSerialNumber.text.toString())){
+                    Dialogs.message(
+                      context: context,
+                      title: "Nomor seri lama tidak boleh 0.",
+                    );
+                    return;
+                  }
+
+                  if (Strings.isZero(tecNewSerialNumber.text.toString())){
+                    Dialogs.message(
+                      context: context,
+                      title: "Nomor seri baru tidak boleh 0.",
+                    );
+                    return;
+                  }
 
                   if (StringUtils.isNullOrEmpty(tecOldSerialNumber.text)) {
                     Dialogs.message(

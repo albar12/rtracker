@@ -7,7 +7,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_number/mobile_number.dart';
+import 'package:jfullinfo/jDataModels.dart';
+import 'package:jfullinfo/jFullInfo.dart';
+// import 'package:mobile_number/mobile_number.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rtracker/api/endpoint/login/login_response.dart';
@@ -34,6 +36,7 @@ import 'package:rtracker/module/synchronization/synchronization_page.dart';
 import 'package:rtracker/module/terima_barang/terima_barang_page.dart';
 import 'package:rtracker/realm/job_order_dao.dart';
 import 'package:rtracker/widget/text_sheet.dart';
+import 'package:sim_data/sim_data.dart';
 
 class HomePage extends StatefulWidget {
   final LoginResponse loginResponse;
@@ -55,27 +58,49 @@ class HomePageState extends State<HomePage> {
   Timer? timer;
   DateTime? lastSynchronization;
 
-  void checkPhoneNumber() async {
-    var status = await Permission.phone.status;
-    if (!status.isGranted) {
-      status = await Permission.phone.request();
-    }
+  // void checkPhoneNumber() async {
+  //   var status = await Permission.phone.status;
+  //   if (!status.isGranted) {
+  //     status = await Permission.phone.request();
+  //   }
+  //
+  //   if (status.isGranted) {
+  //     MobileNumber.getSimCards?.then((value) {
+  //       for (SimCard simCard in value){
+  //         var number = simCard.number;
+  //         if (number != null){
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
-    if (status.isGranted) {
-      MobileNumber.getSimCards?.then((value) {
-        for (SimCard simCard in value){
-          var number = simCard.number;
-          if (number != null){
-          }
-        }
-      });
+  void printSimCardsData() async {
+    try {
+      SimData simData = await SimDataPlugin.getSimData();
+      print("SIM DATA : ${simData.cards.toString()}");
+      for (var s in simData.cards) {
+        print('Serial number: ${s.serialNumber}');
+        print('Subscription ID: ${s.subscriptionId}');
+      }
+    } on PlatformException catch (e) {
+      debugPrint("error! code: ${e.code} - message: ${e.message}");
+    }
+  }
+
+  Future<void> getSimCardInfo() async {
+    final _jFullInfo = JFullInfo();
+    final data = await _jFullInfo.getSimInformation();
+    print("ALL DATA : $data");
+    for (JSimInfo sim in data){
+      print("SIMCARD : ${sim.toString()}");
     }
   }
 
   @override
   void initState() {
     super.initState();
-    checkPhoneNumber();
+    // getSimCardInfo();
     try {
       if (Preferences.getInstance()
           .contain(SharedPreferenceKey.LAST_VERSIONING)) {

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:rtracker/api/api_manager.dart';
 import 'package:rtracker/api/endpoint/submit/submit_response.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order.dart';
+import 'package:rtracker/helper/json_helper.dart';
 import 'package:rtracker/module/job_form/bloc/job_form_event.dart';
 import 'package:rtracker/module/job_form/bloc/job_form_state.dart';
 import 'package:rtracker/realm/app_version_dao.dart';
@@ -280,14 +281,19 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       );
 
       if (response.statusCode == 200) {
-        JobOrderDao.synced(event.jobOrder);
-        Map<String, dynamic> data = jsonDecode(response.data);
-        var submitResponse = SubmitResponse.fromJson(data);
-        String message = "${submitResponse.keteranganStatus}\n${submitResponse.keterangan}";
-        if (submitResponse.status == "success"){
-          emit(JobFormSubmitSuccess(message));
+        Map<String, dynamic>? data = JsonHelper.parseJson(response.data);
+        if (data != null) {
+          var submitResponse = SubmitResponse.fromJson(data);
+          String message =
+              "${submitResponse.keteranganStatus}\n${submitResponse.keterangan}";
+          if (submitResponse.status == "success") {
+            JobOrderDao.synced(event.jobOrder);
+            emit(JobFormSubmitSuccess(message));
+          } else {
+            emit(JobFormSubmitFailed(message));
+          }
         } else {
-          emit(JobFormSubmitFailed(message));
+          emit(JobFormSubmitFailed(response.data));
         }
       } else {
         emit(JobFormSubmitFailed(messageError));

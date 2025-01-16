@@ -72,4 +72,17 @@ class Strings {
       return value + " (" + valuex + ")";
     }
   }
+
+  static bool isZero(String value){
+    try {
+      int parsedNumber = int.parse(value);
+      if (parsedNumber == 0){
+        return true;
+      } else {
+        return false;
+      }
+    } catch (_){
+      return false;
+    }
+  }
 }
