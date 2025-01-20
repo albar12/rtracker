@@ -279,10 +279,7 @@ class BottomSheets {
                             List<SpinnerItem> spinnerItems = [];
 
                             if (selectedCategory != null) {
-                              for (SpinnerItem spinnerItem in map[
-                                  selectedCategory!.identity.toString()]!) {
-                                spinnerItems.add(spinnerItem);
-                              }
+                              spinnerItems.addAll(map[selectedCategory!.identity.toString()]!);
                             }
 
                             BottomSheets.spinner(

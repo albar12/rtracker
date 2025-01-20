@@ -395,12 +395,12 @@ class HomePageState extends State<HomePage> {
                 menu(
                   color: const Color(0xffEB5757),
                   onTap: () {
-                    if (JobOrderDao.pendings().isNotEmpty) {
+                    if (JobOrderDao.pendings().isNotEmpty && JobOrderDao.checkSameMidJobToday().isNotEmpty) {
                       Dialogs.message(
                         context: context,
                         title: "Gagal Keluar",
                         message:
-                            "Dikarenakan terdapat job order yang masih pending",
+                            "Dikarenakan terdapat job order yang masih pending atau ada job yang harus diselesaikan hari ini",
                       );
                     } else {
                       Dialogs.confirmation(

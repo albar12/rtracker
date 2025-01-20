@@ -898,4 +898,60 @@ class JobOrderDao {
       }
     });
   }
+
+  static Map<String, List<JobOrder>> checkSameMidJobToday() {
+    Map<String, List<JobOrder>> result = {};
+    try {
+      Realm realm = Realms.get();
+      var finishedJobs = realm.query<JobOrder>(
+        "documentStatus.id = \$0",
+        [Progress.end],
+      ).toList();
+      List<JobOrder> jobsFinished = [];
+      for (JobOrder job in finishedJobs) {
+        if (job.timing != null) {
+          if (job.timing!.finish != null){
+            DateTime dateTimeJob = job.timing!.finish!;
+            DateTime dateTimeNow = DateTime.now();
+            if (dateTimeJob.year == dateTimeNow.year &&
+              dateTimeJob.month == dateTimeNow.month &&
+              dateTimeJob.day == dateTimeNow.day){
+              jobsFinished.add(job);
+            }
+          }
+        }
+      }
+      List<String> mids = [];
+      List<String> caseIds = [];
+      List<String> ids = [];
+      for (var job in jobsFinished){
+        final splitMid = job.mid!.split(" | ");
+        var mid = splitMid.last;
+        if (mids.where((element) => element == mid).isEmpty){
+          mids.add(mid);
+        }
+        caseIds.add(job.caseId!);
+        ids.add(job.id);
+      }
+      for (String mid in mids){
+        List<JobOrder> listJobs = [];
+
+        var listSameMid = realm.all<JobOrder>().query(
+          "mid ENDSWITH \$0 AND documentStatus.id != \$1",
+          [mid, Progress.end],
+        ).toList();
+        for (var jobOrder in listSameMid){
+          if (!Strings.equalsAny(jobOrder.caseId!, caseIds)
+            && !Strings.equalsAny(jobOrder.parentId, ids)){
+            listJobs.add(jobOrder);
+          }
+        }
+        if (listJobs.isNotEmpty) result[mid] = listJobs;
+      }
+
+    } catch (e){
+      print("Error Required : ${e.toString()}");
+    }
+    return result;
+  }
 }

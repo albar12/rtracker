@@ -15,6 +15,7 @@ import 'package:rtracker/realm/schemas.dart';
 import 'package:rtracker/realm/vendor_dao.dart';
 import 'package:rtracker/widget/camera_page.dart';
 import 'package:rtracker/widget/information/basic_information.dart';
+import 'package:rtracker/widget/job_form/custom_list_job.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 
 class Dialogs {
@@ -458,6 +459,69 @@ class Dialogs {
                   ),
                 )
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<void> requiredJobInformation({
+    required BuildContext context,
+    required Map<String, List<JobOrder>> data,
+    required bool finished,
+    required Function closedAction,
+    required Function completeCommit,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext){
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text("Silahkan kerjakan job dibawah ini terlebih dahulu"),
+            content: ListTile(
+              title: SizedBox(
+                height: 400,
+                width: 300,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: data.entries.map((mid) {
+                      return Column(
+                        children: [
+                          Text("Merchant ID : ${mid.key}"),
+                          const SizedBox(height: 12),
+                          ...mid.value.map((jobOrder) {
+                            return CustomListWidget.show(
+                              context: context,
+                              finished: finished,
+                              jobOrder: jobOrder,
+                              closedAction: closedAction,
+                              completeCommit: (){
+                                Navigator.pop(context);
+                                completeCommit();
+                              },
+                            );
+                          }),
+                          const Divider(),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: (){
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  child: const Icon(
+                    Icons.home,
+                  ),
+                ),
+              ),
             ),
           ),
         );
