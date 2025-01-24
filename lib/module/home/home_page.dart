@@ -7,11 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jfullinfo/jDataModels.dart';
-import 'package:jfullinfo/jFullInfo.dart';
-// import 'package:mobile_number/mobile_number.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rtracker/api/endpoint/login/login_response.dart';
 import 'package:rtracker/constant.dart';
 import 'package:rtracker/helper/app_colors.dart';
@@ -36,7 +32,7 @@ import 'package:rtracker/module/synchronization/synchronization_page.dart';
 import 'package:rtracker/module/terima_barang/terima_barang_page.dart';
 import 'package:rtracker/realm/job_order_dao.dart';
 import 'package:rtracker/widget/text_sheet.dart';
-import 'package:sim_data/sim_data.dart';
+import 'package:get_phone_number/get_phone_number.dart';
 
 class HomePage extends StatefulWidget {
   final LoginResponse loginResponse;
@@ -75,32 +71,34 @@ class HomePageState extends State<HomePage> {
   //   }
   // }
 
-  void printSimCardsData() async {
-    try {
-      SimData simData = await SimDataPlugin.getSimData();
-      print("SIM DATA : ${simData.cards.toString()}");
-      for (var s in simData.cards) {
-        print('Serial number: ${s.serialNumber}');
-        print('Subscription ID: ${s.subscriptionId}');
-      }
-    } on PlatformException catch (e) {
-      debugPrint("error! code: ${e.code} - message: ${e.message}");
-    }
-  }
+  Future<void> getPhoneNumber() async {
+    String phoneNumber = await GetPhoneNumber().get();
+    print('getPhoneNumber result: $phoneNumber');
 
-  Future<void> getSimCardInfo() async {
-    final _jFullInfo = JFullInfo();
-    final data = await _jFullInfo.getSimInformation();
-    print("ALL DATA : $data");
-    for (JSimInfo sim in data){
-      print("SIMCARD : ${sim.toString()}");
+    List<String> list = await GetPhoneNumber().getListPhoneNumber();
+
+    print('getListPhoneNumber result: $list');
+
+    final module = GetPhoneNumber();
+
+    if (!module.isSupport()) {
+      print('Not supported platform');
     }
+
+    if (!await module.hasPermission()) {
+      if (!await module.requestPermission()) {
+        print('Failed to get permission phone number');
+      }
+    }
+
+    String phoneNumber2 = await module.getPhoneNumber();
+    print('getPhoneNumber2 result: $phoneNumber2');
   }
 
   @override
   void initState() {
     super.initState();
-    // getSimCardInfo();
+    // getPhoneNumber();
     try {
       if (Preferences.getInstance()
           .contain(SharedPreferenceKey.LAST_VERSIONING)) {
@@ -395,7 +393,7 @@ class HomePageState extends State<HomePage> {
                 menu(
                   color: const Color(0xffEB5757),
                   onTap: () {
-                    if (JobOrderDao.pendings().isNotEmpty && JobOrderDao.checkSameMidJobToday().isNotEmpty) {
+                    if (JobOrderDao.pendings().isNotEmpty || JobOrderDao.checkSameMidJobToday().isNotEmpty) {
                       Dialogs.message(
                         context: context,
                         title: "Gagal Keluar",

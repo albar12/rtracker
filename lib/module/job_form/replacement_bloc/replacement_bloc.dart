@@ -11,42 +11,42 @@ class ReplacementBloc extends Bloc<ReplacementEvent, ReplacementState> {
 
   final List<SamCard> listSamCard = [
     SamCard(
-      samCardId: 1,
+      samCardId: 38,
       vendorId: "2",
       samCardName: "SamCard BRI",
     ),
     SamCard(
-      samCardId: 2,
+      samCardId: 39,
       vendorId: "2",
       samCardName: "SamCard Mandiri",
     ),
     SamCard(
-      samCardId: 3,
+      samCardId: 37,
       vendorId: "2",
       samCardName: "SamCard BNI",
     ),
     SamCard(
-      samCardId: 4,
+      samCardId: 41,
       vendorId: "2",
       samCardName: "SamCard BTN",
     ),
     SamCard(
-      samCardId: 5,
+      samCardId: 91,
       vendorId: "2",
       samCardName: "SamCard BSI",
     ),
     SamCard(
-      samCardId: 6,
+      samCardId: 92,
       vendorId: "2",
       samCardName: "SamCard Danamon",
     ),
     SamCard(
-      samCardId: 7,
+      samCardId: 93,
       vendorId: "2",
       samCardName: "SamCard Astrapay",
     ),
     SamCard(
-      samCardId: 1,
+      samCardId: 34,
       vendorId: "3",
       samCardName: "SamCard BRI",
     ),

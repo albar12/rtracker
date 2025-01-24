@@ -46,9 +46,7 @@ dependencies:
   camera: 0.10.5+2
   jiffy: 6.2.1
   maps_launcher: ^2.2.0
-  mobile_number: ^2.1.1
-  sim_data: ^0.0.2
-  jfullinfo: ^0.5.1
+  get_phone_number: ^3.0.10
 
 dependency_overrides:
   geolocator: 9.0.1

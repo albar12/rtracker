@@ -273,6 +273,10 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                       if (value!.length < maxDigit) {
                         return "Minimal karakter $maxDigit.";
                       }
+
+                      if (Strings.isZero(value)){
+                        return "Kolom ini tidak boleh 0";
+                      }
                     } else if (jobOrder.serialNumberValidationType[0] == "2") {
                       if (SnStockDao.find(
                         serialNumber: value!,

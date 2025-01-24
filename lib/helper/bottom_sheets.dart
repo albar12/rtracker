@@ -398,7 +398,7 @@ class BottomSheets {
                           serialNumber: tecNewSerialNumber.text,
                           servicePointId: jobOrder.servicePoint!.id,
                           category: selectedCategory!.identity,
-                          product: selectedProduct!.identity,
+                          product: null,
                         ) ==
                         null) {
                       Dialogs.message(
