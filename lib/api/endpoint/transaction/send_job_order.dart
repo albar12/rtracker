@@ -1,3 +1,4 @@
+import 'package:rtracker/api/endpoint/transaction/send_bni_mti_edc_feature.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_edc_feature_test_case.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_edc_update.dart';
 import 'package:rtracker/api/endpoint/transaction/send_job_order_input_peripheral.dart';
@@ -54,6 +55,10 @@ class SendJobOrder {
   final String? merchantRequest;
   final String? promoMaterial;
   final String? position;
+  final List<SendBniMtiEdcFeature> edcBniMtiFeatures;
+  final String? mostStableEdc;
+  final String? mostGoodProviderInMerchantLocation;
+  final String? otherBankEdcProvider;
 
   SendJobOrder(
       {required this.id,
@@ -91,41 +96,45 @@ class SendJobOrder {
       this.otherEdc,
       this.merchantRequest,
       this.promoMaterial,
-      this.position,});
+      this.position,
+      required this.edcBniMtiFeatures,
+      this.mostStableEdc,
+      this.mostGoodProviderInMerchantLocation,
+      this.otherBankEdcProvider,});
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "scannedSerialNumber": scannedSerialNumber,
-        "machineConditionNormal": machineConditionNormal,
-        "damageTypeId": damageTypeId,
-        "documentStatusId": documentStatusId,
-        "poi": poi,
-        "timing": timing != null ? timing!.toJson() : null,
-        "status": status != null ? status!.toJson() : null,
-        "merchant": merchant != null ? merchant!.toJson() : null,
-        "machineAndCard":
-            machineAndCard != null ? machineAndCard!.toJson() : null,
-        "replacements": List<dynamic>.from(replacements.map((x) => x.toJson())),
-        "inputPeripherals":
-            List<dynamic>.from(inputPeripherals.map((x) => x.toJson())),
-        "notes": List<dynamic>.from(notes.map((x) => x.toJson())),
-        "qris": qris != null ? qris!.toJson() : null,
-        "edcEquipments": edcEquipments,
-        "edcFeatureTestCases":
-            List<dynamic>.from(edcFeatureTestCases.map((x) => x.toJson())),
-        "jobCategories":
-            List<dynamic>.from(jobCategories.map((x) => x.toJson())),
-        "transactionTest":
-            transactionTest != null ? transactionTest!.toJson() : null,
-        "otherBankEdcs":
-            List<dynamic>.from(otherBankEdcs.map((x) => x.toJson())),
-        "edcUpdate": edcUpdate != null ? edcUpdate!.toJson() : null,
-        "trainingMaterials":
-            List<dynamic>.from(trainingMaterials.map((x) => x.toJson())),
-        "jamBukaToko": jamBukaToko,
-        "jamTutupToko": jamTutupToko,
-        "edcCount": edcCount,
-        "edcCleaning": edcCleaning,
+    "id": id,
+    "scannedSerialNumber": scannedSerialNumber,
+    "machineConditionNormal": machineConditionNormal,
+    "damageTypeId": damageTypeId,
+    "documentStatusId": documentStatusId,
+    "poi": poi,
+    "timing": timing != null ? timing!.toJson() : null,
+    "status": status != null ? status!.toJson() : null,
+    "merchant": merchant != null ? merchant!.toJson() : null,
+    "machineAndCard":
+    machineAndCard != null ? machineAndCard!.toJson() : null,
+    "replacements": List<dynamic>.from(replacements.map((x) => x.toJson())),
+    "inputPeripherals":
+    List<dynamic>.from(inputPeripherals.map((x) => x.toJson())),
+    "notes": List<dynamic>.from(notes.map((x) => x.toJson())),
+    "qris": qris != null ? qris!.toJson() : null,
+    "edcEquipments": edcEquipments,
+    "edcFeatureTestCases":
+    List<dynamic>.from(edcFeatureTestCases.map((x) => x.toJson())),
+    "jobCategories":
+    List<dynamic>.from(jobCategories.map((x) => x.toJson())),
+    "transactionTest":
+    transactionTest != null ? transactionTest!.toJson() : null,
+    "otherBankEdcs":
+    List<dynamic>.from(otherBankEdcs.map((x) => x.toJson())),
+    "edcUpdate": edcUpdate != null ? edcUpdate!.toJson() : null,
+    "trainingMaterials":
+    List<dynamic>.from(trainingMaterials.map((x) => x.toJson())),
+    "jamBukaToko": jamBukaToko,
+    "jamTutupToko": jamTutupToko,
+    "edcCount": edcCount,
+    "edcCleaning": edcCleaning,
     "edcProblem": edcProblem,
     "comLine": comLine,
     "settlement": settlement,
@@ -137,7 +146,11 @@ class SendJobOrder {
     "merchantRequest": merchantRequest,
     "promoMaterial": promoMaterial,
     "position": position,
-      };
+    "edcBniMtiFeatures": List<dynamic>.from(edcBniMtiFeatures.map((x) => x.toJson())),
+    "mostStableEdc": mostStableEdc,
+    "mostGoodProviderInMerchantLocation": mostGoodProviderInMerchantLocation,
+    "otherBankEdcProvider": otherBankEdcProvider,
+  };
 
   static SendJobOrder build(JobOrder jobOrder) {
     SendJobOrderTiming? sendJobOrderTiming;
@@ -346,6 +359,17 @@ class SendJobOrder {
       );
     }
 
+    List<SendBniMtiEdcFeature> bniMtiEdcFeatures = [];
+
+    for (EdcBniMtiFeature edcFeature in jobOrder.edcBniMtiFeatures) {
+      bniMtiEdcFeatures.add(
+        SendBniMtiEdcFeature(
+          id: edcFeature.id,
+          value: edcFeature.value,
+        ),
+      );
+    }
+
     SendJobOrderEdcUpdate? sendJobOrderEdcUpdate;
 
     if (jobOrder.edcUpdate != null) {
@@ -463,6 +487,10 @@ class SendJobOrder {
       merchantRequest: jobOrder.merchantRequest ?? "",
       promoMaterial: jobOrder.promoMaterial ?? "",
       position: jobOrder.position,
+      edcBniMtiFeatures: bniMtiEdcFeatures,
+      mostStableEdc: jobOrder.mostStableEdc,
+      mostGoodProviderInMerchantLocation: jobOrder.mostGoodProviderInMerchantLocation,
+      otherBankEdcProvider: jobOrder.otherBankEdcProvider,
     );
 
     return sendJobOrder;

@@ -4130,6 +4130,10 @@ class JobOrder extends _JobOrder
         String? merchantRequest,
         String? promoMaterial,
         String? position,
+        String? mostStableEdc,
+        String? mostGoodProviderInMerchantLocation,
+        String? otherBankEdcProvider,
+        Iterable<EdcBniMtiFeature> edcBniMtiFeatures = const [],
       }) {
     RealmObjectBase.set(this, 'transactionTest', transactionTest);
     RealmObjectBase.set(this, 'parentId', parentId);
@@ -4222,6 +4226,14 @@ class JobOrder extends _JobOrder
     RealmObjectBase.set(this, 'merchantRequest', merchantRequest);
     RealmObjectBase.set(this, 'promoMaterial', promoMaterial);
     RealmObjectBase.set(this, 'position', position);
+    RealmObjectBase.set(this, 'mostStableEdc', mostStableEdc);
+    RealmObjectBase.set(this, 'mostGoodProviderInMerchantLocation', mostGoodProviderInMerchantLocation);
+    RealmObjectBase.set(this, 'otherBankEdcProvider', otherBankEdcProvider);
+    RealmObjectBase.set<RealmList<EdcBniMtiFeature>>(
+        this,
+        'edcBniMtiFeatures',
+        RealmList<EdcBniMtiFeature>(edcBniMtiFeatures),
+    );
   }
 
   JobOrder._();
@@ -4681,6 +4693,26 @@ class JobOrder extends _JobOrder
   String? get position => RealmObjectBase.get<String>(this, 'position') as String?;
   @override
   set position(String? value) => RealmObjectBase.set(this, 'position', value);
+  @override
+  String? get mostStableEdc => RealmObjectBase.get<String>(this, 'mostStableEdc') as String?;
+  @override
+  set mostStableEdc(String? value) => RealmObjectBase.set(this, 'mostStableEdc', value);
+  @override
+  String? get mostGoodProviderInMerchantLocation => RealmObjectBase.get<String>(this, 'mostGoodProviderInMerchantLocation') as String?;
+  @override
+  set mostGoodProviderInMerchantLocation(String? value) => RealmObjectBase.set(this, 'mostGoodProviderInMerchantLocation', value);
+  @override
+  String? get otherBankEdcProvider => RealmObjectBase.get<String>(this, 'otherBankEdcProvider') as String?;
+  @override
+  set otherBankEdcProvider(String? value) => RealmObjectBase.set(this, 'otherBankEdcProvider', value);
+
+  @override
+  RealmList<EdcBniMtiFeature> get edcBniMtiFeatures =>
+      RealmObjectBase.get<EdcBniMtiFeature>(this, 'edcBniMtiFeatures')
+      as RealmList<EdcBniMtiFeature>;
+  @override
+  set edcBniMtiFeatures(covariant RealmList<EdcBniMtiFeature> value) =>
+      throw RealmUnsupportedSetError();
 
   @override
   JobOrder freeze() => RealmObjectBase.freezeObject<JobOrder>(this);
@@ -4795,6 +4827,113 @@ class JobOrder extends _JobOrder
       SchemaProperty('merchantRequest', RealmPropertyType.string, optional: true),
       SchemaProperty('promoMaterial', RealmPropertyType.string, optional: true),
       SchemaProperty('position', RealmPropertyType.string, optional: true),
+      SchemaProperty('mostStableEdc', RealmPropertyType.string, optional: true),
+      SchemaProperty('mostGoodProviderInMerchantLocation', RealmPropertyType.string, optional: true),
+      SchemaProperty('otherBankEdcProvider', RealmPropertyType.string, optional: true),
+      SchemaProperty('edcBniMtiFeatures', RealmPropertyType.object,
+          linkTarget: 'EdcBniMtiFeature',
+          collectionType: RealmCollectionType.list,
+      ),
     ]);
+  }
+}
+
+class EdcBniMtiFeatureVersion extends _EdcBniMtiFeatureVersion
+    with RealmEntity, RealmObjectBase, RealmObject {
+  EdcBniMtiFeatureVersion(
+      String? id,
+      String? name,
+      int version,
+      ) {
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'name', name);
+    RealmObjectBase.set(this, 'version', version);
+  }
+
+  EdcBniMtiFeatureVersion._();
+
+  @override
+  String get id => RealmObjectBase.get<String>(this, 'id') as String;
+  @override
+  set id(String? value) => RealmObjectBase.set(this, 'id', value);
+
+  @override
+  String get name => RealmObjectBase.get<String>(this, 'name') as String;
+  @override
+  set name(String? value) => RealmObjectBase.set(this, 'name', value);
+
+  @override
+  int get version => RealmObjectBase.get<int>(this, 'version') as int;
+  @override
+  set version(int value) => RealmObjectBase.set(this, 'version', version);
+
+  @override
+  Stream<RealmObjectChanges<EdcBniMtiFeatureVersion>> get changes =>
+      RealmObjectBase.getChanges<EdcBniMtiFeatureVersion>(this);
+
+  @override
+  EdcBniMtiFeatureVersion freeze() =>
+      RealmObjectBase.freezeObject<EdcBniMtiFeatureVersion>(this);
+
+  static SchemaObject get schema => _schema ??= _initSchema();
+  static SchemaObject? _schema;
+  static SchemaObject _initSchema() {
+    RealmObjectBase.registerFactory(EdcBniMtiFeatureVersion._);
+    return const SchemaObject(ObjectType.realmObject, EdcBniMtiFeatureVersion,
+        'EdcBniMtiFeatureVersion', [
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+          SchemaProperty('version', RealmPropertyType.int),
+        ]);
+  }
+}
+
+class EdcBniMtiFeature extends _EdcBniMtiFeature
+    with RealmEntity, RealmObjectBase, RealmObject {
+  EdcBniMtiFeature(
+      String? id,
+      String? name,
+      bool value,
+      ) {
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'name', name);
+    RealmObjectBase.set(this, 'value', value);
+  }
+
+  EdcBniMtiFeature._();
+
+  @override
+  String get id => RealmObjectBase.get<String>(this, 'id') as String;
+  @override
+  set id(String? value) => RealmObjectBase.set(this, 'id', value);
+
+  @override
+  String get name => RealmObjectBase.get<String>(this, 'name') as String;
+  @override
+  set name(String? value) => RealmObjectBase.set(this, 'name', value);
+
+  @override
+  bool get value => RealmObjectBase.get<bool>(this, 'value') as bool;
+  @override
+  set value(bool value) => RealmObjectBase.set(this, 'value', value);
+
+  @override
+  Stream<RealmObjectChanges<EdcBniMtiFeature>> get changes =>
+      RealmObjectBase.getChanges<EdcBniMtiFeature>(this);
+
+  @override
+  EdcBniMtiFeature freeze() =>
+      RealmObjectBase.freezeObject<EdcBniMtiFeature>(this);
+
+  static SchemaObject get schema => _schema ??= _initSchema();
+  static SchemaObject? _schema;
+  static SchemaObject _initSchema() {
+    RealmObjectBase.registerFactory(EdcBniMtiFeature._);
+    return const SchemaObject(ObjectType.realmObject, EdcBniMtiFeature,
+        'EdcBniMtiFeature', [
+          SchemaProperty('id', RealmPropertyType.string),
+          SchemaProperty('name', RealmPropertyType.string),
+          SchemaProperty('value', RealmPropertyType.bool),
+        ]);
   }
 }

@@ -8,3 +8,8 @@ class ChangeStatus extends StartJobEvent {
   final String status;
   ChangeStatus({required this.readOnly, required this.status});
 }
+
+class CopyFinishedJoImage extends StartJobEvent {
+  final JobOrder jobOrder;
+  CopyFinishedJoImage(this.jobOrder);
+}

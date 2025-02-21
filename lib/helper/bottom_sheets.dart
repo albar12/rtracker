@@ -300,6 +300,7 @@ class BottomSheets {
                         CustomTextField(
                           controller: tecOldSerialNumber,
                           label: 'Nomor Seri Lama',
+                          isCapital: true,
                           suffixIcon: IconButton(
                             icon: const Icon(
                               Icons.qr_code_scanner,
@@ -326,6 +327,7 @@ class BottomSheets {
                         CustomTextField(
                           controller: tecNewSerialNumber,
                           label: 'Nomor Seri Baru',
+                          isCapital: true,
                           suffixIcon: IconButton(
                             icon: const Icon(
                               Icons.qr_code_scanner,
@@ -378,6 +380,23 @@ class BottomSheets {
                     Dialogs.message(
                       context: context,
                       title: "Nomor seri baru tidak boleh 0.",
+                    );
+                    return;
+                  }
+
+                  var oldSnSameCharacters = Strings.findFiveConsecutiveSameCharacters(tecOldSerialNumber.text.toString());
+                  if (oldSnSameCharacters != null){
+                    Dialogs.message(
+                      context: context,
+                      title: "$oldSnSameCharacters tidak valid sebagai nomor serial lama",
+                    );
+                    return;
+                  }
+                  var newSnSameCharacters = Strings.findFiveConsecutiveSameCharacters(tecNewSerialNumber.text.toString());
+                  if (newSnSameCharacters != null){
+                    Dialogs.message(
+                      context: context,
+                      title: "$newSnSameCharacters tidak valid sebagai nomor serial lama",
                     );
                     return;
                   }

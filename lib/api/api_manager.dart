@@ -907,4 +907,18 @@ class ApiManager {
 
     return response;
   }
+
+  Future<Response> getFiturEdcBNIMTI({
+    required int version,
+  }) async {
+    Dio dio = await getDio();
+
+    Response response = await dio.get(
+      ApiUrl.FITUR_EDC_BNI_MTI,
+      queryParameters: setupVersionParams(version),
+      options: await httpOptions(),
+    );
+
+    return response;
+  }
 }

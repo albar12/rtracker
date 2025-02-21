@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rtracker/helper/dimensions.dart';
 
@@ -37,16 +38,25 @@ class _CustomSwitchState extends State<CustomSwitch> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.title),
-        Switch(
-          value: _value,
-          onChanged: (status){
-            if (!widget.readOnly) {
-              setState(() {
-                _value = status;
-              });
-              widget.onChanged.call(status);
-            }
-          },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CupertinoSwitch(
+              value: _value,
+              onChanged: (status){
+                if (!widget.readOnly) {
+                  setState(() {
+                    _value = status;
+                  });
+                  widget.onChanged.call(status);
+                }
+              },
+              activeColor: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              _value ? widget.activeLabel : widget.inactiveLabel,
+            ),
+          ],
         ),
       ],
     );

@@ -28,6 +28,7 @@ class JobFormLoaded extends JobFormState {
   final List<EosUpdateStatus> eosUpdateStatuses;
   final List<TrainingMaterial> trainingMaterials;
   final List<DamageType> damageTypes;
+  final List<EdcBniMtiFeatureVersion> edcBniMtiFeatures;
 
   JobFormLoaded({
     required this.providers,
@@ -51,6 +52,7 @@ class JobFormLoaded extends JobFormState {
     required this.eosUpdateStatuses,
     required this.trainingMaterials,
     required this.damageTypes,
+    required this.edcBniMtiFeatures,
   });
 }
 

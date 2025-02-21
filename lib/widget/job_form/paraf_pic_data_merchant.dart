@@ -7,6 +7,7 @@ import 'package:rtracker/helper/app_colors.dart';
 import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/image_mandatory.dart';
+import 'package:rtracker/helper/strings.dart';
 import 'package:rtracker/helper/widgets.dart';
 import 'package:rtracker/module/job_form/job_form_page.dart';
 import 'package:rtracker/realm/realms.dart';
@@ -15,6 +16,7 @@ import 'package:rtracker/widget/custom_spinner_field.dart';
 import 'package:rtracker/widget/custom_switch.dart';
 import 'package:rtracker/widget/custom_text_area.dart';
 import 'package:rtracker/widget/custom_text_field.dart';
+import 'package:rtracker/widget/custom_time_field.dart';
 import 'package:rtracker/widget/information/custom_information.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
@@ -44,6 +46,12 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
   final TextEditingController tecMostUsedEDC = TextEditingController();
   final TextEditingController tecMerchantRequest = TextEditingController();
   final TextEditingController tecPromoMaterial = TextEditingController();
+
+  final TextEditingController tecMostStableEdc = TextEditingController();
+  final TextEditingController tecMostGoodProviderInMerchantLocation = TextEditingController();
+  final TextEditingController tecOtherBankEdcProvider = TextEditingController();
+
+  TextEditingController edcCount = TextEditingController();
 
   final GlobalKey<SfSignaturePadState> gkSignaturePadState = GlobalKey();
 
@@ -96,6 +104,22 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
         textEditingController: tecPicPosition,
         value: jobOrder.position,
       );
+      Widgets.fill(
+        textEditingController: tecMostStableEdc,
+        value: jobOrder.mostStableEdc,
+      );
+      Widgets.fill(
+        textEditingController: tecMostGoodProviderInMerchantLocation,
+        value: jobOrder.mostGoodProviderInMerchantLocation,
+      );
+      Widgets.fill(
+        textEditingController: tecOtherBankEdcProvider,
+        value: jobOrder.otherBankEdcProvider,
+      );
+    }
+
+    if (jobOrder.edcCount != null){
+      edcCount.text = jobOrder.edcCount.toString();
     }
   }
 
@@ -252,28 +276,94 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
           SizedBox(
             height: Dimensions.height15,
           ),
-          CustomSwitch(
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            title: "EDC Problem",
-            value: SwitchValues.valueToStatus(jobOrder.edcProblem),
-            onChanged: (status){
-              Realms.get().write(() {
-                jobOrder.edcProblem = SwitchValues.statusToValue(status);
-              });
-            },
+          Visibility(
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+            child: CustomTimeField(
+              labelText: "Jam Buka Toko",
+              initialValue:
+              jobOrder.jamBukaToko,
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              validator: (value) {
+                if (widget.jobFormPageState.selectedJobStatus != null &&
+                    widget.jobFormPageState.selectedJobStatus!.identity == "9"
+                    && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
+                  if (value == null) {
+                    return "Kolom ini harus diisi.";
+                  }
+                }
+
+                return null;
+              },
+              onSaved: (value) {
+                if (value != null) {
+                  Realms.get().write(() {
+                    // jobOrder.jamBukaToko ??= jamBukaToko();
+                    // if (jobOrder.jamBukaToko != null) {
+                    jobOrder.jamBukaToko = value.toString();
+                    // }
+                  });
+                }
+              },
+            ),
           ),
-          SizedBox(
-            height: Dimensions.height15,
+          Visibility(
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+            child: CustomTimeField(
+              labelText: "Jam Tutup Toko",
+              initialValue:
+              jobOrder.jamTutupToko,
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              validator: (value) {
+                if (widget.jobFormPageState.selectedJobStatus != null &&
+                    widget.jobFormPageState.selectedJobStatus!.identity == "9"
+                    && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
+                  if (value == null) {
+                    return "Kolom ini harus diisi.";
+                  }
+                }
+
+                return null;
+              },
+              onSaved: (value) {
+                if (value != null) {
+                  Realms.get().write(() {
+                    // if (jobOrder.jamTutupToko != null) {
+                    jobOrder.jamTutupToko = value.toString();
+                    // }
+                  });
+                }
+              },
+            ),
           ),
-          CustomSwitch(
-            readOnly: widget.jobFormPageState.widget.readOnly,
-            title: "Settlement",
-            value: SwitchValues.valueToStatus(jobOrder.settlement),
-            onChanged: (status){
-              Realms.get().write(() {
-                jobOrder.settlement = SwitchValues.statusToValue(status);
-              });
-            },
+          Visibility(
+            visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
+            child: CustomTextField(
+              controller: edcCount,
+              label: jobOrder.vendorId == "3" ? 'EDC Count' : 'Stock Thermal Merchant',
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (widget.jobFormPageState.selectedJobStatus != null &&
+                    widget.jobFormPageState.selectedJobStatus!.identity == "9"
+                    && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
+                  if (StringUtils.isNullOrEmpty(value)) {
+                    return "Kolom ini harus diisi.";
+                  }
+
+                  if (value!.length > 2) {
+                    return "Maksimal 2 digit.";
+                  }
+                }
+                return null;
+              },
+              onSaved: (value) {
+                Realms.get().write(() {
+                  if (value!.isNotEmpty) {
+                    jobOrder.edcCount = int.parse(value!);
+                  }
+                });
+              },
+            ),
           ),
           SizedBox(
             height: Dimensions.height15,
@@ -352,6 +442,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
             label: 'Priority EDC',
             readOnly: widget.jobFormPageState.widget.readOnly,
             keyboardType: TextInputType.text,
+            hintText: 'BCA (nama Bank)',
             validator: (value) {
               if (StringUtils.isNullOrEmpty(value)) {
                 return "Kolom ini harus diisi.";
@@ -398,6 +489,7 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
             label: 'EDC yang sering digunakan',
             readOnly: widget.jobFormPageState.widget.readOnly,
             keyboardType: TextInputType.text,
+            hintText: 'BNI (nama Bank)',
             validator: (value) {
               if (StringUtils.isNullOrEmpty(value)) {
                 return "Kolom ini harus diisi.";
@@ -440,6 +532,60 @@ class ParafPicDataMerchantState extends State<ParafPicDataMerchant>
             onSaved: (value) {
               Realms.get().write(() {
                 jobOrder.promoMaterial = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecMostStableEdc,
+            label: 'EDC paling stabil',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            hintText: 'BRI (nama Bank)',
+            validator: (value) {
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.mostStableEdc = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecMostGoodProviderInMerchantLocation,
+            label: 'Provider yang paling bagus di lokasi Merchant',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            hintText: 'Telkomsel (nama Provider)',
+            validator: (value) {
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.mostGoodProviderInMerchantLocation = value;
+              });
+            },
+          ),
+          SizedBox(
+            height: Dimensions.height15,
+          ),
+          CustomTextField(
+            controller: tecOtherBankEdcProvider,
+            label: 'Provider EDC bank lain',
+            readOnly: widget.jobFormPageState.widget.readOnly,
+            keyboardType: TextInputType.text,
+            hintText: 'XL, Indosat, Telkomsel',
+            validator: (value) {
+              return null;
+            },
+            onSaved: (value) {
+              Realms.get().write(() {
+                jobOrder.otherBankEdcProvider = value;
               });
             },
           ),

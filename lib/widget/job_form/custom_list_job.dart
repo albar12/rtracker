@@ -1,6 +1,7 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:datetime_setting/datetime_setting.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -62,7 +63,7 @@ class CustomListWidget {
             } else if (JobOrderDao.pauseJobs(jobOrder.id) >=
                 (Preferences.getInstance()
                     .getInt(SharedPreferenceKey.PAUSE_MAX, 5) ??
-                    5)) {
+                    5) && !kDebugMode) {
               Dialogs.message(
                 context: context,
                 title:

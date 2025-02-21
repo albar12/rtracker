@@ -22,6 +22,7 @@ import 'package:rtracker/api/endpoint/master/edc_equipment/get_edc_equipment_res
 import 'package:rtracker/api/endpoint/master/edc_feature_test_case/get_edc_feature_test_case_response.dart';
 import 'package:rtracker/api/endpoint/master/edc_type/get_edc_type_response.dart';
 import 'package:rtracker/api/endpoint/master/eos_update_status/get_eos_update_status_response.dart';
+import 'package:rtracker/api/endpoint/master/fitur_edc_bni_mti/get_fitur_edc_bni_mti_response.dart';
 import 'package:rtracker/api/endpoint/master/inbox/get_inbox_response.dart';
 import 'package:rtracker/api/endpoint/master/job_category/get_job_category_response.dart';
 import 'package:rtracker/api/endpoint/master/job_status/get_job_status_response.dart';
@@ -53,9 +54,11 @@ import 'package:rtracker/module/synchronization/synchronization_bloc.dart';
 import 'package:rtracker/module/synchronization/synchronization_event.dart';
 import 'package:rtracker/realm/app_version_dao.dart';
 import 'package:rtracker/realm/base_office_dao.dart';
+import 'package:rtracker/realm/bni_mti_edc_feature_dao.dart';
 import 'package:rtracker/realm/damage_type_dao.dart';
 import 'package:rtracker/realm/document_status_dao.dart';
 import 'package:rtracker/realm/dor_menu_dao.dart';
+import 'package:rtracker/realm/edc_bni_mti_feature_version_dao.dart';
 import 'package:rtracker/realm/edc_communication_type_dao.dart';
 import 'package:rtracker/realm/edc_equipment_dao.dart';
 import 'package:rtracker/realm/edc_feature_test_case_dao.dart';
@@ -1010,6 +1013,29 @@ class BackgroundService {
                     versionKey: versionKey,
                     getJobOrderResponse:
                         GetJobOrderResponse.fromJson(response.data),
+                  );
+
+                  completed++;
+                } else {
+                  throw Exception();
+                }
+              } else if (versionKey == VersionKey.FITUR_EDC_BNI_MTI){
+                if (synchronizationBloc != null){
+                  synchronizationBloc.add(
+                    SynchronizationUpdateMessage(
+                        message: "Mengunduh data fitur edc BNI MTI",
+                    ),
+                  );
+                }
+
+                Response response =
+                await ApiManager().getFiturEdcBNIMTI(version: lastVersion);
+
+                if (response.statusCode == 200 && response.data != null) {
+                  var data = GetFiturEdcBniMtiResponse.fromJson(response.data);
+                  EdcBniMtiFeatureVersionDao.insertOrUpdate(
+                      versionKey: versionKey,
+                      response: data,
                   );
 
                   completed++;

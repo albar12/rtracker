@@ -77,25 +77,27 @@ class JobFormPageState extends State<JobFormPage>
   List<TrainingMaterial> trainingMaterials = [];
   List<DamageType> damageTypes = [];
   List<JobFormStep> jobFormSteps = [];
+  List<EdcBniMtiFeatureVersion> edcBniMtiFeatures = [];
 
   SpinnerItem? selectedJobStatus;
   List<GlobalKey<FormState>> formStates =
-      List.generate(7, (index) => GlobalKey<FormState>());
+  List.generate(7, (index) => GlobalKey<FormState>());
   List<GlobalKey<State>> widgetStates =
-      List.generate(7, (index) => GlobalKey<State>());
+  List.generate(7, (index) => GlobalKey<State>());
 
   late TabController tabController;
 
   var isLoading = false;
+  StartJobBloc copyImageBloc = StartJobBloc();
 
   @override
   void initState() {
     context.read<JobFormBloc>().add(
-          JobFormStarted(
-            widget.jobOrder.vendorId!,
-            widget.jobOrder,
-          ),
-        );
+      JobFormStarted(
+        widget.jobOrder.vendorId!,
+        widget.jobOrder,
+      ),
+    );
 
     String progress = "";
     if (widget.jobOrder.documentStatus != null){
@@ -115,55 +117,71 @@ class JobFormPageState extends State<JobFormPage>
   @override
   Widget build(BuildContext context) {
     setupStep();
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<JobFormBloc, JobFormState>(
+          listener: (context, state) {
+            if (state is JobFormLoaded) {
+              providers = state.providers;
+              edcTypes = state.edcTypes;
+              appVersion = state.appVersion;
+              osPatch = state.osPatch;
+              stickerBank = state.stickerBank;
+              edcCommunicationTypes = state.edcCommunicationTypes;
+              replacementTypes = state.replacementTypes;
+              jobStatuses = state.jobStatuses;
+              jobStatusCategories = state.jobStatusCategories;
+              notes = state.notes;
+              qrisMenus = state.qrisMenus;
+              edcEquipments = state.edcEquipments;
+              edcFeatureTestCases = state.edcFeatureTestCases;
+              jobCategories = state.jobCategories;
+              otherBankEdcs = state.otherBankEdcs;
+              dorMenus = state.dorMenus;
+              marcollUpdateStatuses = state.marcollUpdateStatuses;
+              eosUpdateStatuses = state.eosUpdateStatuses;
+              trainingMaterials = state.trainingMaterials;
+              damageTypes = state.damageTypes;
+              transactionTestCases = state.transactionTestCases;
+              edcBniMtiFeatures = state.edcBniMtiFeatures;
+              copyImageBloc.add(CopyFinishedJoImage(widget.jobOrder));
+              setState(() {});
+            } else if (state is JobFormJobStatusCategorySuccess) {
+              jobStatusCategories = state.jobStatusCategories;
 
-    return BlocListener<JobFormBloc, JobFormState>(
-      listener: (context, state) {
-        if (state is JobFormLoaded) {
-          providers = state.providers;
-          edcTypes = state.edcTypes;
-          appVersion = state.appVersion;
-          osPatch = state.osPatch;
-          stickerBank = state.stickerBank;
-          edcCommunicationTypes = state.edcCommunicationTypes;
-          replacementTypes = state.replacementTypes;
-          jobStatuses = state.jobStatuses;
-          jobStatusCategories = state.jobStatusCategories;
-          notes = state.notes;
-          qrisMenus = state.qrisMenus;
-          edcEquipments = state.edcEquipments;
-          edcFeatureTestCases = state.edcFeatureTestCases;
-          jobCategories = state.jobCategories;
-          otherBankEdcs = state.otherBankEdcs;
-          dorMenus = state.dorMenus;
-          marcollUpdateStatuses = state.marcollUpdateStatuses;
-          eosUpdateStatuses = state.eosUpdateStatuses;
-          trainingMaterials = state.trainingMaterials;
-          damageTypes = state.damageTypes;
-          transactionTestCases = state.transactionTestCases;
-
-          setState(() {});
-        } else if (state is JobFormJobStatusCategorySuccess) {
-          jobStatusCategories = state.jobStatusCategories;
-
-          setState(() {});
-        } else if (state is JobFormSubmitLoading) {
-          context.loaderOverlay.show();
-        } else if (state is JobFormSubmitSuccess) {
-          Dialogs.message(
-            context: context,
-            title: "Berhasil",
-            message: state.data,
-          ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
-        } else if (state is JobFormSubmitFailed) {
-          Dialogs.message(
-            context: context,
-            title: "Gagal",
-            message: state.message,
-          ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
-        } else if (state is JobFormSubmitFinished) {
-          context.loaderOverlay.hide();
-        }
-      },
+              setState(() {});
+            } else if (state is JobFormSubmitLoading) {
+              context.loaderOverlay.show();
+            } else if (state is JobFormSubmitSuccess) {
+              Dialogs.message(
+                context: context,
+                title: "Berhasil",
+                message: state.data,
+              ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
+            } else if (state is JobFormSubmitFailed) {
+              Dialogs.message(
+                context: context,
+                title: "Gagal",
+                message: state.message,
+              ).whenComplete(() => !widget.readOnly ? Navigators.pop(context) : null);
+            } else if (state is JobFormSubmitFinished) {
+              context.loaderOverlay.hide();
+            }
+          },
+        ),
+        BlocListener(
+          bloc: copyImageBloc,
+          listener: (context, state){
+            if (state is CopyingImage){
+              context.loaderOverlay.show();
+            }
+            if (state is CopyFinished){
+              context.loaderOverlay.hide();
+              setState(() {});
+            }
+          },
+        ),
+      ],
       child: WillPopScope(
         child: Scaffold(
           appBar: StandardAppBar(
@@ -217,9 +235,9 @@ class JobFormPageState extends State<JobFormPage>
                                 backgroundColor: tabController.index == index
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.3),
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.3),
                                 foregroundColor: Theme.of(context).primaryColor,
                                 radius: 12,
                                 child: Text(
@@ -487,10 +505,10 @@ class JobFormPageState extends State<JobFormPage>
             positive: "Kirim",
             positiveCallback: () async {
               context.read<JobFormBloc>().add(
-                    JobFormSubmitted(
-                      jobOrder: widget.jobOrder,
-                    ),
-                  );
+                JobFormSubmitted(
+                  jobOrder: widget.jobOrder,
+                ),
+              );
             },
           );
         },
@@ -546,11 +564,11 @@ class JobFormPageState extends State<JobFormPage>
                       if (success) {
                         setState(() {});
                         context.read<StartJobBloc>().add(
-                              ChangeStatus(
-                                readOnly: widget.readOnly,
-                                status: Progress.start,
-                              ),
-                            );
+                          ChangeStatus(
+                            readOnly: widget.readOnly,
+                            status: Progress.start,
+                          ),
+                        );
                         context.loaderOverlay.hide();
                       }
                     });
@@ -560,7 +578,7 @@ class JobFormPageState extends State<JobFormPage>
                 await Dialogs.message(
                   context: context,
                   title:
-                      "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
+                  "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
                 );
 
                 DatetimeSetting.openSetting();
@@ -590,7 +608,7 @@ class JobFormPageState extends State<JobFormPage>
                 Dialogs.confirmation(
                   context: context,
                   title:
-                      "Apakah anda yakin ingin berhenti sejenak dari tugas ini?",
+                  "Apakah anda yakin ingin berhenti sejenak dari tugas ini?",
                   positive: "Berhenti Sejenak",
                   positiveCallback: () async {
                     context.loaderOverlay.show();
@@ -608,11 +626,11 @@ class JobFormPageState extends State<JobFormPage>
                       if (success) {
                         setState(() {});
                         context.read<StartJobBloc>().add(
-                              ChangeStatus(
-                                readOnly: widget.readOnly,
-                                status: Progress.pause,
-                              ),
-                            );
+                          ChangeStatus(
+                            readOnly: widget.readOnly,
+                            status: Progress.pause,
+                          ),
+                        );
                         context.loaderOverlay.hide();
                       }
                     });
@@ -622,7 +640,7 @@ class JobFormPageState extends State<JobFormPage>
                 await Dialogs.message(
                   context: context,
                   title:
-                      "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
+                  "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
                 );
 
                 DatetimeSetting.openSetting();
@@ -673,11 +691,11 @@ class JobFormPageState extends State<JobFormPage>
                 if (success) {
                   setState(() {});
                   context.read<StartJobBloc>().add(
-                        ChangeStatus(
-                          readOnly: widget.readOnly,
-                          status: Progress.visit,
-                        ),
-                      );
+                    ChangeStatus(
+                      readOnly: widget.readOnly,
+                      status: Progress.visit,
+                    ),
+                  );
                   context.loaderOverlay.hide();
                 }
               });
@@ -687,7 +705,7 @@ class JobFormPageState extends State<JobFormPage>
           await Dialogs.message(
             context: context,
             title:
-                "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
+            "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
           );
 
           DatetimeSetting.openSetting();
@@ -715,12 +733,12 @@ class JobFormPageState extends State<JobFormPage>
     required String jobTypeId,
   }) {
     context.read<JobFormBloc>().add(
-          JobFormJobStatusSelected(
-            jobStatusId: jobStatusId,
-            vendorId: vendorId,
-            jobTypeId: jobTypeId,
-          ),
-        );
+      JobFormJobStatusSelected(
+        jobStatusId: jobStatusId,
+        vendorId: vendorId,
+        jobTypeId: jobTypeId,
+      ),
+    );
   }
 
   void changeTabIndex(int newIndex) {
@@ -773,7 +791,7 @@ class JobFormPageState extends State<JobFormPage>
           shape: const CircleBorder(),
           padding: EdgeInsets.zero,
           backgroundColor:
-              Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          Theme.of(context).colorScheme.primary.withOpacity(0.3),
           foregroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
         ),
@@ -827,9 +845,9 @@ class JobFormPageState extends State<JobFormPage>
                     Dialogs.confirmation(
                       context: context,
                       title:
-                          "Apakah anda yakin ingin menyelesaikan pekerjaan ini dengan status ${selectedJobStatus!.description}?",
+                      "Apakah anda yakin ingin menyelesaikan pekerjaan ini dengan status ${selectedJobStatus!.description}?",
                       message:
-                          "Anda tidak bisa melakukan perubahan data setelah pekerjaan ini selesai.",
+                      "Anda tidak bisa melakukan perubahan data setelah pekerjaan ini selesai.",
                       positive: "Selesai",
                       positiveCallback: () async {
                         context.loaderOverlay.show();
@@ -911,7 +929,7 @@ class JobFormPageState extends State<JobFormPage>
                             }
 
                             for (JobOrderReplacement jobOrderReplacement
-                                in widget.jobOrder.replacements) {
+                            in widget.jobOrder.replacements) {
                               SnStockDao.used(
                                 jobOrderReplacement.newSerialNumber,
                               );
@@ -932,11 +950,11 @@ class JobFormPageState extends State<JobFormPage>
                         }
 
                         ParafPicDataMerchantState parafPicDataMerchantState =
-                            widgetStates[tabController.index].currentState
-                                as ParafPicDataMerchantState;
+                        widgetStates[tabController.index].currentState
+                        as ParafPicDataMerchantState;
 
                         if (parafPicDataMerchantState
-                                .gkSignaturePadState.currentState !=
+                            .gkSignaturePadState.currentState !=
                             null) {
                           if (widget.jobOrder.merchant != null) {
                             ui.Image image = await parafPicDataMerchantState
@@ -971,10 +989,10 @@ class JobFormPageState extends State<JobFormPage>
                           if (success) {
                             context.loaderOverlay.hide();
                             context.read<JobFormBloc>().add(
-                                  JobFormSubmitted(
-                                    jobOrder: widget.jobOrder,
-                                  ),
-                                );
+                              JobFormSubmitted(
+                                jobOrder: widget.jobOrder,
+                              ),
+                            );
                           }
                         });
                       },
@@ -983,7 +1001,7 @@ class JobFormPageState extends State<JobFormPage>
                     Dialogs.message(
                       context: context,
                       title:
-                          "Mohon pastikan data yang dimasukkan sudah sesuai.",
+                      "Mohon pastikan data yang dimasukkan sudah sesuai.",
                     );
                   }
                 }
@@ -992,7 +1010,7 @@ class JobFormPageState extends State<JobFormPage>
               await Dialogs.message(
                 context: context,
                 title:
-                    "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
+                "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
               );
 
               DatetimeSetting.openSetting();

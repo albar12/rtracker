@@ -260,9 +260,14 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
               child: CustomScanField(
                 title: "PINDAI NOMOR SERI",
                 readOnly: state.readOnly,
+                isCapital: true,
                 validator: (value) {
                   int maxDigit =
                   int.parse(jobOrder.serialNumberMaxDigit.split("-")[0]);
+                  var sameCharacters = Strings.findFiveConsecutiveSameCharacters(value.toString());
+                  if (sameCharacters != null){
+                    return "$sameCharacters tidak valid sebagai nomor serial";
+                  }
 
                   if (jobOrder.serialNumberValidationType[0] != "0") {
                     if (StringUtils.isNullOrEmpty(value)) {
@@ -310,6 +315,10 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                                 "",
                           )) {
                         return "Nomor seri tidak sesuai.";
+                      }
+                    } else {
+                      if (StringUtils.isNullOrEmpty(value)) {
+                        return "Kolom ini harus diisi.";
                       }
                     }
                   }

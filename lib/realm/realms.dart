@@ -75,8 +75,10 @@ class Realms {
         JobOrderTrainingMaterial.schema,
         JobOrder.schema,
         Inbox.schema,
+        EdcBniMtiFeature.schema,
+        EdcBniMtiFeatureVersion.schema,
       ],
-        schemaVersion: 3,
+        schemaVersion: 8,
       ),
     );
 
@@ -154,6 +156,8 @@ class Realms {
       realm.deleteAll<JobOrderTrainingMaterial>();
       realm.deleteAll<JobOrder>();
       realm.deleteAll<Inbox>();
+      realm.deleteAll<EdcBniMtiFeature>();
+      realm.deleteAll<EdcBniMtiFeatureVersion>();
     });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtracker/helper/uppercase_formatters.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -10,6 +11,8 @@ class CustomTextField extends StatelessWidget {
   final bool readOnly;
   final Widget? suffixIcon;
   final Key? fieldKey;
+  final String? hintText;
+  final bool isCapital;
 
   const CustomTextField({
     Key? key,
@@ -22,12 +25,12 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.suffixIcon,
     this.fieldKey,
+    this.hintText,
+    this.isCapital = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final FocusNode focusNode = FocusNode();
-    focusNode.canRequestFocus = !readOnly;
     return TextFormField(
       key: fieldKey,
       validator: validator,
@@ -35,10 +38,13 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       controller: controller,
       readOnly: readOnly,
-      focusNode: focusNode,
+      inputFormatters: [
+        if (isCapital) UpperCaseTextFormatter(),
+      ],
       decoration: InputDecoration(
         helperText: helperText,
         labelText: label,
+        hintText: hintText,
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.primary,
         ),

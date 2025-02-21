@@ -2,9 +2,11 @@
 
 import "package:basic_utils/basic_utils.dart";
 import "package:flutter/cupertino.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get/get.dart";
+import "package:rtracker/constant.dart";
 import "package:rtracker/helper/bottom_sheets.dart";
 import "package:rtracker/helper/dialogs.dart";
 import "package:rtracker/helper/dimensions.dart";
@@ -19,6 +21,7 @@ import "package:rtracker/widget/custom_checklist_field.dart";
 import "package:rtracker/widget/custom_date_field.dart";
 import "package:rtracker/widget/custom_number_list_field.dart";
 import "package:rtracker/widget/custom_spinner_field.dart";
+import "package:rtracker/widget/custom_switch.dart";
 import "package:rtracker/widget/custom_text_field.dart";
 import "package:rtracker/widget/custom_time_field.dart";
 import "package:rtracker/widget/information/custom_information.dart";
@@ -43,8 +46,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
 
   TextEditingController tecJobStatusCategory = TextEditingController();
   TextEditingController tecNewVisitDate = TextEditingController();
-  TextEditingController tecOpen = TextEditingController();
-  TextEditingController edcCount = TextEditingController();
   TextEditingController tecPatchOs = TextEditingController();
 
   GlobalKey<FormFieldState> ffsJobStatusCategory = GlobalKey<FormFieldState>();
@@ -83,10 +84,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     if (jobOrder.qris != null) {
       hasQris = jobOrder.qris!.exist;
       qrisCheckResult = jobOrder.qris!.testResult;
-    }
-
-    if (jobOrder.edcCount != null) {
-      edcCount.text = jobOrder.edcCount.toString();
     }
 
     if (jobOrder.edcUpdate!.appVersion != null) {
@@ -136,7 +133,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                   return "Kolom ini harus diisi.";
                 }
 
-                if (value.identity == "9"){
+                if (value!.identity == "9"){
                   String errorMessage = "";
                   int totalRequired = IntUtils.parseToInt(jobOrder.requiredThermalCount)!;
                   int requirement = totalRequired - totalThermal;
@@ -303,80 +300,28 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             SizedBox(
               height: Dimensions.height15,
             ),
-            Visibility(
-              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-              child: CustomTimeField(
-                labelText: "Jam Buka Toko",
-                initialValue:
-                jobOrder.jamBukaToko,
-                readOnly: widget.jobFormPageState.widget.readOnly,
-                validator: (value) {
-                  if (value == null) {
-                    return "Kolom ini harus diisi.";
-                  }
-
-                  return null;
-                },
-                onSaved: (value) {
-                  if (value != null) {
-                    Realms.get().write(() {
-                      // jobOrder.jamBukaToko ??= jamBukaToko();
-                      // if (jobOrder.jamBukaToko != null) {
-                      jobOrder.jamBukaToko = value.toString();
-                      // }
-                    });
-                  }
-                },
-              ),
+            CustomSwitch(
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              title: "EDC Problem",
+              value: SwitchValues.valueToStatus(jobOrder.edcProblem),
+              onChanged: (status){
+                Realms.get().write(() {
+                  jobOrder.edcProblem = SwitchValues.statusToValue(status);
+                });
+              },
             ),
-            Visibility(
-              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-              child: CustomTimeField(
-                labelText: "Jam Tutup Toko",
-                initialValue:
-                jobOrder.jamTutupToko,
-                readOnly: widget.jobFormPageState.widget.readOnly,
-                validator: (value) {
-                  if (value == null) {
-                    return "Kolom ini harus diisi.";
-                  }
-
-                  return null;
-                },
-                onSaved: (value) {
-                  if (value != null) {
-                    Realms.get().write(() {
-                      // if (jobOrder.jamTutupToko != null) {
-                      jobOrder.jamTutupToko = value.toString();
-                      // }
-                    });
-                  }
-                },
-              ),
+            SizedBox(
+              height: Dimensions.height15,
             ),
-            Visibility(
-              visible: Strings.equalsAny(jobOrder.vendorId, ["3","2"]),
-              child: CustomTextField(
-                controller: edcCount,
-                label: jobOrder.vendorId == "3" ? 'EDC Count' : 'Thermal Count',
-                readOnly: widget.jobFormPageState.widget.readOnly,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (StringUtils.isNullOrEmpty(value)) {
-                    return "Kolom ini harus diisi.";
-                  }
-
-                  if (value!.length > 2) {
-                    return "Maksimal 2 digit.";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  Realms.get().write(() {
-                    jobOrder.edcCount = int.parse(value!);
-                  });
-                },
-              ),
+            CustomSwitch(
+              readOnly: widget.jobFormPageState.widget.readOnly,
+              title: "Settlement",
+              value: SwitchValues.valueToStatus(jobOrder.settlement),
+              onChanged: (status){
+                Realms.get().write(() {
+                  jobOrder.settlement = SwitchValues.statusToValue(status);
+                });
+              },
             ),
             ...requiredThermalCount(),
             ...checklistNotes(),
@@ -467,7 +412,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               title: "DAFTAR PERIKSA KATEGORI PEKERJAAN",
               readOnly: widget.jobFormPageState.widget.readOnly,
               validator: (value) {
-                if (value != null) {
+                if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                   if (widget.jobFormPageState.selectedJobStatus != null &&
                       widget.jobFormPageState.selectedJobStatus!.identity ==
                           "9") {
@@ -515,6 +460,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             ),
             ...trainingMaterial(),
             ...otherBankEdc(),
+            ...edcFeatures(),
             ...edcUpdate(),
             ...vendorMtiOnly(),
           ],
@@ -560,7 +506,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           title: "DAFTAR PERIKSA CATATAN",
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (value != null) {
+            if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
@@ -602,7 +548,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               value: jobOrderNote != null ? jobOrderNote.value : false,
             );
           }).toList(),
-        )
+        ),
       ];
     }
 
@@ -612,7 +558,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
   List<Widget> qris() {
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
 
-    if (Strings.equalsAny(jobOrder.vendorId, ["3"])) {
+    if (Strings.equalsAny(jobOrder.vendorId, ["3","2"])) {
       return [
         SizedBox(
           height: Dimensions.height15,
@@ -714,7 +660,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                       title: "Menu QRIS",
                       readOnly: widget.jobFormPageState.widget.readOnly,
                       validator: (value) {
-                        if (value != null) {
+                        if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                           if (widget.jobFormPageState.selectedJobStatus !=
                               null &&
                               widget.jobFormPageState.selectedJobStatus!
@@ -774,7 +720,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               )
             ],
           ),
-        )
+        ),
       ];
     }
 
@@ -793,7 +739,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           title: "DAFTAR PENGUJIAN FITUR EDC",
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (value != null) {
+            if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
@@ -858,7 +804,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
           title: "DAFTAR MATERI PELATIHAN",
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (value != null) {
+            if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
               if (widget.jobFormPageState.selectedJobStatus != null &&
                   widget.jobFormPageState.selectedJobStatus!.identity == "9") {
                 CheckItem? checkItem =
@@ -869,7 +815,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 }
               }
             }
-
             return null;
           },
           onSaved: (value) {
@@ -923,7 +868,6 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             title: "DAFTAR EDC BANK LAIN",
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-
               return null;
             },
             onSaved: (value) {
@@ -965,32 +909,58 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
     return [];
   }
 
+  List<Widget> edcFeatures() {
+    JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
+    if (Strings.equalsAny(jobOrder.vendorId, ["2"])) {
+      return [
+        SizedBox(
+          height: Dimensions.height15,
+        ),
+        CustomCheckListField(
+          title: "FITUR EDC",
+          readOnly: widget.jobFormPageState.widget.readOnly,
+          validator: (value) {
+            return null;
+          },
+          onSaved: (value) {
+            if (value != null) {
+              Realms.get().write(() {
+                jobOrder.edcBniMtiFeatures.clear();
+
+                for (CheckItem checkItem in value) {
+                  jobOrder.edcBniMtiFeatures.add(
+                    EdcBniMtiFeature(
+                      checkItem.identity,
+                      checkItem.description,
+                      checkItem.value,
+                    ),
+                  );
+                }
+              });
+            }
+          },
+          checkItems: widget.jobFormPageState.edcBniMtiFeatures.map((e) {
+            EdcBniMtiFeature? edcFeature = jobOrder
+                .edcBniMtiFeatures
+                .firstWhereOrNull((element) => element.id == e.id);
+
+            return CheckItem(
+              identity: e.id,
+              description: e.name,
+              tag: e,
+              value: edcFeature != null
+                  ? edcFeature.value
+                  : false,
+            );
+          }).toList(),
+        ),
+      ];
+    }
+    return [];
+  }
+
   List<Widget> edcUpdate() {
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
-
-    List<Map<String, dynamic>> versiEdc = [
-      {"id": 1, "name": "data1"},
-      {"id": 2, "name": "data2"},
-      {"id": 3, "name": "data3"},
-    ];
-
-    List<Map<String, dynamic>> patchOS = [
-      {
-        "id": 1,
-        "name": "patchOS1",
-        "versiEdc": "1",
-      },
-      {
-        "id": 2,
-        "name": "patchOS2",
-        "versiEdc": "2",
-      },
-      {
-        "id": 3,
-        "name": "patchOS3",
-        "versiEdc": "3",
-      },
-    ];
 
     if (jobOrder.jobType != null) {
       if (Strings.equalsAny(jobOrder.jobType!.id, ["6", "20","26","27"])) {
@@ -1018,7 +988,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (done) {
+              if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                 if (value == null) {
                   return "Kolom ini harus diisi.";
                 }
@@ -1069,7 +1039,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (done) {
+              if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                 if (value == null) {
                   return "Kolom ini harus diisi.";
                 }
@@ -1123,7 +1093,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (done) {
+              if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                 if (value == null) {
                   return "Kolom ini harus diisi.";
                 }
@@ -1180,7 +1150,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (done) {
+              if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                 if (value == null) {
                   return "Kolom ini harus diisi.";
                 }
@@ -1259,7 +1229,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 : null,
             readOnly: widget.jobFormPageState.widget.readOnly,
             validator: (value) {
-              if (done) {
+              if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
                 if (value == null) {
                   return "Kolom ini harus diisi.";
                 }
@@ -1305,7 +1275,15 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
                 .toList(),
           ),
         ];
+      } else {
+        return [
+          kDebugMode ? Text("Job Type is ${jobOrder.jobType!.id}") : const SizedBox(),
+        ];
       }
+    } else {
+      return [
+        kDebugMode ? const Text('Job Type is NULL') : const SizedBox(),
+      ];
     }
 
     return [];
@@ -1343,7 +1321,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
             return null;
           },
           onSaved: (value) {
-            if (value != null) {
+            if (value != null && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
               Realms.get().write(() {
                 jobOrder.edcUpdate ??= JobOrderEdcUpdate();
 
@@ -1388,7 +1366,7 @@ class RincianPekerjaanState extends State<RincianPekerjaan>
               : null,
           readOnly: widget.jobFormPageState.widget.readOnly,
           validator: (value) {
-            if (done) {
+            if (done && !Strings.equalsAny(jobOrder.jobType!.id, ["18","21"])) {
               if (value == null) {
                 return "Kolom ini harus diisi.";
               }

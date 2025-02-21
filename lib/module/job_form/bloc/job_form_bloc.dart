@@ -13,6 +13,7 @@ import 'package:rtracker/module/job_form/bloc/job_form_state.dart';
 import 'package:rtracker/realm/app_version_dao.dart';
 import 'package:rtracker/realm/damage_type_dao.dart';
 import 'package:rtracker/realm/dor_menu_dao.dart';
+import 'package:rtracker/realm/edc_bni_mti_feature_version_dao.dart';
 import 'package:rtracker/realm/edc_communication_type_dao.dart';
 import 'package:rtracker/realm/edc_equipment_dao.dart';
 import 'package:rtracker/realm/edc_feature_test_case_dao.dart';
@@ -86,6 +87,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
     List<DamageType> damageTypes = DamageTypeDao.all();
     List<TransactionTestCase> transactionTestCases =
         TransactionTestCaseDao.all(jobTypeId: event.jobOrder.jobType!.id);
+    List<EdcBniMtiFeatureVersion> edcBniMtiFeatures = EdcBniMtiFeatureVersionDao.all();
 
     emit(
       JobFormLoaded(
@@ -110,6 +112,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
         eosUpdateStatuses: eosUpdateStatuses,
         trainingMaterials: trainingMaterials,
         damageTypes: damageTypes,
+        edcBniMtiFeatures: edcBniMtiFeatures,
       ),
     );
   }

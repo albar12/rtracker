@@ -639,4 +639,24 @@ class _JobOrder {
   late String? merchantRequest;
   late String? promoMaterial;
   late String? position;
+  late String? mostStableEdc;
+  late String? mostGoodProviderInMerchantLocation;
+  late String? otherBankEdcProvider;
+  late List<_EdcBniMtiFeature> edcBniMtiFeatures;
+}
+
+@RealmModel()
+class _EdcBniMtiFeatureVersion {
+  @PrimaryKey()
+  late String? id;
+  late String? name;
+  late int version;
+}
+
+@RealmModel()
+class _EdcBniMtiFeature {
+  @PrimaryKey()
+  late String? id;
+  late String? name;
+  late bool value;
 }

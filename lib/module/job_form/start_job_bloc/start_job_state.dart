@@ -7,3 +7,7 @@ class StartJobInitial extends StartJobState {
   final bool readOnly;
   StartJobInitial({required this.readOnly});
 }
+
+class CopyingImage extends StartJobState {}
+
+class CopyFinished extends StartJobState {}

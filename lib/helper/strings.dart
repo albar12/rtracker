@@ -85,4 +85,10 @@ class Strings {
       return false;
     }
   }
+
+  static String? findFiveConsecutiveSameCharacters(String input) {
+    RegExp regex = RegExp(r'(.)\1{4}'); // Match any character repeated 5 times consecutively
+    Match? match = regex.firstMatch(input);
+    return match?.group(0); // Return the matched sequence or null if not found
+  }
 }

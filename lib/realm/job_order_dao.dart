@@ -954,4 +954,55 @@ class JobOrderDao {
     }
     return result;
   }
+
+  static void getImageFromFinishedJo(JobOrder jobOrder) {
+    try {
+      JobOrder? result;
+      Realm realm = Realms.get();
+      final splitMid = jobOrder.mid!.split(" | ");
+      var mid = splitMid.last;
+      var finishedJobs = realm.query<JobOrder>(
+        "documentStatus.id = \$0 AND mid ENDSWITH \$1",
+        [Progress.end, mid],
+      ).toList();
+      for (JobOrder job in finishedJobs) {
+        if (job.timing != null) {
+          if (job.timing!.finish != null){
+            DateTime dateTimeJob = job.timing!.finish!;
+            DateTime dateTimeNow = DateTime.now();
+            if (dateTimeJob.year == dateTimeNow.year &&
+                dateTimeJob.month == dateTimeNow.month &&
+                dateTimeJob.day == dateTimeNow.day){
+              result = job;
+              break;
+            }
+          }
+        }
+      }
+      if (result != null) {
+        realm.write(() {
+          if (jobOrder.merchant != null) {
+            jobOrder.merchant!.images = result!.merchant!.images;
+          }
+          if (jobOrder.machineAndCard != null) {
+            jobOrder.machineAndCard!.images = result!.machineAndCard!.images;
+            jobOrder.machineAndCard!.serialNumberPhotos =
+                result.machineAndCard!.serialNumberPhotos;
+            jobOrder.machineAndCard!.picMerchantImages =
+                result.machineAndCard!.picMerchantImages;
+            jobOrder.machineAndCard!.rollSalesDraftImages =
+                result.machineAndCard!.rollSalesDraftImages;
+            jobOrder.machineAndCard!.trainingStatementLetterImages =
+                result.machineAndCard!.trainingStatementLetterImages;
+            jobOrder.machineAndCard!.edcAppImages =
+                result.machineAndCard!.edcAppImages;
+            jobOrder.machineAndCard!.otherImages =
+                result.machineAndCard!.otherImages;
+          }
+        });
+      }
+    } catch (e){
+      print("Error Get Image Finished : ${e.toString()}");
+    }
+  }
 }

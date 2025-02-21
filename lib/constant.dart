@@ -30,7 +30,8 @@ enum VersionKey {
   APP_VERSION("APP VERSION"),
   OS_PATCH("OS PATCH"),
   STICKER_BANK("STICKER BANK"),
-  INBOX("Inbox");
+  INBOX("Inbox"),
+  FITUR_EDC_BNI_MTI("FITUR EDC BNI MTI");
 
   final String alias;
 
@@ -113,6 +114,7 @@ class ApiUrl {
   static String SEND_SN_REQUEST_RETUR = '/send_sn_request_retur';
   static String SEND_NON_SN_REQUEST_RETUR = '/send_non_sn_request_retur';
   static String SYNC_FINISHED_JO = "/send_check_id_job_selesai";
+  static String FITUR_EDC_BNI_MTI = "/fitur_edc_bni_mti";
 }
 
 enum SharedPreferenceKey {

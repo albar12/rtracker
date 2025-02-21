@@ -21,6 +21,9 @@ import 'package:rtracker/module/job_form/start_job_bloc/start_job_bloc.dart';
 import 'package:rtracker/module/job_form/thermal_count_bloc/thermal_count_bloc.dart';
 import 'package:rtracker/module/job_list/job_list_bloc.dart';
 import 'package:rtracker/module/profile/profile_bloc.dart';
+import 'package:rtracker/module/pullout/bloc/add_pullout_bloc/add_pullout_bloc.dart';
+import 'package:rtracker/module/pullout/bloc/list_pullout_bloc/list_pullout_bloc.dart';
+import 'package:rtracker/module/scan_sn/scan_sn_bloc/scan_sn_bloc.dart';
 import 'package:rtracker/module/sign_in/bloc/sign_in_bloc.dart';
 import 'package:rtracker/module/sign_in/sign_in_page.dart';
 import 'package:basic_utils/basic_utils.dart';
@@ -199,6 +202,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => StartJobBloc()),
         BlocProvider(create: (context) => ReplacementBloc()),
         BlocProvider(create: (context) => RequiredJobBloc()),
+        BlocProvider(create: (context) => AddPulloutBloc()),
+        BlocProvider(create: (context) => ListPulloutBloc()),
+        BlocProvider(create: (context) => ScanSnBloc()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,

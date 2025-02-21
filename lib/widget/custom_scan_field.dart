@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:rtracker/helper/app_colors.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/navigators.dart';
+import 'package:rtracker/helper/uppercase_formatters.dart';
 import 'package:rtracker/module/scan_sn/scan_sn.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 
@@ -17,6 +18,7 @@ class CustomScanField extends StatefulWidget {
   final String? initialValue;
   final FormFieldSetter<String>? onSaved;
   final TextEditingController? textEditingController;
+  final bool isCapital;
 
   const CustomScanField({
     Key? key,
@@ -27,6 +29,7 @@ class CustomScanField extends StatefulWidget {
     this.initialValue,
     this.onSaved,
     this.textEditingController,
+    this.isCapital = false,
   }) : super(key: key);
 
   @override
@@ -109,12 +112,12 @@ class CustomScanFieldState extends State<CustomScanField> {
                                 color: AppColors.primaryDark,
                                 fontWeight: FontWeight.bold,
                               ),
-                            )
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -174,6 +177,9 @@ class CustomScanFieldState extends State<CustomScanField> {
           fontWeight: FontWeight.bold,
         ),
         textAlign: TextAlign.center,
+        inputFormatters: [
+          if (widget.isCapital) UpperCaseTextFormatter(),
+        ],
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.primary.withOpacity(0.35),
