@@ -10,4 +10,9 @@ class StartJobInitial extends StartJobState {
 
 class CopyingImage extends StartJobState {}
 
-class CopyFinished extends StartJobState {}
+class CopyFinished extends StartJobState {
+  final JobOrder? jobOrder;
+  CopyFinished(this.jobOrder);
+}
+
+class ReloadCopyLayout extends StartJobState {}

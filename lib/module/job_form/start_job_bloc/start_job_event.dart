@@ -13,3 +13,5 @@ class CopyFinishedJoImage extends StartJobEvent {
   final JobOrder jobOrder;
   CopyFinishedJoImage(this.jobOrder);
 }
+
+class ReloadCopyImage extends StartJobEvent {}

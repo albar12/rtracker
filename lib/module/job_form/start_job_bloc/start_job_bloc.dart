@@ -25,8 +25,12 @@ class StartJobBloc extends Bloc<StartJobEvent, StartJobState> {
       }
 
       if (event is CopyFinishedJoImage){
-        JobOrderDao.getImageFromFinishedJo(event.jobOrder);
-        emit(CopyFinished());
+        var data = JobOrderDao.getImageFromFinishedJo(event.jobOrder);
+        emit(CopyFinished(data));
+      }
+
+      if (event is ReloadCopyImage){
+        emit(ReloadCopyLayout());
       }
     });
   }

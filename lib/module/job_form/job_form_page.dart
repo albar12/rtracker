@@ -144,8 +144,6 @@ class JobFormPageState extends State<JobFormPage>
               damageTypes = state.damageTypes;
               transactionTestCases = state.transactionTestCases;
               edcBniMtiFeatures = state.edcBniMtiFeatures;
-              copyImageBloc.add(CopyFinishedJoImage(widget.jobOrder));
-              setState(() {});
             } else if (state is JobFormJobStatusCategorySuccess) {
               jobStatusCategories = state.jobStatusCategories;
 
@@ -176,6 +174,46 @@ class JobFormPageState extends State<JobFormPage>
               context.loaderOverlay.show();
             }
             if (state is CopyFinished){
+              if (state.jobOrder != null){
+                Realms.get().write(() {
+                  if (widget.jobOrder.merchant != null){
+                    if (widget.jobOrder.merchant!.images.isEmpty){
+                      widget.jobOrder.merchant!.images.clear();
+                      widget.jobOrder.merchant!.images.addAll(state.jobOrder!.merchant!.images);
+                    }
+                  }
+                  if (widget.jobOrder.machineAndCard != null){
+                    if (widget.jobOrder.machineAndCard!.images.isEmpty){
+                      widget.jobOrder.machineAndCard!.images.clear();
+                      widget.jobOrder.machineAndCard!.images.addAll(state.jobOrder!.machineAndCard!.images);
+                    }
+                    if (widget.jobOrder.machineAndCard!.serialNumberPhotos.isEmpty){
+                      widget.jobOrder.machineAndCard!.serialNumberPhotos.clear();
+                      widget.jobOrder.machineAndCard!.serialNumberPhotos.addAll(state.jobOrder!.machineAndCard!.serialNumberPhotos);
+                    }
+                    if (widget.jobOrder.machineAndCard!.picMerchantImages.isEmpty){
+                      widget.jobOrder.machineAndCard!.picMerchantImages.clear();
+                      widget.jobOrder.machineAndCard!.picMerchantImages.addAll(state.jobOrder!.machineAndCard!.picMerchantImages);
+                    }
+                    if (widget.jobOrder.machineAndCard!.rollSalesDraftImages.isEmpty){
+                      widget.jobOrder.machineAndCard!.rollSalesDraftImages.clear();
+                      widget.jobOrder.machineAndCard!.rollSalesDraftImages.addAll(state.jobOrder!.machineAndCard!.rollSalesDraftImages);
+                    }
+                    if (widget.jobOrder.machineAndCard!.trainingStatementLetterImages.isEmpty){
+                      widget.jobOrder.machineAndCard!.trainingStatementLetterImages.clear();
+                      widget.jobOrder.machineAndCard!.trainingStatementLetterImages.addAll(state.jobOrder!.machineAndCard!.trainingStatementLetterImages);
+                    }
+                    if (widget.jobOrder.machineAndCard!.edcAppImages.isEmpty){
+                      widget.jobOrder.machineAndCard!.edcAppImages.clear();
+                      widget.jobOrder.machineAndCard!.edcAppImages.addAll(state.jobOrder!.machineAndCard!.edcAppImages);
+                    }
+                    if (widget.jobOrder.machineAndCard!.otherImages.isEmpty){
+                      widget.jobOrder.machineAndCard!.otherImages.clear();
+                      widget.jobOrder.machineAndCard!.otherImages.addAll(state.jobOrder!.machineAndCard!.otherImages);
+                    }
+                  }
+                });
+              }
               context.loaderOverlay.hide();
               setState(() {});
             }

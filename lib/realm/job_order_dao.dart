@@ -955,9 +955,9 @@ class JobOrderDao {
     return result;
   }
 
-  static void getImageFromFinishedJo(JobOrder jobOrder) {
+  static JobOrder? getImageFromFinishedJo(JobOrder jobOrder) {
+    JobOrder? result;
     try {
-      JobOrder? result;
       Realm realm = Realms.get();
       final splitMid = jobOrder.mid!.split(" | ");
       var mid = splitMid.last;
@@ -979,30 +979,9 @@ class JobOrderDao {
           }
         }
       }
-      if (result != null) {
-        realm.write(() {
-          if (jobOrder.merchant != null) {
-            jobOrder.merchant!.images = result!.merchant!.images;
-          }
-          if (jobOrder.machineAndCard != null) {
-            jobOrder.machineAndCard!.images = result!.machineAndCard!.images;
-            jobOrder.machineAndCard!.serialNumberPhotos =
-                result.machineAndCard!.serialNumberPhotos;
-            jobOrder.machineAndCard!.picMerchantImages =
-                result.machineAndCard!.picMerchantImages;
-            jobOrder.machineAndCard!.rollSalesDraftImages =
-                result.machineAndCard!.rollSalesDraftImages;
-            jobOrder.machineAndCard!.trainingStatementLetterImages =
-                result.machineAndCard!.trainingStatementLetterImages;
-            jobOrder.machineAndCard!.edcAppImages =
-                result.machineAndCard!.edcAppImages;
-            jobOrder.machineAndCard!.otherImages =
-                result.machineAndCard!.otherImages;
-          }
-        });
-      }
     } catch (e){
       print("Error Get Image Finished : ${e.toString()}");
     }
+    return result;
   }
 }
