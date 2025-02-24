@@ -1,0 +1,8 @@
+<resources>
+    <string name="default_web_client_id">947944455513-n4e5rj7bat0nth82jovinlr91penr2ub.apps.googleusercontent.com</string>
+    <string name="google_api_key">AIzaSyAnM8W7109km-3h49btOvW-n6QiZWCilQQ</string>
+    <string name="gcm_defaultSenderId">947944455513</string>
+    <string name="google_app_id">1:947944455513:android:1ac1d3d48db7da33fda048</string>
+    <string name="google_storage_bucket">rtracker-44fea.appspot.com</string>
+    <string name="project_id">rtracker-44fea</string>
+</resources>

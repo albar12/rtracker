@@ -18,10 +18,12 @@ class Locations {
 
     LocationPermission locationPermission = await Geolocator.checkPermission();
 
-    if (locationPermission == LocationPermission.denied || locationPermission == LocationPermission.deniedForever) {
+    if (locationPermission == LocationPermission.denied ||
+        locationPermission == LocationPermission.deniedForever) {
       locationPermission = await Geolocator.requestPermission();
 
-      if (locationPermission == LocationPermission.denied || locationPermission == LocationPermission.deniedForever) {
+      if (locationPermission == LocationPermission.denied ||
+          locationPermission == LocationPermission.deniedForever) {
         throw GeneralException(
           message: "Harap untuk mengizinkan akses terhadap lokasi.",
         );
@@ -31,18 +33,19 @@ class Locations {
     bool isMock = false;
 
     if (Platform.isAndroid) {
-      isMock = await SafeDevice.canMockLocation;
+      isMock = await SafeDevice.isMockLocation;
 
       if (isMock) {
         await Future.delayed(const Duration(seconds: 1));
 
-        isMock = await SafeDevice.canMockLocation;
+        isMock = await SafeDevice.isMockLocation;
       }
     }
 
     if (isMock) {
       throw GeneralException(
-        message: "Program mendeteksi adanya penggunaan fake GPS, silahkan untuk menonaktifkannya terlebih dahulu.",
+        message:
+            "Program mendeteksi adanya penggunaan fake GPS, silahkan untuk menonaktifkannya terlebih dahulu.",
       );
     }
 
@@ -63,8 +66,12 @@ class Locations {
       );
     } else {
       return LongLat(
-        latitude: Preferences.getInstance().getDouble(SharedPreferenceKey.LAST_LATITUDE) ?? 0,
-        longitude: Preferences.getInstance().getDouble(SharedPreferenceKey.LAST_LONGITUDE) ?? 0,
+        latitude: Preferences.getInstance()
+                .getDouble(SharedPreferenceKey.LAST_LATITUDE) ??
+            0,
+        longitude: Preferences.getInstance()
+                .getDouble(SharedPreferenceKey.LAST_LONGITUDE) ??
+            0,
       );
     }
   }

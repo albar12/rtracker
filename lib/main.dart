@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:rtracker/api/api_manager.dart';
 import 'package:rtracker/api/endpoint/login/login_response.dart';
 import 'package:rtracker/constant.dart';
@@ -34,7 +35,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:loader_overlay/loader_overlay.dart';
+
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:dio/dio.dart' as dio;
@@ -42,7 +43,6 @@ import 'package:rtracker/module/stok_barang/stok_barang_bloc.dart';
 import 'package:rtracker/module/synchronization/synchronization_bloc.dart';
 import 'package:rtracker/module/terima_barang/terima_barang_bloc.dart';
 import 'package:rtracker/service/background_service.dart';
-import 'package:rtracker/widget/job_form/rincian_pekerjaan.dart';
 
 Future<void> firebaseCloudMessagingInitialization() async {
   try {
@@ -208,14 +208,16 @@ class App extends StatelessWidget {
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,
-        overlayWidget: const Center(
-          child: SpinKitFadingCube(
-            color: AppColors.primary,
-            size: 50,
-          ),
-        ),
+       
+        overlayWidgetBuilder: (progress) {
+         return const Center(
+            child: SpinKitFadingCube(
+              color: AppColors.primary,
+              size: 50,
+            ),
+          );
+        },
         overlayColor: Colors.black,
-        overlayOpacity: 0.8,
         child: DismissibleKeyboard(
           widget: GetMaterialApp(
             title: 'RTracker',

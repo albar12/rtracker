@@ -106,3 +106,11 @@
 
 # Hermes
 -keep class com.facebook.hermes.unicode.** { *; }
+
+# Keep Play Core library classes
+-keep class com.google.android.play.** { *; }
+-dontwarn com.google.android.play.**
+
+# Keep Flutter deferred components
+-keep class io.flutter.embedding.engine.deferredcomponents.** { *; }
+

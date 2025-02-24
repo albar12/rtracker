@@ -26,7 +26,7 @@ class _ScannerPageState extends State<ScannerPage> {
     super.initState();
   }
 
-  MobileScannerArguments? arguments;
+  // MobileScannerArguments? arguments;
   MobileScannerController? controller;
 
   ScanType? scanType;
@@ -60,16 +60,16 @@ class _ScannerPageState extends State<ScannerPage> {
         listeners: [
           BlocListener(
             bloc: bloc,
-            listener: (context, state){
-              if (state is ScanSelected){
+            listener: (context, state) {
+              if (state is ScanSelected) {
                 scanType = state.scanType;
               }
             },
           ),
           BlocListener(
             bloc: displaySnBloc,
-            listener: (context, state){
-              if (state is BarcodeCaptured){
+            listener: (context, state) {
+              if (state is BarcodeCaptured) {
                 submitScan(state.barcode);
               }
             },
@@ -81,7 +81,7 @@ class _ScannerPageState extends State<ScannerPage> {
             return BlocBuilder(
               bloc: bloc,
               builder: (context, state) {
-                if (state is ScanSelected){
+                if (state is ScanSelected) {
                   final scanWindow = Rect.fromCenter(
                     center: MediaQuery.of(context).size.center(Offset.zero),
                     width: state.scanType == ScanType.qrCode ? 200 : 400,
@@ -94,11 +94,11 @@ class _ScannerPageState extends State<ScannerPage> {
                         fit: BoxFit.contain,
                         scanWindow: scanWindow,
                         controller: controller,
-                        onScannerStarted: (arguments){
-                          if (arguments != null) {
-                            this.arguments = arguments;
-                          }
-                        },
+                        // onScannerStarted: (arguments) {
+                        //   if (arguments != null) {
+                        //     this.arguments = arguments;
+                        //   }
+                        // },
                         onDetect: (capture) {
                           if (!_process) {
                             _process = true;
@@ -128,12 +128,12 @@ class _ScannerPageState extends State<ScannerPage> {
                       ),
                       BlocBuilder(
                         bloc: displaySnBloc,
-                        builder: (context, state){
-                          if (state is DisplayBarcode){
+                        builder: (context, state) {
+                          if (state is DisplayBarcode) {
                             return CustomPaint(
                               painter: BarcodeOverlay(
                                 barcode: state.barcode,
-                                arguments: arguments!,
+                                // arguments: arguments!,
                                 boxFit: BoxFit.contain,
                                 capture: state.barcodeCapture,
                               ),
@@ -161,17 +161,23 @@ class _ScannerPageState extends State<ScannerPage> {
                                   child: BlocBuilder(
                                     bloc: displaySnBloc,
                                     builder: (context, state) {
-                                      if (state is BarcodeCaptured){
+                                      if (state is BarcodeCaptured) {
                                         return Text(
                                           state.barcode.displayValue!,
                                           overflow: TextOverflow.fade,
-                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium!
+                                              .copyWith(color: Colors.white),
                                         );
                                       } else {
                                         return Text(
                                           'Silahkan lakukan scan',
                                           overflow: TextOverflow.fade,
-                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium!
+                                              .copyWith(color: Colors.white),
                                         );
                                       }
                                     },
@@ -181,10 +187,11 @@ class _ScannerPageState extends State<ScannerPage> {
                               BlocBuilder(
                                 bloc: displaySnBloc,
                                 builder: (context, state) {
-                                  if (state is BarcodeCaptured){
+                                  if (state is BarcodeCaptured) {
                                     return ElevatedButton(
                                       onPressed: () {
-                                        if (state.barcode.displayValue != null) {
+                                        if (state.barcode.displayValue !=
+                                            null) {
                                           widget.onSubmitted(
                                             state.barcode.displayValue!,
                                           );
@@ -211,13 +218,15 @@ class _ScannerPageState extends State<ScannerPage> {
                           child: Row(
                             children: [
                               TextSheet(
-                                state.scanType == ScanType.qrCode ? "QR Code" : "Barcode",
+                                state.scanType == ScanType.qrCode
+                                    ? "QR Code"
+                                    : "Barcode",
                                 color: Colors.white,
                               ),
                               SizedBox(width: Dimensions.width5),
                               ElevatedButton(
-                                onPressed: (){
-                                  if (state.scanType == ScanType.qrCode){
+                                onPressed: () {
+                                  if (state.scanType == ScanType.qrCode) {
                                     bloc.add(ChooseType(ScanType.barcode));
                                   } else {
                                     bloc.add(ChooseType(ScanType.qrCode));
@@ -249,7 +258,8 @@ class _ScannerPageState extends State<ScannerPage> {
                 } else {
                   return Container(
                     color: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.width10, vertical: 0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimensions.width10, vertical: 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -325,20 +335,20 @@ class ScannerOverlay extends CustomPainter {
 class BarcodeOverlay extends CustomPainter {
   BarcodeOverlay({
     required this.barcode,
-    required this.arguments,
+    // required this.arguments,
     required this.boxFit,
     required this.capture,
   });
 
   final BarcodeCapture capture;
   final Barcode barcode;
-  final MobileScannerArguments arguments;
+  // final MobileScannerArguments arguments;
   final BoxFit boxFit;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (barcode.corners == null) return;
-    final adjustedSize = applyBoxFit(boxFit, arguments.size, size);
+    final adjustedSize = applyBoxFit(boxFit, size / 2, size);
 
     double verticalPadding = size.height - adjustedSize.destination.height;
     double horizontalPadding = size.width - adjustedSize.destination.width;
@@ -354,8 +364,11 @@ class BarcodeOverlay extends CustomPainter {
       horizontalPadding = 0;
     }
 
-    final ratioWidth = (Platform.isIOS ? capture.width! : arguments.size.width) / adjustedSize.destination.width;
-    final ratioHeight = (Platform.isIOS ? capture.height! : arguments.size.height) / adjustedSize.destination.height;
+    final ratioWidth = (Platform.isIOS ? capture.size.width : size.width / 2) /
+        adjustedSize.destination.width;
+    final ratioHeight =
+        (Platform.isIOS ? capture.size.width : size.height / 2) /
+            adjustedSize.destination.height;
 
     final List<Offset> adjustedOffset = [];
     for (final offset in barcode.corners!) {
