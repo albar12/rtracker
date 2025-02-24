@@ -1,0 +1,2 @@
+/Users/yapindo/development/test_project/rtracker/android/app/.cxx/RelWithDebInfo/3k2hj4g5/x86/CMakeFiles/edit_cache.dir
+/Users/yapindo/development/test_project/rtracker/android/app/.cxx/RelWithDebInfo/3k2hj4g5/x86/CMakeFiles/rebuild_cache.dir

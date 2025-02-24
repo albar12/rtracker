@@ -212,9 +212,11 @@ class ProfilePageState extends State<ProfilePage> {
                       );
                     },
                     child: const TextSheet(
+                      textAlign: TextAlign.center,
                       'Bersihkan data dan sinkronisasi ulang',
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
+                      color: Colors.white,
                     ),
                   ),
                 ),

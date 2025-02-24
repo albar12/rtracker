@@ -14,12 +14,14 @@ Widget menu({
   required String name,
   String? badge,
 }) {
+  print("StringUtils.isNotNullOrEmpty(badge)");
+  print(StringUtils.isNotNullOrEmpty(badge));
   return Container(
     margin: EdgeInsets.symmetric(vertical: Dimensions.height5),
     child: InkWell(
       splashColor: color.lighten(50),
       radius: Dimensions.radius15,
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.circular(20),
       onTap: onTap,
       child: Ink(
         color: color.lighten(95),
@@ -29,13 +31,14 @@ Widget menu({
             vertical: Dimensions.height20,
           ),
           decoration: BoxDecoration(
-            border: Border.all(color: color),
-            borderRadius: BorderRadius.circular(15),
+            color: color,
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(30),
           ),
           child: Row(
             children: [
               SizedBox(width: Dimensions.width5),
-              Icon(iconData, color: color, size: 30),
+              Icon(iconData, color: Colors.black, size: 30),
               SizedBox(width: Dimensions.width10),
               Expanded(
                 child: TextSheet(
@@ -43,30 +46,31 @@ Widget menu({
                   fontSize: 20,
                   letterSpacing: 1.5,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
               StringUtils.isNotNullOrEmpty(badge)
                   ? Card(
-                elevation: 0,
-                color: AppColors.alertShaded.lighten(80),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(Dimensions.height5),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 18,
-                        color: AppColors.alertShaded,
+                      elevation: 0,
+                      color: AppColors.alertShaded.lighten(80),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      SizedBox(width: 3),
-                      TextSheet('3', color: AppColors.alertShaded),
-                    ],
-                  ),
-                ),
-              )
+                      child: Padding(
+                        padding: EdgeInsets.all(Dimensions.height5),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 18,
+                              color: AppColors.alertShaded,
+                            ),
+                            SizedBox(width: 3),
+                            TextSheet('3', color: AppColors.alertShaded),
+                          ],
+                        ),
+                      ),
+                    )
                   : const SizedBox.shrink(),
             ],
           ),

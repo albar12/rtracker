@@ -76,20 +76,10 @@ class SignInPageState extends State<SignInPage> {
                   top: MediaQuery.of(context).size.height * 0.08,
                   bottom: 10,
                 ),
-                child: const Center(
-                  child: Column(
-                    children: [
-                      TextSheet(
-                        'FMS',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
-                      TextSheet(
-                        'JADIN TRACKER',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      )
-                    ],
+                child: Center(
+                  child: Image.asset(
+                    "asset/images/img_text_logo.png",
+                    width: 200,
                   ),
                 ),
               ),
@@ -101,7 +91,7 @@ class SignInPageState extends State<SignInPage> {
                     EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children:  [
+                  children: [
                     TextSheet(
                       'Sign in',
                       fontSize: 24,
@@ -112,7 +102,7 @@ class SignInPageState extends State<SignInPage> {
                       height: 5,
                     ),
                     TextSheet(
-                      'with your account',
+                      'to your account',
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black54,
@@ -132,8 +122,11 @@ class SignInPageState extends State<SignInPage> {
                       ),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          labelText: 'Masukkan Username',
                           prefixIcon: Icon(Icons.account_box_sharp),
                         ),
                         autofillHints: const [AutofillHints.email],
@@ -147,7 +140,10 @@ class SignInPageState extends State<SignInPage> {
                         onEditingComplete: () =>
                             TextInput.finishAutofillContext(),
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          labelText: 'Masukkan Username',
                           prefixIcon: const Icon(Icons.key),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -198,11 +194,17 @@ class SignInPageState extends State<SignInPage> {
                                 );
                           },
                           style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 202, 195, 195),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const TextSheet('SIGN IN'),
+                          child: TextSheet(
+                            'SIGN IN',
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       )
                     ],

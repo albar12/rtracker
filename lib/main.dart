@@ -208,9 +208,8 @@ class App extends StatelessWidget {
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,
-       
         overlayWidgetBuilder: (progress) {
-         return const Center(
+          return const Center(
             child: SpinKitFadingCube(
               color: AppColors.primary,
               size: 50,

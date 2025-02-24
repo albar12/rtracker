@@ -16,7 +16,7 @@
 
     <application
         tools:replace="android:label,android:allowBackup"
-        android:label="RTracker"
+        android:label="TWS Tracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"

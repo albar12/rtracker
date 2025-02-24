@@ -192,10 +192,24 @@ class HomePageState extends State<HomePage> {
                 Container(
                   width: double.infinity,
                   alignment: Alignment.centerLeft,
-                  child: const TextSheet(
-                    'RTracker',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const TextSheet(
+                        'TWS Tracker',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigators.push(context, const InboxPage());
+                        },
+                        icon: Icon(
+                          Icons.notifications,
+                          color: Color(0xff2F80ED),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -326,7 +340,7 @@ class HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: Dimensions.height10),
                 menu(
-                  color: const Color(0xffF2994A),
+                  color: const Color(0xFF82E2FF),
                   onTap: () {
                     Navigators.push(
                       context,
@@ -337,7 +351,7 @@ class HomePageState extends State<HomePage> {
                   name: "JO ACTIVE",
                 ),
                 menu(
-                  color: const Color(0xff219653),
+                  color: const Color(0xffEAD299),
                   onTap: () {
                     Navigators.push(
                       context,
@@ -348,15 +362,7 @@ class HomePageState extends State<HomePage> {
                   name: "PEKERJAAN SELESAI",
                 ),
                 menu(
-                  color: const Color(0xff2F80ED),
-                  onTap: () {
-                    Navigators.push(context, const InboxPage());
-                  },
-                  iconData: Icons.notifications,
-                  name: "PESAN",
-                ),
-                menu(
-                  color: Colors.yellow,
+                  color: const Color(0xffFFF699),
                   onTap: () {
                     Navigators.push(context, const TerimaBarangPage());
                   },
@@ -364,7 +370,7 @@ class HomePageState extends State<HomePage> {
                   name: "TERIMA BARANG",
                 ),
                 menu(
-                  color: Colors.cyan,
+                  color: const Color(0xff28C1CA),
                   onTap: () {
                     Navigators.push(context, const StokBarangPage());
                   },
@@ -392,7 +398,8 @@ class HomePageState extends State<HomePage> {
                 menu(
                   color: const Color(0xffEB5757),
                   onTap: () {
-                    if (JobOrderDao.pendings().isNotEmpty || JobOrderDao.checkSameMidJobToday().isNotEmpty) {
+                    if (JobOrderDao.pendings().isNotEmpty ||
+                        JobOrderDao.checkSameMidJobToday().isNotEmpty) {
                       Dialogs.message(
                         context: context,
                         title: "Gagal Keluar",
@@ -440,6 +447,4 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 }
