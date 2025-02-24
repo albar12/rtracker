@@ -42,7 +42,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.jadin.rtracker"
+        // applicationId "com.jadin.rtracker"
+        applicationId "com.tws.tracker"
         minSdkVersion 28
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()

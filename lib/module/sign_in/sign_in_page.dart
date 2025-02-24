@@ -45,6 +45,7 @@ class SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
         if (state is SignInLoading) {
@@ -64,154 +65,162 @@ class SignInPageState extends State<SignInPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         resizeToAvoidBottomInset: false,
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.08,
-                  bottom: 10,
-                ),
-                child: Center(
-                  child: Image.asset(
-                    "asset/images/img_text_logo.png",
-                    width: 200,
+        body: Container(
+          height: size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("asset/img_background_mobile.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.08,
+                    bottom: 10,
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      "asset/images/img_text_logo.png",
+                      width: 200,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.025,
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextSheet(
-                      'Sign in',
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    TextSheet(
-                      'to your account',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    )
-                  ],
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.025,
                 ),
-              ),
-              Form(
-                child: AutofillGroup(
-                  child: Column(
+                Padding(
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Masukkan Username',
-                          prefixIcon: Icon(Icons.account_box_sharp),
-                        ),
-                        autofillHints: const [AutofillHints.email],
-                      ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        autofillHints: const [AutofillHints.password],
-                        onEditingComplete: () =>
-                            TextInput.finishAutofillContext(),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Masukkan Username',
-                          prefixIcon: const Icon(Icons.key),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _passwordVisible = !_passwordVisible;
-                              });
-                            },
-                            icon: Icon(
-                              !_passwordVisible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                          ),
-                        ),
-                        obscureText: !_passwordVisible,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigators.push(
-                          context,
-                          const ForgotPasswordPage(),
-                        ),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: TextSheet(
-                            'Forgot your password?',
-                            textAlign: TextAlign.end,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
+                      TextSheet(
+                        'Sign in',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: 5,
+                      ),
+                      TextSheet(
+                        'to your account',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            context.read<SignInBloc>().add(
-                                  SignInClicked(
-                                    username: _usernameController.text,
-                                    password: _passwordController.text,
-                                  ),
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 202, 195, 195),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: TextSheet(
-                            'SIGN IN',
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
+                        height: 5,
                       )
                     ],
                   ),
                 ),
-              )
-            ],
+                Form(
+                  child: AutofillGroup(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Masukkan Username',
+                            prefixIcon: Icon(Icons.account_box_sharp),
+                          ),
+                          autofillHints: const [AutofillHints.email],
+                        ),
+                        const SizedBox(
+                          height: 12.0,
+                        ),
+                        TextFormField(
+                          controller: _passwordController,
+                          autofillHints: const [AutofillHints.password],
+                          onEditingComplete: () =>
+                              TextInput.finishAutofillContext(),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Masukkan Username',
+                            prefixIcon: const Icon(Icons.key),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                              icon: Icon(
+                                !_passwordVisible
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                            ),
+                          ),
+                          obscureText: !_passwordVisible,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigators.push(
+                            context,
+                            const ForgotPasswordPage(),
+                          ),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: TextSheet(
+                              'Forgot your password?',
+                              textAlign: TextAlign.end,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              context.read<SignInBloc>().add(
+                                    SignInClicked(
+                                      username: _usernameController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 202, 195, 195),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: TextSheet(
+                              'SIGN IN',
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Container(
