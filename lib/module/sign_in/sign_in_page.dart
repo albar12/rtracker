@@ -70,7 +70,7 @@ class SignInPageState extends State<SignInPage> {
           height: size.height,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("asset/img_background_mobile.png"),
+              image: AssetImage("asset/images/img_background_mobile.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -218,56 +218,57 @@ class SignInPageState extends State<SignInPage> {
                       ],
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                child: Text(
-                  'v$appVersion',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                ),
+                Spacer(),
+                Container(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        child: Text(
+                          'v$appVersion',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onTap: () {
+                          bool mock = Preferences.getInstance()
+                                  .getBool(SharedPreferenceKey.MOCK) ??
+                              false;
+
+                          if (mock) {
+                            Preferences.getInstance()
+                                .setBool(SharedPreferenceKey.MOCK, false);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Base url dirubah ke ${ApiUrl.MAIN_BASE}."),
+                                duration: const Duration(milliseconds: 500),
+                              ),
+                            );
+                          } else {
+                            Preferences.getInstance()
+                                .setBool(SharedPreferenceKey.MOCK, true);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Base url dirubah ke ${ApiUrl.MOCK_LOCAL_BASE}.",
+                                ),
+                                duration: const Duration(milliseconds: 500),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                onTap: () {
-                  bool mock = Preferences.getInstance()
-                          .getBool(SharedPreferenceKey.MOCK) ??
-                      false;
-
-                  if (mock) {
-                    Preferences.getInstance()
-                        .setBool(SharedPreferenceKey.MOCK, false);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content:
-                            Text("Base url dirubah ke ${ApiUrl.MAIN_BASE}."),
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                    );
-                  } else {
-                    Preferences.getInstance()
-                        .setBool(SharedPreferenceKey.MOCK, true);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Base url dirubah ke ${ApiUrl.MOCK_LOCAL_BASE}.",
-                        ),
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
