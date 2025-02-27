@@ -46,6 +46,7 @@ class ApiManager {
 
     return Options(
       headers: headers,
+      responseType: ResponseType.plain,
     );
   }
 
