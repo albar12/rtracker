@@ -87,7 +87,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
     List<DamageType> damageTypes = DamageTypeDao.all();
     List<TransactionTestCase> transactionTestCases =
         TransactionTestCaseDao.all(jobTypeId: event.jobOrder.jobType!.id);
-    List<EdcBniMtiFeatureVersion> edcBniMtiFeatures = EdcBniMtiFeatureVersionDao.all();
+    List<EdcBniMtiFeatureVersion> edcBniMtiFeatures =
+        EdcBniMtiFeatureVersionDao.all();
 
     emit(
       JobFormLoaded(
@@ -145,7 +146,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
     Emitter<JobFormState> emit,
   ) async {
     emit(JobFormSubmitLoading());
-    var messageError = "Aplikasi akan terus mencoba mengirim data job order yang belum terkirim ke server bahkan ketika aplikasi tidak sedang dibuka.";
+    var messageError =
+        "Aplikasi akan terus mencoba mengirim data job order yang belum terkirim ke server bahkan ketika aplikasi tidak sedang dibuka.";
     try {
       Uint8List? merchantSignature;
       List<Uint8List> merchantImages = [];
@@ -195,7 +197,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
         }
 
         // Add here
-        for (ImageFile imageFile in event.jobOrder.machineAndCard!.picMerchantImages) {
+        for (ImageFile imageFile
+            in event.jobOrder.machineAndCard!.picMerchantImages) {
           picMerchantImages.add(
             Uint8List.fromList(
               imageFile.file,
@@ -203,7 +206,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
           );
         }
 
-        for (ImageFile imageFile in event.jobOrder.machineAndCard!.rollSalesDraftImages) {
+        for (ImageFile imageFile
+            in event.jobOrder.machineAndCard!.rollSalesDraftImages) {
           rollSalesDraftImages.add(
             Uint8List.fromList(
               imageFile.file,
@@ -211,7 +215,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
           );
         }
 
-        for (ImageFile imageFile in event.jobOrder.machineAndCard!.trainingStatementLetterImages) {
+        for (ImageFile imageFile
+            in event.jobOrder.machineAndCard!.trainingStatementLetterImages) {
           trainingStatementLetterImages.add(
             Uint8List.fromList(
               imageFile.file,
@@ -219,7 +224,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
           );
         }
 
-        for (ImageFile imageFile in event.jobOrder.machineAndCard!.edcAppImages) {
+        for (ImageFile imageFile
+            in event.jobOrder.machineAndCard!.edcAppImages) {
           edcAppImages.add(
             Uint8List.fromList(
               imageFile.file,
@@ -227,7 +233,8 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
           );
         }
 
-        for (ImageFile imageFile in event.jobOrder.machineAndCard!.otherImages) {
+        for (ImageFile imageFile
+            in event.jobOrder.machineAndCard!.otherImages) {
           otherImages.add(
             Uint8List.fromList(
               imageFile.file,

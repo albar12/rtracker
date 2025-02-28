@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -289,8 +290,11 @@ class BackgroundService {
           .checkVersion(checkVersionRequest: checkVersionRequest);
 
       if (response.statusCode == 200) {
+        // CheckVersionResponse checkVersionResponse =
+        //     CheckVersionResponse.fromJson(response.data);
+
         CheckVersionResponse checkVersionResponse =
-            CheckVersionResponse.fromJson(response.data);
+            CheckVersionResponse.fromJson(jsonDecode(response.data));
 
         int completed = 0;
 
@@ -317,7 +321,8 @@ class BackgroundService {
                   VendorDao.insertOrUpdate(
                     versionKey: versionKey,
                     getVendorResponse:
-                        GetVendorResponse.fromJson(response.data),
+                        // GetVendorResponse.fromJson(response.data),
+                        GetVendorResponse.fromJson(jsonDecode(response.data)),
                   );
 
                   completed++;
@@ -339,7 +344,10 @@ class BackgroundService {
                   BaseOfficeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getBaseOfficeResponse:
-                        GetBaseOfficeResponse.fromJson(response.data),
+                        // GetBaseOfficeResponse.fromJson(response.data),
+                        GetBaseOfficeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -361,7 +369,10 @@ class BackgroundService {
                   ServicePointDao.insertOrUpdate(
                     versionKey: versionKey,
                     getServicePointResponse:
-                        GetServicePointResponse.fromJson(response.data),
+                        // GetServicePointResponse.fromJson(response.data),
+                        GetServicePointResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -383,7 +394,10 @@ class BackgroundService {
                   JobTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getJobTypeResponse:
-                        GetJobTypeResponse.fromJson(response.data),
+                        // GetJobTypeResponse.fromJson(response.data),
+                        GetJobTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -405,7 +419,10 @@ class BackgroundService {
                   DocumentStatusDao.insertOrUpdate(
                     versionKey: versionKey,
                     getDocumentStatusResponse:
-                        GetDocumentStatusResponse.fromJson(response.data),
+                        // GetDocumentStatusResponse.fromJson(response.data),
+                        GetDocumentStatusResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -427,7 +444,10 @@ class BackgroundService {
                   RequestTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getRequestTypeResponse:
-                        GetRequestTypeResponse.fromJson(response.data),
+                        // GetRequestTypeResponse.fromJson(response.data),
+                        GetRequestTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -449,7 +469,10 @@ class BackgroundService {
                   MmsStatusDao.insertOrUpdate(
                     versionKey: versionKey,
                     getMmsStatusResponse:
-                        GetMmsStatusResponse.fromJson(response.data),
+                        // GetMmsStatusResponse.fromJson(response.data),
+                        GetMmsStatusResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -471,7 +494,10 @@ class BackgroundService {
                   ProviderDao.insertOrUpdate(
                     versionKey: versionKey,
                     getProviderResponse:
-                        GetProviderResponse.fromJson(response.data),
+                        // GetProviderResponse.fromJson(response.data),
+                        GetProviderResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -493,7 +519,10 @@ class BackgroundService {
                   EdcTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getEdcTypeResponse:
-                        GetEdcTypeResponse.fromJson(response.data),
+                        // GetEdcTypeResponse.fromJson(response.data),
+                        GetEdcTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -517,7 +546,10 @@ class BackgroundService {
                   AppVersionDao.insertOrUpdate(
                     versionKey: versionKey,
                     getAppVersionResponse:
-                        GetAppVersionResponse.fromJson(response.data),
+                        // GetAppVersionResponse.fromJson(response.data),
+                        GetAppVersionResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -541,14 +573,14 @@ class BackgroundService {
                 }
 
                 Response response = await ApiManager().osPatch();
-                print("osPatch");
-                print(response.statusCode);
-                print(response.data);
                 if (response.statusCode == 200 && response.data != null) {
                   OsPatchDao.insertOrUpdate(
                     versionKey: versionKey,
                     getOsPatchResponse:
-                        GetOsPatchResponse.fromJson(response.data),
+                        // GetOsPatchResponse.fromJson(response.data),
+                        GetOsPatchResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -565,14 +597,14 @@ class BackgroundService {
                 }
 
                 Response response = await ApiManager().sitckerBank();
-                print("sitckerBank");
-                print(response.statusCode);
-                print(response.data);
                 if (response.statusCode == 200 && response.data != null) {
                   StickerBankDao.insertOrUpdate(
                     versionKey: versionKey,
                     getOsPatchResponse:
-                        GetStickerBankResponse.fromJson(response.data),
+                        // GetStickerBankResponse.fromJson(response.data),
+                        GetStickerBankResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -594,7 +626,10 @@ class BackgroundService {
                   EdcCommunicationTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getEdcCommunicationTypeResponse:
-                        GetEdcCommunicationTypeResponse.fromJson(response.data),
+                        // GetEdcCommunicationTypeResponse.fromJson(response.data),
+                        GetEdcCommunicationTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -616,7 +651,10 @@ class BackgroundService {
                   ReplacementTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getReplacementTypeResponse:
-                        GetReplacementTypeResponse.fromJson(response.data),
+                        // GetReplacementTypeResponse.fromJson(response.data),
+                        GetReplacementTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -638,7 +676,10 @@ class BackgroundService {
                   JobStatusDao.insertOrUpdate(
                     versionKey: versionKey,
                     getJobStatusResponse:
-                        GetJobStatusResponse.fromJson(response.data),
+                        // GetJobStatusResponse.fromJson(response.data),
+                        GetJobStatusResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -660,7 +701,10 @@ class BackgroundService {
                   JobStatusCategoryDao.insertOrUpdate(
                     versionKey: versionKey,
                     getJobStatusCategoryResponse:
-                        GetJobStatusCategoryResponse.fromJson(response.data),
+                        // GetJobStatusCategoryResponse.fromJson(response.data),
+                        GetJobStatusCategoryResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -681,7 +725,9 @@ class BackgroundService {
                 if (response.statusCode == 200 && response.data != null) {
                   NoteDao.insertOrUpdate(
                     versionKey: versionKey,
-                    getNoteResponse: GetNoteResponse.fromJson(response.data),
+                    getNoteResponse:
+                        GetNoteResponse.fromJson(jsonDecode(response.data)),
+                    // GetNoteResponse.fromJson(response.data)
                   );
 
                   completed++;
@@ -703,7 +749,10 @@ class BackgroundService {
                   QrisMenuDao.insertOrUpdate(
                     versionKey: versionKey,
                     getQrisMenuResponse:
-                        GetQrisMenuResponse.fromJson(response.data),
+                        // GetQrisMenuResponse.fromJson(response.data),
+                        GetQrisMenuResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -725,7 +774,10 @@ class BackgroundService {
                   EdcEquipmentDao.insertOrUpdate(
                     versionKey: versionKey,
                     getEdcEquipmentResponse:
-                        GetEdcEquipmentResponse.fromJson(response.data),
+                        // GetEdcEquipmentResponse.fromJson(response.data),
+                        GetEdcEquipmentResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -747,7 +799,10 @@ class BackgroundService {
                   EdcFeatureTestCaseDao.insertOrUpdate(
                     versionKey: versionKey,
                     getEdcFeatureTestCaseResponse:
-                        GetEdcFeatureTestCaseResponse.fromJson(response.data),
+                        // GetEdcFeatureTestCaseResponse.fromJson(response.data),
+                        GetEdcFeatureTestCaseResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -769,7 +824,10 @@ class BackgroundService {
                   JobCategoryDao.insertOrUpdate(
                     versionKey: versionKey,
                     getJobCategoryResponse:
-                        GetJobCategoryResponse.fromJson(response.data),
+                        // GetJobCategoryResponse.fromJson(response.data),
+                        GetJobCategoryResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -791,7 +849,10 @@ class BackgroundService {
                   TransactionTestCaseDao.insertOrUpdate(
                     versionKey: versionKey,
                     getTransactionTestCaseResponse:
-                        GetTransactionTestCaseResponse.fromJson(response.data),
+                        // GetTransactionTestCaseResponse.fromJson(response.data),
+                        GetTransactionTestCaseResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -813,7 +874,10 @@ class BackgroundService {
                   OtherBankEdcDao.insertOrUpdate(
                     versionKey: versionKey,
                     getOtherBankEdcResponse:
-                        GetOtherBankEdcResponse.fromJson(response.data),
+                        // GetOtherBankEdcResponse.fromJson(response.data),
+                        GetOtherBankEdcResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -835,7 +899,10 @@ class BackgroundService {
                   DorMenuDao.insertOrUpdate(
                     versionKey: versionKey,
                     getDorMenuResponse:
-                        GetDorMenuResponse.fromJson(response.data),
+                        // GetDorMenuResponse.fromJson(response.data),
+                        GetDorMenuResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -857,7 +924,10 @@ class BackgroundService {
                   MarcollUpdateStatusDao.insertOrUpdate(
                     versionKey: versionKey,
                     getMarcollUpdateStatusResponse:
-                        GetMarcollUpdateStatusResponse.fromJson(response.data),
+                        // GetMarcollUpdateStatusResponse.fromJson(response.data),
+                        GetMarcollUpdateStatusResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -879,7 +949,10 @@ class BackgroundService {
                   EosUpdateStatusDao.insertOrUpdate(
                     versionKey: versionKey,
                     getEosUpdateStatusResponse:
-                        GetEosUpdateStatusResponse.fromJson(response.data),
+                        // GetEosUpdateStatusResponse.fromJson(response.data),
+                        GetEosUpdateStatusResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -901,7 +974,9 @@ class BackgroundService {
                   TrainingMaterialDao.insertOrUpdate(
                     versionKey: versionKey,
                     getTrainingMaterialResponse:
-                        GetTrainingMaterialResponse.fromJson(response.data),
+                        // GetTrainingMaterialResponse.fromJson(response.data),
+                        GetTrainingMaterialResponse.fromJson(
+                            jsonDecode(response.data)),
                   );
 
                   completed++;
@@ -923,7 +998,10 @@ class BackgroundService {
                   DamageTypeDao.insertOrUpdate(
                     versionKey: versionKey,
                     getDamageTypeResponse:
-                        GetDamageTypeResponse.fromJson(response.data),
+                        // GetDamageTypeResponse.fromJson(response.data),
+                        GetDamageTypeResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -945,7 +1023,10 @@ class BackgroundService {
                   SnStockDao.insertOrUpdate(
                     versionKey: versionKey,
                     getSnStockResponse:
-                        GetSnStockResponse.fromJson(response.data),
+                        // GetSnStockResponse.fromJson(response.data),
+                        GetSnStockResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -967,7 +1048,10 @@ class BackgroundService {
                   NonSnStockDao.insertOrUpdate(
                     versionKey: versionKey,
                     getNonSnStockResponse:
-                        GetNonSnStockResponse.fromJson(response.data),
+                        // GetNonSnStockResponse.fromJson(response.data),
+                        GetNonSnStockResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -989,7 +1073,10 @@ class BackgroundService {
                 if (response.statusCode == 200 && response.data != null) {
                   InboxDao.insertOrUpdate(
                     versionKey: versionKey,
-                    getInboxResponse: GetInboxResponse.fromJson(response.data),
+                    // getInboxResponse: GetInboxResponse.fromJson(response.data),
+                    getInboxResponse: GetInboxResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
@@ -1009,33 +1096,40 @@ class BackgroundService {
                     await ApiManager().getJobOrders(version: lastVersion);
 
                 if (response.statusCode == 200 && response.data != null) {
+                  print("getJobOrders");
+                  print(response.data);
                   JobOrderDao.addJobOrder(
                     versionKey: versionKey,
                     getJobOrderResponse:
-                        GetJobOrderResponse.fromJson(response.data),
+                        // GetJobOrderResponse.fromJson(response.data),
+                        GetJobOrderResponse.fromJson(
+                      jsonDecode(response.data),
+                    ),
                   );
 
                   completed++;
                 } else {
                   throw Exception();
                 }
-              } else if (versionKey == VersionKey.FITUR_EDC_BNI_MTI){
-                if (synchronizationBloc != null){
+              } else if (versionKey == VersionKey.FITUR_EDC_BNI_MTI) {
+                if (synchronizationBloc != null) {
                   synchronizationBloc.add(
                     SynchronizationUpdateMessage(
-                        message: "Mengunduh data fitur edc BNI MTI",
+                      message: "Mengunduh data fitur edc BNI MTI",
                     ),
                   );
                 }
 
                 Response response =
-                await ApiManager().getFiturEdcBNIMTI(version: lastVersion);
+                    await ApiManager().getFiturEdcBNIMTI(version: lastVersion);
 
                 if (response.statusCode == 200 && response.data != null) {
-                  var data = GetFiturEdcBniMtiResponse.fromJson(response.data);
+                  // var data = GetFiturEdcBniMtiResponse.fromJson(response.data);
+                  var data = GetFiturEdcBniMtiResponse.fromJson(
+                      jsonDecode(response.data));
                   EdcBniMtiFeatureVersionDao.insertOrUpdate(
-                      versionKey: versionKey,
-                      response: data,
+                    versionKey: versionKey,
+                    response: data,
                   );
 
                   completed++;
@@ -1144,7 +1238,8 @@ class BackgroundService {
           }
 
           // Add here
-          for (ImageFile imageFile in jobOrder.machineAndCard!.picMerchantImages) {
+          for (ImageFile imageFile
+              in jobOrder.machineAndCard!.picMerchantImages) {
             picMerchantImages.add(
               Uint8List.fromList(
                 imageFile.file,
@@ -1152,7 +1247,8 @@ class BackgroundService {
             );
           }
 
-          for (ImageFile imageFile in jobOrder.machineAndCard!.rollSalesDraftImages) {
+          for (ImageFile imageFile
+              in jobOrder.machineAndCard!.rollSalesDraftImages) {
             rollSalesDraftImages.add(
               Uint8List.fromList(
                 imageFile.file,
@@ -1160,7 +1256,8 @@ class BackgroundService {
             );
           }
 
-          for (ImageFile imageFile in jobOrder.machineAndCard!.trainingStatementLetterImages) {
+          for (ImageFile imageFile
+              in jobOrder.machineAndCard!.trainingStatementLetterImages) {
             trainingStatementLetterImages.add(
               Uint8List.fromList(
                 imageFile.file,

@@ -78,7 +78,7 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
     super.initState();
 
     if (widget.jobFormPageState.widget.jobOrder.machineAndCard?.edcType
-        ?.flag_android !=
+            ?.flag_android !=
         null) {
       setState(() {
         testFlagAndroid = int.parse(widget.jobFormPageState.widget.jobOrder
@@ -93,50 +93,65 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
     super.build(context);
 
     JobOrder jobOrder = widget.jobFormPageState.widget.jobOrder;
-
+    print("objectx");
+    print(jobOrder.machineAndCard != null &&
+        jobOrder.machineAndCard!.edcType != null);
+    print(jobOrder.machineAndCard);
+    print(jobOrder.machineAndCard!.edcType);
     return BlocListener(
       bloc: copyImageBloc,
       listener: (context, state) {
-        if (state is CopyingImage){
+        if (state is CopyingImage) {
           context.loaderOverlay.show();
         }
-        if (state is CopyFinished){
-          if (state.jobOrder != null){
+        if (state is CopyFinished) {
+          if (state.jobOrder != null) {
             Realms.get().write(() {
-              if (jobOrder.merchant != null){
-                if (jobOrder.merchant!.images.isEmpty){
+              if (jobOrder.merchant != null) {
+                if (jobOrder.merchant!.images.isEmpty) {
                   jobOrder.merchant!.images.clear();
-                  jobOrder.merchant!.images.addAll(state.jobOrder!.merchant!.images);
+                  jobOrder.merchant!.images
+                      .addAll(state.jobOrder!.merchant!.images);
                 }
               }
-              if (jobOrder.machineAndCard != null){
-                if (jobOrder.machineAndCard!.images.isEmpty){
+              if (jobOrder.machineAndCard != null) {
+                if (jobOrder.machineAndCard!.images.isEmpty) {
                   jobOrder.machineAndCard!.images.clear();
-                  jobOrder.machineAndCard!.images.addAll(state.jobOrder!.machineAndCard!.images);
+                  jobOrder.machineAndCard!.images
+                      .addAll(state.jobOrder!.machineAndCard!.images);
                 }
-                if (jobOrder.machineAndCard!.serialNumberPhotos.isEmpty){
+                if (jobOrder.machineAndCard!.serialNumberPhotos.isEmpty) {
                   jobOrder.machineAndCard!.serialNumberPhotos.clear();
-                  jobOrder.machineAndCard!.serialNumberPhotos.addAll(state.jobOrder!.machineAndCard!.serialNumberPhotos);
+                  jobOrder.machineAndCard!.serialNumberPhotos.addAll(
+                      state.jobOrder!.machineAndCard!.serialNumberPhotos);
                 }
-                if (jobOrder.machineAndCard!.picMerchantImages.isEmpty){
+                if (jobOrder.machineAndCard!.picMerchantImages.isEmpty) {
                   jobOrder.machineAndCard!.picMerchantImages.clear();
-                  jobOrder.machineAndCard!.picMerchantImages.addAll(state.jobOrder!.machineAndCard!.picMerchantImages);
+                  jobOrder.machineAndCard!.picMerchantImages.addAll(
+                      state.jobOrder!.machineAndCard!.picMerchantImages);
                 }
-                if (jobOrder.machineAndCard!.rollSalesDraftImages.isEmpty){
+                if (jobOrder.machineAndCard!.rollSalesDraftImages.isEmpty) {
                   jobOrder.machineAndCard!.rollSalesDraftImages.clear();
-                  jobOrder.machineAndCard!.rollSalesDraftImages.addAll(state.jobOrder!.machineAndCard!.rollSalesDraftImages);
+                  jobOrder.machineAndCard!.rollSalesDraftImages.addAll(
+                      state.jobOrder!.machineAndCard!.rollSalesDraftImages);
                 }
-                if (jobOrder.machineAndCard!.trainingStatementLetterImages.isEmpty){
-                  jobOrder.machineAndCard!.trainingStatementLetterImages.clear();
-                  jobOrder.machineAndCard!.trainingStatementLetterImages.addAll(state.jobOrder!.machineAndCard!.trainingStatementLetterImages);
+                if (jobOrder
+                    .machineAndCard!.trainingStatementLetterImages.isEmpty) {
+                  jobOrder.machineAndCard!.trainingStatementLetterImages
+                      .clear();
+                  jobOrder.machineAndCard!.trainingStatementLetterImages.addAll(
+                      state.jobOrder!.machineAndCard!
+                          .trainingStatementLetterImages);
                 }
-                if (jobOrder.machineAndCard!.edcAppImages.isEmpty){
+                if (jobOrder.machineAndCard!.edcAppImages.isEmpty) {
                   jobOrder.machineAndCard!.edcAppImages.clear();
-                  jobOrder.machineAndCard!.edcAppImages.addAll(state.jobOrder!.machineAndCard!.edcAppImages);
+                  jobOrder.machineAndCard!.edcAppImages
+                      .addAll(state.jobOrder!.machineAndCard!.edcAppImages);
                 }
-                if (jobOrder.machineAndCard!.otherImages.isEmpty){
+                if (jobOrder.machineAndCard!.otherImages.isEmpty) {
                   jobOrder.machineAndCard!.otherImages.clear();
-                  jobOrder.machineAndCard!.otherImages.addAll(state.jobOrder!.machineAndCard!.otherImages);
+                  jobOrder.machineAndCard!.otherImages
+                      .addAll(state.jobOrder!.machineAndCard!.otherImages);
                 }
               }
             });
@@ -147,7 +162,7 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
       },
       child: BlocBuilder<StartJobBloc, StartJobState>(
         builder: (context, state) {
-          if (state is StartJobInitial){
+          if (state is StartJobInitial) {
             return Padding(
               padding: EdgeInsets.all(
                 Dimensions.width15,
@@ -271,20 +286,26 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                   BlocBuilder(
                     bloc: copyImageBloc,
                     builder: (context, stateCopy) {
-                      if (stateCopy is ReloadCopyLayout){
+                      if (stateCopy is ReloadCopyLayout) {
                         List<Uint8List> displayData = [];
-                        if (jobOrder.merchant != null){
-                          displayData = jobOrder.merchant!.images.map((e) => Uint8List.fromList(e.file)).toList();
+                        if (jobOrder.merchant != null) {
+                          displayData = jobOrder.merchant!.images
+                              .map((e) => Uint8List.fromList(e.file))
+                              .toList();
                         }
                         return CustomImageField(
                           title: "FOTO PLANG MERCHANT",
                           subtitle: "Silahkan unggah foto plang merchant",
                           allowGallery: Preferences.getInstance().getBool(
-                            SharedPreferenceKey.MERCHANT_IMAGE_ALLOW_GALLERY,
-                          ) ??
+                                SharedPreferenceKey
+                                    .MERCHANT_IMAGE_ALLOW_GALLERY,
+                              ) ??
                               false,
                           validator: (value) {
-                            if (ImageMandatory.getImageMandatory(jobOrder.imageMandatoryType, ImageMandatoryKey.merchant) == "1") {
+                            if (ImageMandatory.getImageMandatory(
+                                    jobOrder.imageMandatoryType,
+                                    ImageMandatoryKey.merchant) ==
+                                "1") {
                               if (value == null || value.isEmpty) {
                                 return "Kolom ini harus diisi.";
                               }
@@ -327,10 +348,12 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                       readOnly: state.readOnly,
                       isCapital: true,
                       validator: (value) {
-                        int maxDigit =
-                        int.parse(jobOrder.serialNumberMaxDigit.split("-")[0]);
-                        var sameCharacters = Strings.findFiveConsecutiveSameCharacters(value.toString());
-                        if (sameCharacters != null){
+                        int maxDigit = int.parse(
+                            jobOrder.serialNumberMaxDigit.split("-")[0]);
+                        var sameCharacters =
+                            Strings.findFiveConsecutiveSameCharacters(
+                                value.toString());
+                        if (sameCharacters != null) {
                           return "$sameCharacters tidak valid sebagai nomor serial";
                         }
 
@@ -344,39 +367,43 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                               return "Minimal karakter $maxDigit.";
                             }
 
-                            if (Strings.isZero(value)){
+                            if (Strings.isZero(value)) {
                               return "Kolom ini tidak boleh 0";
                             }
-                          } else if (jobOrder.serialNumberValidationType[0] == "2") {
+                          } else if (jobOrder.serialNumberValidationType[0] ==
+                              "2") {
                             if (SnStockDao.find(
-                              serialNumber: value!,
-                              servicePointId: widget.jobFormPageState.widget
-                                  .jobOrder.servicePoint!.id,
-                              category: SnStockCategory.MESIN.name,
-                            ) ==
+                                  serialNumber: value!,
+                                  servicePointId: widget.jobFormPageState.widget
+                                      .jobOrder.servicePoint!.id,
+                                  category: SnStockCategory.MESIN.name,
+                                ) ==
                                 null) {
                               return "Nomor seri tidak ditemukan.";
                             }
-                          } else if (jobOrder.serialNumberValidationType[0] == "3") {
+                          } else if (jobOrder.serialNumberValidationType[0] ==
+                              "3") {
                             if (!StringUtils.equalsIgnoreCase(
                               value!,
-                              widget.jobFormPageState.widget.jobOrder.serialNumber ??
+                              widget.jobFormPageState.widget.jobOrder
+                                      .serialNumber ??
                                   "",
                             )) {
                               return "Nomor seri tidak sesuai.";
                             }
-                          } else if (jobOrder.serialNumberValidationType[0] == "4") {
+                          } else if (jobOrder.serialNumberValidationType[0] ==
+                              "4") {
                             if (SnStockDao.find(
-                              serialNumber: value!,
-                              servicePointId: widget.jobFormPageState.widget
-                                  .jobOrder.servicePoint!.id,
-                              category: SnStockCategory.MESIN.name,
-                            ) ==
-                                null ||
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.MESIN.name,
+                                    ) ==
+                                    null ||
                                 !StringUtils.equalsIgnoreCase(
                                   value,
                                   widget.jobFormPageState.widget.jobOrder
-                                      .serialNumber ??
+                                          .serialNumber ??
                                       "",
                                 )) {
                               return "Nomor seri tidak sesuai.";
@@ -390,11 +417,12 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
 
                         return null;
                       },
-                      initialValue:
-                      StringUtils.defaultString(jobOrder.scannedSerialNumber),
+                      initialValue: StringUtils.defaultString(
+                          jobOrder.scannedSerialNumber),
                       onSaved: (newValue) {
                         Realms.get().write(() {
-                          if (!Strings.equals(jobOrder.scannedSerialNumber, newValue)) {
+                          if (!Strings.equals(
+                              jobOrder.scannedSerialNumber, newValue)) {
                             jobOrder.scannedSerialNumber = newValue;
                           }
                         });
@@ -415,11 +443,12 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                   CustomSpinnerField(
                     labelText: 'Provider',
                     initialValue: jobOrder.machineAndCard != null &&
-                        jobOrder.machineAndCard!.provider != null
+                            jobOrder.machineAndCard!.provider != null
                         ? SpinnerItem(
-                      identity: jobOrder.machineAndCard!.provider!.id,
-                      description: jobOrder.machineAndCard!.provider!.name,
-                    )
+                            identity: jobOrder.machineAndCard!.provider!.id,
+                            description:
+                                jobOrder.machineAndCard!.provider!.name,
+                          )
                         : null,
                     readOnly: state.readOnly,
                     validator: (value) {
@@ -435,13 +464,16 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           jobOrder.machineAndCard ??= JobOrderMachineAndCard();
 
                           if (jobOrder.machineAndCard!.provider == null) {
-                            jobOrder.machineAndCard!.provider = JobOrderProvider(
+                            jobOrder.machineAndCard!.provider =
+                                JobOrderProvider(
                               value.identity,
                               value.description,
                             );
                           } else {
-                            jobOrder.machineAndCard!.provider!.id = value.identity;
-                            jobOrder.machineAndCard!.provider!.name = value.description;
+                            jobOrder.machineAndCard!.provider!.id =
+                                value.identity;
+                            jobOrder.machineAndCard!.provider!.name =
+                                value.description;
                           }
                         });
                       }
@@ -449,10 +481,10 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                     spinnerItems: widget.jobFormPageState.providers
                         .map(
                           (e) => SpinnerItem(
-                        identity: e.id,
-                        description: e.name,
-                      ),
-                    )
+                            identity: e.id,
+                            description: e.name,
+                          ),
+                        )
                         .toList(),
                   ),
                   SizedBox(
@@ -470,74 +502,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSimCard.currentState != null) {
-                                            tecSimCard.text = value;
-                                            ffsSimCard.currentState!
-                                                .setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSimCard.currentState !=
+                                                    null) {
+                                                  tecSimCard.text = value;
+                                                  ffsSimCard.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[1]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[1]);
 
                             if (jobOrder.serialNumberValidationType[1] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[1] == "1") {
+                              if (jobOrder.serialNumberValidationType[1] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[1] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[1] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.PROVIDER.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.PROVIDER.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[1] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[1] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.simCard ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .simCard ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[1] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[1] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.PROVIDER.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.PROVIDER.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.simCard ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .simCard ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -549,7 +594,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.simCard,
@@ -578,73 +624,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam.currentState != null) {
-                                            tecSam.text = value;
-                                            ffsSam.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam.currentState !=
+                                                    null) {
+                                                  tecSam.text = value;
+                                                  ffsSam.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[2]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[2]);
 
                             if (jobOrder.serialNumberValidationType[2] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[2] == "1") {
+                              if (jobOrder.serialNumberValidationType[2] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[2] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[2] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[2] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[2] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam ?? "",
+                                  widget.jobFormPageState.widget.jobOrder.sam ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[2] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[2] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam ?? "",
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam ??
+                                          "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
@@ -655,7 +715,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam,
@@ -684,73 +745,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam2.currentState != null) {
-                                            tecSam2.text = value;
-                                            ffsSam2.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam2.currentState !=
+                                                    null) {
+                                                  tecSam2.text = value;
+                                                  ffsSam2.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[3]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[3]);
 
                             if (jobOrder.serialNumberValidationType[3] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[3] == "1") {
+                              if (jobOrder.serialNumberValidationType[3] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[3] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[3] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[3] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[3] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam2 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam2 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[3] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[3] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam2 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam2 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -768,7 +843,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam2,
@@ -797,73 +873,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam3.currentState != null) {
-                                            tecSam3.text = value;
-                                            ffsSam3.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam3.currentState !=
+                                                    null) {
+                                                  tecSam3.text = value;
+                                                  ffsSam3.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[4]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[4]);
 
                             if (jobOrder.serialNumberValidationType[4] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[4] == "1") {
+                              if (jobOrder.serialNumberValidationType[4] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[4] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[4] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[4] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[4] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam3 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam3 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[4] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[4] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam3 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam3 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -884,7 +974,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam3,
@@ -913,73 +1004,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam4.currentState != null) {
-                                            tecSam4.text = value;
-                                            ffsSam4.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam4.currentState !=
+                                                    null) {
+                                                  tecSam4.text = value;
+                                                  ffsSam4.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[5]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[5]);
 
                             if (jobOrder.serialNumberValidationType[5] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[5] == "1") {
+                              if (jobOrder.serialNumberValidationType[5] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[5] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[5] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[5] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[5] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam4 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam4 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[5] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[5] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam4 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam4 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -1000,7 +1105,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam4,
@@ -1029,73 +1135,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam5.currentState != null) {
-                                            tecSam5.text = value;
-                                            ffsSam5.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam5.currentState !=
+                                                    null) {
+                                                  tecSam5.text = value;
+                                                  ffsSam5.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[6]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[6]);
 
                             if (jobOrder.serialNumberValidationType[6] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[6] == "1") {
+                              if (jobOrder.serialNumberValidationType[6] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[6] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[6] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[6] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[6] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam5 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam5 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[6] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[6] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam5 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam5 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -1118,7 +1238,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam5,
@@ -1147,73 +1268,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam6.currentState != null) {
-                                            tecSam6.text = value;
-                                            ffsSam6.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam6.currentState !=
+                                                    null) {
+                                                  tecSam6.text = value;
+                                                  ffsSam6.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[7]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[7]);
 
                             if (jobOrder.serialNumberValidationType[7] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[7] == "1") {
+                              if (jobOrder.serialNumberValidationType[7] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[7] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[7] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[7] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[7] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam6 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam6 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[7] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[7] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam6 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam6 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -1237,7 +1372,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam6,
@@ -1266,73 +1402,87 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           suffixIcon: state.readOnly
                               ? null
                               : IconButton(
-                            icon: const Icon(
-                              Icons.qr_code_scanner,
-                            ),
-                            onPressed: () async {
-                              Permission.camera.request().then((value) {
-                                if (value.isGranted) {
-                                  Navigators.push(
-                                    context,
-                                    ScannerPage(
-                                      onSubmitted: (String value) {
-                                        setState(() {
-                                          if (ffsSam7.currentState != null) {
-                                            tecSam7.text = value;
-                                            ffsSam7.currentState!.setValue(value);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                  ),
+                                  onPressed: () async {
+                                    Permission.camera.request().then((value) {
+                                      if (value.isGranted) {
+                                        Navigators.push(
+                                          context,
+                                          ScannerPage(
+                                            onSubmitted: (String value) {
+                                              setState(() {
+                                                if (ffsSam7.currentState !=
+                                                    null) {
+                                                  tecSam7.text = value;
+                                                  ffsSam7.currentState!
+                                                      .setValue(value);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
                           validator: (value) {
-                            int maxDigit =
-                            int.parse(jobOrder.serialNumberMaxDigit.split("-")[8]);
+                            int maxDigit = int.parse(
+                                jobOrder.serialNumberMaxDigit.split("-")[8]);
 
                             if (jobOrder.serialNumberValidationType[8] != "0") {
                               if (StringUtils.isNullOrEmpty(value)) {
                                 return "Kolom ini harus diisi.";
                               }
 
-                              if (jobOrder.serialNumberValidationType[8] == "1") {
+                              if (jobOrder.serialNumberValidationType[8] ==
+                                  "1") {
                                 if (value!.length < maxDigit) {
                                   return "Minimal karakter $maxDigit.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[8] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[8] ==
                                   "2") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
+                                      serialNumber: value!,
+                                      servicePointId: widget.jobFormPageState
+                                          .widget.jobOrder.servicePoint!.id,
+                                      category: SnStockCategory.SAMCARD.name,
+                                    ) ==
                                     null) {
                                   return "Nomor seri tidak ditemukan.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[8] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[8] ==
                                   "3") {
                                 if (!StringUtils.equalsIgnoreCase(
                                   value!,
-                                  widget.jobFormPageState.widget.jobOrder.sam7 ?? "",
+                                  widget.jobFormPageState.widget.jobOrder
+                                          .sam7 ??
+                                      "",
                                 )) {
                                   return "Nomor seri tidak sesuai.";
                                 }
-                              } else if (jobOrder.serialNumberValidationType[8] ==
+                              } else if (jobOrder
+                                      .serialNumberValidationType[8] ==
                                   "4") {
                                 if (SnStockDao.find(
-                                  serialNumber: value!,
-                                  servicePointId: widget.jobFormPageState.widget
-                                      .jobOrder.servicePoint!.id,
-                                  category: SnStockCategory.SAMCARD.name,
-                                ) ==
-                                    null ||
+                                          serialNumber: value!,
+                                          servicePointId: widget
+                                              .jobFormPageState
+                                              .widget
+                                              .jobOrder
+                                              .servicePoint!
+                                              .id,
+                                          category:
+                                              SnStockCategory.SAMCARD.name,
+                                        ) ==
+                                        null ||
                                     !StringUtils.equalsIgnoreCase(
                                       value,
-                                      widget.jobFormPageState.widget.jobOrder.sam7 ??
+                                      widget.jobFormPageState.widget.jobOrder
+                                              .sam7 ??
                                           "",
                                     )) {
                                   return "Nomor seri tidak sesuai.";
@@ -1357,7 +1507,8 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                           },
                           onSaved: (value) {
                             Realms.get().write(() {
-                              jobOrder.machineAndCard ??= JobOrderMachineAndCard();
+                              jobOrder.machineAndCard ??=
+                                  JobOrderMachineAndCard();
 
                               if (!Strings.equals(
                                 jobOrder.machineAndCard!.sam7,
@@ -1377,12 +1528,12 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                   CustomSpinnerField(
                     labelText: 'Jenis EDC',
                     initialValue: jobOrder.machineAndCard != null &&
-                        jobOrder.machineAndCard!.edcType != null
+                            jobOrder.machineAndCard!.edcType != null
                         ? SpinnerItem(
-                      identity: jobOrder.machineAndCard!.edcType!.id,
-                      description: jobOrder.machineAndCard!.edcType!.name,
-                      tag: jobOrder.machineAndCard!.edcType!,
-                    )
+                            identity: jobOrder.machineAndCard!.edcType!.id,
+                            description: jobOrder.machineAndCard!.edcType!.name,
+                            tag: jobOrder.machineAndCard!.edcType!,
+                          )
                         : null,
                     readOnly: state.readOnly,
                     validator: (value) {
@@ -1420,17 +1571,18 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                     },
                     onChanged: (newValue) {
                       setState(() {
-                        testFlagAndroid = (newValue.tag as EdcType).flag_android;
+                        testFlagAndroid =
+                            (newValue.tag as EdcType).flag_android;
                       });
                     },
                     spinnerItems: widget.jobFormPageState.edcTypes
                         .map(
                           (e) => SpinnerItem(
-                        identity: e.id,
-                        description: e.name,
-                        tag: e,
-                      ),
-                    )
+                            identity: e.id,
+                            description: e.name,
+                            tag: e,
+                          ),
+                        )
                         .toList(),
                   ),
                   SizedBox(
@@ -1439,12 +1591,14 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                   CustomSpinnerField(
                     labelText: 'Jenis Komunikasi EDC',
                     initialValue: jobOrder.machineAndCard != null &&
-                        jobOrder.machineAndCard!.edcCommunicationType != null
+                            jobOrder.machineAndCard!.edcCommunicationType !=
+                                null
                         ? SpinnerItem(
-                      identity: jobOrder.machineAndCard!.edcCommunicationType!.id,
-                      description:
-                      jobOrder.machineAndCard!.edcCommunicationType!.name,
-                    )
+                            identity: jobOrder
+                                .machineAndCard!.edcCommunicationType!.id,
+                            description: jobOrder
+                                .machineAndCard!.edcCommunicationType!.name,
+                          )
                         : null,
                     readOnly: state.readOnly,
                     validator: (value) {
@@ -1459,17 +1613,18 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                         Realms.get().write(() {
                           jobOrder.machineAndCard ??= JobOrderMachineAndCard();
 
-                          if (jobOrder.machineAndCard!.edcCommunicationType == null) {
+                          if (jobOrder.machineAndCard!.edcCommunicationType ==
+                              null) {
                             jobOrder.machineAndCard!.edcCommunicationType =
                                 JobOrderEdcCommunicationType(
-                                  value.identity,
-                                  value.description,
-                                );
+                              value.identity,
+                              value.description,
+                            );
                           } else {
                             jobOrder.machineAndCard!.edcCommunicationType!.id =
                                 value.identity;
-                            jobOrder.machineAndCard!.edcCommunicationType!.name =
-                                value.description;
+                            jobOrder.machineAndCard!.edcCommunicationType!
+                                .name = value.description;
                           }
                         });
                       }
@@ -1477,10 +1632,10 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                     spinnerItems: widget.jobFormPageState.edcCommunicationTypes
                         .map(
                           (e) => SpinnerItem(
-                        identity: e.id,
-                        description: e.name,
-                      ),
-                    )
+                            identity: e.id,
+                            description: e.name,
+                          ),
+                        )
                         .toList(),
                   ),
                   ...cekPoi(state),
@@ -1582,12 +1737,12 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                         onChanged: state.readOnly
                             ? null
                             : (value) {
-                          setState(() {
-                            field.setValue(value);
+                                setState(() {
+                                  field.setValue(value);
 
-                            machineConditionNormal = value;
-                          });
-                        },
+                                  machineConditionNormal = value;
+                                });
+                              },
                         activeColor: Theme.of(context).colorScheme.primary,
                       ),
                     )
@@ -1599,9 +1754,9 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                     labelText: 'Jenis Kerusakan',
                     initialValue: jobOrder.damageType != null
                         ? SpinnerItem(
-                      identity: jobOrder.damageType!.id,
-                      description: jobOrder.damageType!.name,
-                    )
+                            identity: jobOrder.damageType!.id,
+                            description: jobOrder.damageType!.name,
+                          )
                         : null,
                     readOnly: state.readOnly,
                     validator: (value) {
@@ -1629,10 +1784,10 @@ class RangkumanPekerjaanState extends State<RangkumanPekerjaan>
                     spinnerItems: widget.jobFormPageState.damageTypes
                         .map(
                           (e) => SpinnerItem(
-                        identity: e.id,
-                        description: e.name,
-                      ),
-                    )
+                            identity: e.id,
+                            description: e.name,
+                          ),
+                        )
                         .toList(),
                   ),
                 )

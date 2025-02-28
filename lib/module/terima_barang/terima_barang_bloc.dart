@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,9 @@ class TerimaBarangBloc extends Bloc<TerimaBarangEvent, TerimaBarangState> {
           if (response.statusCode == 200 && response.data != null) {
             SnStockDao.insertOrUpdate(
               versionKey: VersionKey.SN_STOCK,
-              getSnStockResponse: GetSnStockResponse.fromJson(response.data),
+              // getSnStockResponse: GetSnStockResponse.fromJson(response.data),
+              getSnStockResponse:
+                  GetSnStockResponse.fromJson(jsonDecode(response.data)),
             );
           }
         } catch (e) {
@@ -82,9 +85,10 @@ class TerimaBarangBloc extends Bloc<TerimaBarangEvent, TerimaBarangState> {
       Response response = await ApiManager().terimaSnStock();
 
       if (response.statusCode == 200) {
+        // TerimaSnStockResponse terimaSnStockResponse =
+        //     TerimaSnStockResponse.fromJson(response.data);
         TerimaSnStockResponse terimaSnStockResponse =
-            TerimaSnStockResponse.fromJson(response.data);
-
+            TerimaSnStockResponse.fromJson(jsonDecode(response.data));
         emit(
           TerimaBarangGetSnStockSuccess(
             terimaSnStockResponse: terimaSnStockResponse,
@@ -134,8 +138,10 @@ class TerimaBarangBloc extends Bloc<TerimaBarangEvent, TerimaBarangState> {
           if (response.statusCode == 200 && response.data != null) {
             NonSnStockDao.insertOrUpdate(
               versionKey: VersionKey.NON_SN_STOCK,
+              // getNonSnStockResponse:
+              //     GetNonSnStockResponse.fromJson(response.data),
               getNonSnStockResponse:
-                  GetNonSnStockResponse.fromJson(response.data),
+                  GetNonSnStockResponse.fromJson(jsonDecode(response.data)),
             );
           }
         } catch (e) {
@@ -177,8 +183,10 @@ class TerimaBarangBloc extends Bloc<TerimaBarangEvent, TerimaBarangState> {
       Response response = await ApiManager().terimaNonSnStock();
 
       if (response.statusCode == 200) {
+        // TerimaNonSnStockResponse terimaNonSnStockResponse =
+        //     TerimaNonSnStockResponse.fromJson(response.data);
         TerimaNonSnStockResponse terimaNonSnStockResponse =
-            TerimaNonSnStockResponse.fromJson(response.data);
+            TerimaNonSnStockResponse.fromJson(jsonDecode(response.data));
 
         emit(
           TerimaBarangGetNonSnStockSuccess(

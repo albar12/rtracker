@@ -28,10 +28,11 @@ class CustomListWidget {
     required JobOrder jobOrder,
     required Function closedAction,
     required Function completeCommit,
-  }){
+  }) {
     String due = Formats.due(
       finished ? jobOrder.timing!.finish : DateTime.now(),
-      jobOrder.endSla,);
+      jobOrder.endSla,
+    );
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
       clipBehavior: Clip.antiAlias,
@@ -58,33 +59,33 @@ class CustomListWidget {
               Dialogs.message(
                 context: context,
                 title:
-                "Tidak dapat mengerjakan tugas ini, dikarenakan terdapat tugas lain yang masih dikerjakan.",
+                    "Tidak dapat mengerjakan tugas ini, dikarenakan terdapat tugas lain yang masih dikerjakan.",
               );
             } else if (JobOrderDao.pauseJobs(jobOrder.id) >=
-                (Preferences.getInstance()
-                    .getInt(SharedPreferenceKey.PAUSE_MAX, 5) ??
-                    5) && !kDebugMode) {
+                    (Preferences.getInstance()
+                            .getInt(SharedPreferenceKey.PAUSE_MAX, 5) ??
+                        5) &&
+                !kDebugMode) {
               Dialogs.message(
                 context: context,
                 title:
-                "Tidak dapat mengerjakan tugas ini, dikarenakan tugas yang dilakukan PAUSE sudah melewati batas.",
+                    "Tidak dapat mengerjakan tugas ini, dikarenakan tugas yang dilakukan PAUSE sudah melewati batas.",
               );
             } else {
               bool timeAuto = await DatetimeSetting.timeIsAuto();
-              bool timezoneAuto =
-              await DatetimeSetting.timeZoneIsAuto();
+              bool timezoneAuto = await DatetimeSetting.timeZoneIsAuto();
 
               if (timezoneAuto && timeAuto) {
                 Dialogs.confirmation(
                   context: context,
-                  title:
-                  "Apakah anda yakin ingin mengerjakan tugas ini?",
+                  title: "Apakah anda yakin ingin mengerjakan tugas ini?",
                   positive: "Kerjakan",
                   positiveCallback: () async {
                     context.loaderOverlay.show();
                     bool success = true;
-                    await JobOrderDao.execute(jobOrder, locationNull: (status, message) async {
-                      if (status){
+                    await JobOrderDao.execute(jobOrder,
+                        locationNull: (status, message) async {
+                      if (status) {
                         context.loaderOverlay.hide();
                         success = false;
                         await Dialogs.message(
@@ -111,7 +112,7 @@ class CustomListWidget {
                 await Dialogs.message(
                   context: context,
                   title:
-                  "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
+                      "Harap untuk merubah settingan tanggal dan waktu anda menjadi otomatis.",
                 );
 
                 DatetimeSetting.openSetting();
@@ -140,8 +141,8 @@ class CustomListWidget {
                         TextSheet(
                           jobOrder.merchant != null
                               ? StringUtils.defaultString(
-                            jobOrder.merchant!.name,
-                          )
+                                  jobOrder.merchant!.name,
+                                )
                               : "",
                           fontWeight: FontWeight.normal,
                         ),
@@ -151,8 +152,8 @@ class CustomListWidget {
                         TextSheet(
                           jobOrder.servicePoint != null
                               ? StringUtils.defaultString(
-                            jobOrder.servicePoint!.name,
-                          )
+                                  jobOrder.servicePoint!.name,
+                                )
                               : "",
                           fontWeight: FontWeight.normal,
                         ),
@@ -191,104 +192,104 @@ class CustomListWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 0,
-                        children: [
-                          CustomChip(
-                            label: Text(
-                              jobOrder.jobType != null
-                                  ? StringUtils.defaultString(
-                                jobOrder.jobType!.name,
-                              )
-                                  : "",
-                              style: const TextStyle(
-                                color: Color(0xff2F80ED),
-                                fontWeight: FontWeight.bold,
-                              ),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 0,
+                      children: [
+                        CustomChip(
+                          label: Text(
+                            jobOrder.jobType != null
+                                ? StringUtils.defaultString(
+                                    jobOrder.jobType!.name,
+                                  )
+                                : "",
+                            style: const TextStyle(
+                              color: Color(0xff2F80ED),
+                              fontWeight: FontWeight.bold,
                             ),
-                            backgroundColor:
-                            const Color(0xff2F80ED).withOpacity(0.2),
                           ),
-                          CustomChip(
+                          backgroundColor:
+                              const Color(0xff2F80ED).withOpacity(0.2),
+                        ),
+                        CustomChip(
+                          label: RichText(
+                            text: TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: "MID ",
+                                  style: TextStyle(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: jobOrder.mid,
+                                  style: const TextStyle(
+                                    color: Color(0xff219653),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          backgroundColor:
+                              const Color(0xffC0FFDB).withOpacity(0.5),
+                        ),
+                        CustomChip(
+                          label: RichText(
+                            text: TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: "TID ",
+                                  style: TextStyle(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: jobOrder.tid,
+                                  style: const TextStyle(
+                                    color: Colors.purple,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          backgroundColor: Colors.purple.lighten(70),
+                        ),
+                        Visibility(
+                          visible: jobOrder.status != null &&
+                              StringUtils.isNotNullOrEmpty(
+                                jobOrder.status!.name,
+                              ),
+                          child: CustomChip(
                             label: RichText(
                               text: TextSpan(
                                 children: [
                                   const TextSpan(
-                                    text: "MID ",
+                                    text: "Status ",
                                     style: TextStyle(
                                       color: AppColors.textPrimary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   TextSpan(
-                                    text: jobOrder.mid,
-                                    style: const TextStyle(
-                                      color: Color(0xff219653),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            backgroundColor:
-                            const Color(0xffC0FFDB).withOpacity(0.5),
-                          ),
-                          CustomChip(
-                            label: RichText(
-                              text: TextSpan(
-                                children: [
-                                  const TextSpan(
-                                    text: "TID ",
+                                    text: jobOrder.status?.name,
                                     style: TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: jobOrder.tid,
-                                    style: const TextStyle(
-                                      color: Colors.purple,
+                                      color: Colors.amber.darken(20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            backgroundColor: Colors.purple.lighten(70),
+                            backgroundColor: Colors.amber.withOpacity(0.2),
                           ),
-                          Visibility(
-                            visible: jobOrder.status != null &&
-                                StringUtils.isNotNullOrEmpty(
-                                  jobOrder.status!.name,
-                                ),
-                            child: CustomChip(
-                              label: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    const TextSpan(
-                                      text: "Status ",
-                                      style: TextStyle(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: jobOrder.status?.name,
-                                      style: TextStyle(
-                                        color: Colors.amber.darken(20),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              backgroundColor:
-                              Colors.amber.withOpacity(0.2),
-                            ),
-                          ),
-                        ],
-                      ),),
+                        ),
+                      ],
+                    ),
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -322,63 +323,59 @@ class CustomListWidget {
                         height: Dimensions.height5,
                       ),
                       Visibility(
-                          visible: jobOrder.endSla != null,
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.end,
-                            mainAxisAlignment:
-                            MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(
-                                  Dimensions.width5,
-                                ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      Dimensions.radius10,
-                                    ),
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.red,
-                                    width: 1,
+                        visible: jobOrder.endSla != null,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                Dimensions.width5,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    Dimensions.radius10,
                                   ),
                                 ),
-                                child: TextSheet(
-                                  DateFormat("dd-MMM", "id").format(
-                                      (jobOrder.endSla ??
-                                          DateTime.now())
-                                          .toLocal(),
-                                  ),
+                                border: Border.all(
                                   color: Colors.red,
+                                  width: 1,
                                 ),
                               ),
-                              SizedBox(
-                                height: Dimensions.height5,
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(
-                                  Dimensions.width5,
+                              child: TextSheet(
+                                DateFormat("dd-MMM", "id").format(
+                                  (jobOrder.endSla ?? DateTime.now()).toLocal(),
                                 ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  color: due.contains("Out")
-                                      ? Colors.red
-                                      : Colors.blue,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      Dimensions.radius10,
-                                    ),
+                                color: Colors.red,
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height5,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                Dimensions.width5,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: due.contains("Out")
+                                    ? Colors.red
+                                    : Colors.blue,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    Dimensions.radius10,
                                   ),
                                 ),
-                                child: TextSheet(
-                                  due,
-                                  color: Colors.white,
-                                ),
                               ),
-                            ],
-                          ),
+                              child: TextSheet(
+                                due,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: Dimensions.height5,
@@ -391,23 +388,23 @@ class CustomListWidget {
                           children: [
                             InkWell(
                               child: Container(
-                                  padding: EdgeInsets.all(
-                                    Dimensions.width5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        Dimensions.radius10,
-                                      ),
+                                padding: EdgeInsets.all(
+                                  Dimensions.width5,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      Dimensions.radius10,
                                     ),
                                   ),
-                                  child: const Icon(Icons.gps_fixed),
+                                ),
+                                child: const Icon(Icons.gps_fixed),
                               ),
                               onTap: () {
                                 MapsLauncher.launchQuery(
-                                    '${jobOrder.latitude}, ${jobOrder.longitude}',
+                                  '${jobOrder.latitude}, ${jobOrder.longitude}',
                                 );
                               },
                             ),

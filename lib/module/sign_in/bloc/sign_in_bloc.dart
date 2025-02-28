@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -61,7 +62,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
       if (response.statusCode == 200) {
         // Jika sukses, proses data login
-        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+        // LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+        LoginResponse loginResponse =
+            LoginResponse.fromJson(jsonDecode(response.data));
 
         // Menyimpan status login
         Generals.signIn(loginResponse: loginResponse);
@@ -78,13 +81,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         emit(
           SignInFailed(
             message:
-                "Ada sesuatu yang salah, mohon coba kembali beberapa saat kemudian.",
+                "Ada sesuatu yang salah, mohon coba kembali beberapa saat kemudian",
           ),
         );
       }
     } catch (e) {
       String message =
-          "Ada sesuatu yang salah, mohon coba kembali beberapa saat kemudian.";
+          "Ada sesuatu yang salah, mohon coba kembali beberapa saat kemudian";
 
       // Menangani GeneralException
       if (e is GeneralException) {

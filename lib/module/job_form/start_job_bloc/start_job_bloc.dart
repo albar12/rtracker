@@ -10,12 +10,12 @@ part 'start_job_state.dart';
 class StartJobBloc extends Bloc<StartJobEvent, StartJobState> {
   StartJobBloc() : super(StartJobInitial(readOnly: true)) {
     on<StartJobEvent>((event, emit) {
-      if (event is ChangeStatus){
+      if (event is ChangeStatus) {
         bool status = false;
-        if (event.readOnly){
+        if (event.readOnly) {
           status = true;
         } else {
-          if (event.status == Progress.start){
+          if (event.status == Progress.start) {
             status = false;
           } else {
             status = true;
@@ -24,12 +24,12 @@ class StartJobBloc extends Bloc<StartJobEvent, StartJobState> {
         emit(StartJobInitial(readOnly: status));
       }
 
-      if (event is CopyFinishedJoImage){
+      if (event is CopyFinishedJoImage) {
         var data = JobOrderDao.getImageFromFinishedJo(event.jobOrder);
         emit(CopyFinished(data));
       }
 
-      if (event is ReloadCopyImage){
+      if (event is ReloadCopyImage) {
         emit(ReloadCopyLayout());
       }
     });
