@@ -23,6 +23,7 @@ import 'package:rtracker/helper/strings.dart';
 import 'package:rtracker/module/home/bloc/home_bloc.dart';
 import 'package:rtracker/module/home/bloc/home_event.dart';
 import 'package:rtracker/module/home/bloc/home_state.dart';
+import 'package:rtracker/module/home/widgets/content/jo_today_content.dart';
 import 'package:rtracker/module/inbox/inbox_page.dart';
 import 'package:rtracker/module/job_list/job_list_page.dart';
 import 'package:rtracker/module/profile/profile_page.dart';
@@ -35,6 +36,9 @@ import 'package:rtracker/widget/custom_menu.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 import 'package:get_phone_number/get_phone_number.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'widgets/content/jo_mtd_content.dart';
+import 'widgets/content/jo_yesterday_content.dart';
 
 class HomePage extends StatefulWidget {
   final LoginResponse loginResponse;
@@ -340,6 +344,12 @@ class HomePageState extends State<HomePage> {
                     borderColor: Theme.of(context).colorScheme.primary,
                   ),
                 ),
+                SizedBox(height: Dimensions.height10),
+                JoTodayContent(),
+                SizedBox(height: Dimensions.height10),
+                JoYesterdayContent(),
+                SizedBox(height: Dimensions.height10),
+                JoMTDContent(),
                 SizedBox(
                   height: Dimensions.height15,
                 ),
