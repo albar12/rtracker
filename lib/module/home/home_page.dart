@@ -14,6 +14,7 @@ import 'package:rtracker/helper/bottom_sheets.dart';
 import 'package:rtracker/helper/dialogs.dart';
 import 'package:rtracker/helper/dimensions.dart';
 import 'package:rtracker/helper/formats.dart';
+import 'package:rtracker/helper/gdp_dara.dart';
 import 'package:rtracker/helper/generals.dart';
 import 'package:rtracker/helper/navigators.dart';
 import 'package:rtracker/helper/notifications.dart';
@@ -29,9 +30,11 @@ import 'package:rtracker/module/stok_barang/stok_barang_page.dart';
 import 'package:rtracker/module/synchronization/synchronization_page.dart';
 import 'package:rtracker/module/terima_barang/terima_barang_page.dart';
 import 'package:rtracker/realm/job_order_dao.dart';
+import 'package:rtracker/widget/custom_date_field.dart';
 import 'package:rtracker/widget/custom_menu.dart';
 import 'package:rtracker/widget/text_sheet.dart';
 import 'package:get_phone_number/get_phone_number.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
   final LoginResponse loginResponse;
@@ -52,6 +55,10 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   Timer? timer;
   DateTime? lastSynchronization;
+  late List<GDPData> _chartData;
+  late TooltipBehavior _tooltipBehavior;
+  TextEditingController dateStartController = TextEditingController();
+  TextEditingController dateEndController = TextEditingController();
 
   // void checkPhoneNumber() async {
   //   var status = await Permission.phone.status;
@@ -97,6 +104,8 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _chartData = getChartData();
+    _tooltipBehavior = TooltipBehavior(enable: true);
     // getPhoneNumber();
     try {
       if (Preferences.getInstance()
@@ -185,106 +194,37 @@ class HomePageState extends State<HomePage> {
         },
         child: Scaffold(
           backgroundColor: Theme.of(context).primaryColor,
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const TextSheet(
+                    'Manage Service',
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigators.push(context, const InboxPage());
+                    },
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Color(0xff2F80ED),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          drawer: _drawer(),
           body: Container(
             padding: EdgeInsets.all(Dimensions.width15),
             child: ListView(
               children: [
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const TextSheet(
-                        'TWS Tracker',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigators.push(context, const InboxPage());
-                        },
-                        icon: Icon(
-                          Icons.notifications,
-                          color: Color(0xff2F80ED),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-                Center(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            widget.loginResponse.photo,
-                            errorBuilder: (context, error, stackTrace) => Icon(
-                              Icons.person_outline,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 160,
-                            ),
-                            fit: BoxFit.cover,
-                            width: 160,
-                            height: 160,
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(80),
-                            onTap: () {
-                              Navigators.push(
-                                context,
-                                ProfilePage(
-                                  loginResponse: widget.loginResponse,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(
-                    vertical: Dimensions.height10,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 24,
-                      ),
-                      children: [
-                        const TextSpan(text: 'Hello, '),
-                        TextSpan(
-                          text: Strings.firstWord(
-                            widget.loginResponse.name,
-                          ),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: Dimensions.height5),
                 Container(
                   padding: EdgeInsets.symmetric(
                     vertical: Dimensions.height5,
@@ -334,111 +274,74 @@ class HomePageState extends State<HomePage> {
                             const Text("Sinkron Sekarang"),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(height: Dimensions.height10),
-                menu(
-                  color: const Color(0xFF82E2FF),
-                  onTap: () {
-                    Navigators.push(
-                      context,
-                      const JobListPage(finished: false),
-                    );
-                  },
-                  iconData: Icons.assignment,
-                  name: "JO ACTIVE",
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: CustomDateField(
+                        textEditingController: dateStartController,
+                        labelText: "Date Start",
+                      ),
+                    ),
+                    Container(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
+                      height: Dimensions.height10 * 5.5,
+                      child: Icon(Icons.keyboard_double_arrow_right),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: CustomDateField(
+                        textEditingController: dateEndController,
+                        labelText: "Date End",
+                      ),
+                    ),
+                  ],
                 ),
-                menu(
-                  color: const Color(0xffEAD299),
-                  onTap: () {
-                    Navigators.push(
-                      context,
-                      const JobListPage(finished: true),
-                    );
+                SizedBox(height: Dimensions.height10),
+                ElevatedButton(
+                  onPressed: () {
+                    dateStartController.clear();
+                    dateEndController.clear();
                   },
-                  iconData: Icons.assignment,
-                  name: "PEKERJAAN SELESAI",
-                ),
-                menu(
-                  color: const Color(0xffFFF699),
-                  onTap: () {
-                    Navigators.push(context, const TerimaBarangPage());
-                  },
-                  iconData: Icons.download,
-                  name: "TERIMA BARANG",
-                ),
-                menu(
-                  color: const Color(0xff28C1CA),
-                  onTap: () {
-                    Navigators.push(context, const StokBarangPage());
-                  },
-                  iconData: Icons.inventory,
-                  name: "STOK BARANG",
-                ),
-                Visibility(
-                  visible: StringUtils.isNotNullOrEmpty(
-                    Preferences.getInstance()
-                        .getString(SharedPreferenceKey.WEB_PORTAL_URL),
-                  ),
-                  child: menu(
-                    color: Colors.deepPurple,
-                    onTap: () {
-                      BottomSheets.webView(
-                        context: context,
-                        url: Preferences.getInstance()
-                            .getString(SharedPreferenceKey.WEB_PORTAL_URL)!,
-                      );
-                    },
-                    iconData: Icons.http,
-                    name: "LAIN-LAIN",
+                  child: TextSheet(
+                    'Filter',
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-                menu(
-                  color: const Color(0xffEB5757),
-                  onTap: () {
-                    if (JobOrderDao.pendings().isNotEmpty ||
-                        JobOrderDao.checkSameMidJobToday().isNotEmpty) {
-                      Dialogs.message(
-                        context: context,
-                        title: "Gagal Keluar",
-                        message:
-                            "Dikarenakan terdapat job order yang masih pending atau ada job yang harus diselesaikan hari ini",
-                      );
-                    } else {
-                      Dialogs.confirmation(
-                        context: context,
-                        title: "Apakah anda yakin ingin keluar?",
-                        positive: "Keluar",
-                        positiveCallback: () {
-                          context.read<HomeBloc>().add(HomeSignOut());
-                        },
-                      );
-                    }
-                  },
-                  iconData: Icons.logout,
-                  name: "KELUAR",
+                SizedBox(height: Dimensions.height10),
+                Expanded(
+                  flex: 1,
+                  child: SfCircularChart(
+                    legend: Legend(
+                      isVisible: true,
+                      overflowMode: LegendItemOverflowMode.wrap,
+                    ),
+                    tooltipBehavior: _tooltipBehavior,
+                    series: <CircularSeries>[
+                      DoughnutSeries<GDPData, String>(
+                        dataSource: _chartData,
+                        xValueMapper: (datum, index) => datum.continent,
+                        yValueMapper: (datum, index) => datum.gdp,
+                        dataLabelSettings: DataLabelSettings(
+                          isVisible: true,
+                        ),
+                      ),
+                    ],
+                    borderWidth: 1.0,
+                    borderColor: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 SizedBox(
                   height: Dimensions.height15,
-                ),
-                Center(
-                  child: FutureBuilder<PackageInfo>(
-                    future: PackageInfo.fromPlatform(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(
-                          'v${snapshot.data!.version}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
                 ),
               ],
             ),
@@ -446,5 +349,197 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Widget _drawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 24,
+                ),
+                children: [
+                  const TextSpan(
+                    text: 'Hello, ',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  TextSpan(
+                    text: Strings.firstWord(
+                      widget.loginResponse.name,
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            accountEmail: Text(""),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).primaryColor,
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          widget.loginResponse.photo,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.person_outline,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 160,
+                          ),
+                          fit: BoxFit.cover,
+                          width: 160,
+                          height: 160,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(80),
+                          onTap: () {
+                            Navigators.push(
+                              context,
+                              ProfilePage(
+                                loginResponse: widget.loginResponse,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.assignment),
+            title: Text('JO ACTIVE'),
+            onTap: () {
+              Navigators.push(
+                context,
+                const JobListPage(finished: false),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.assignment),
+            title: Text('Pekerjaan Selesai'),
+            onTap: () {
+              Navigators.push(
+                context,
+                const JobListPage(finished: true),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.download),
+            title: Text('Terima Barang'),
+            onTap: () {
+              Navigators.push(context, const TerimaBarangPage());
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.inventory),
+            title: Text('Stok Barang'),
+            onTap: () {
+              Navigators.push(context, const StokBarangPage());
+            },
+          ),
+          Visibility(
+            visible: StringUtils.isNotNullOrEmpty(
+              Preferences.getInstance()
+                  .getString(SharedPreferenceKey.WEB_PORTAL_URL),
+            ),
+            child: ListTile(
+              leading: Icon(Icons.http),
+              title: Text('Lain-lain'),
+              onTap: () {
+                BottomSheets.webView(
+                  context: context,
+                  url: Preferences.getInstance()
+                      .getString(SharedPreferenceKey.WEB_PORTAL_URL)!,
+                );
+              },
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Keluar'),
+            onTap: () {
+              if (JobOrderDao.pendings().isNotEmpty ||
+                  JobOrderDao.checkSameMidJobToday().isNotEmpty) {
+                Dialogs.message(
+                  context: context,
+                  title: "Gagal Keluar",
+                  message:
+                      "Dikarenakan terdapat job order yang masih pending atau ada job yang harus diselesaikan hari ini",
+                );
+              } else {
+                Dialogs.confirmation(
+                  context: context,
+                  title: "Apakah anda yakin ingin keluar?",
+                  positive: "Keluar",
+                  positiveCallback: () {
+                    context.read<HomeBloc>().add(HomeSignOut());
+                  },
+                );
+              }
+            },
+          ),
+          Center(
+            child: FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    'v${snapshot.data!.version}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<GDPData> getChartData() {
+    final List<GDPData> chartData = [
+      GDPData("Installation (60)", 60),
+      GDPData("Pullout (Penarikan) (30)", 30),
+      GDPData("PM - MTI (13814)", 13814),
+      GDPData("Thermal (CM) (116)", 116),
+      GDPData("PM - Thermal (4906)", 4906),
+      GDPData("Replacement (CM) (74)", 74),
+      GDPData("Visit (CM) (3039)", 3039),
+    ];
+
+    return chartData;
   }
 }

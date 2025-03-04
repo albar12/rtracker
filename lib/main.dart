@@ -278,6 +278,13 @@ class App extends StatelessWidget {
       );
     } else {
       return const SignInPage();
+      // String loginResponse = Preferences.getInstance()
+      //         .getString(SharedPreferenceKey.LOGIN_RESPONSE) ??
+      //     '{}';
+
+      // return HomePage(
+      //   loginResponse: LoginResponse.fromJson(jsonDecode(loginResponse)),
+      // );
     }
   }
 }

@@ -42,18 +42,18 @@ class Parameter {
   static const bool API_PRINT_LOGGING_ENABLED = true;
   static const String CLIENT_ID = "r-tracker_mobile_api";
   static const String CLIENT_SECRET_KEY = "ci10cmFja2V yX21vYmlsZV9hcGk=";
-  static const List<String> signalBars = ['1','2','3','4'];
+  static const List<String> signalBars = ['1', '2', '3', '4'];
 }
 
 class SwitchValues {
   static const String yes = "Yes";
   static const String no = "No";
 
-  static bool valueToStatus(String? value){
+  static bool valueToStatus(String? value) {
     return (value ?? no) == yes;
   }
 
-  static String statusToValue(bool status){
+  static String statusToValue(bool status) {
     return status ? yes : no;
   }
 }
@@ -63,8 +63,10 @@ class ApiUrl {
   //     "https://fms.jadintracker.id/api_mobile/api_mobile/";
   // static String MAIN_BASE =
   //     "https://fms.jadintracker.id/api_mobile/Api_mobile_v1_2_12/";
-  static String MAIN_BASE =
-      "https://fms.jadintracker.id/api_mobile/Api_mobile_v1_2_13/";
+  // static String MAIN_BASE =
+  //     "https://fms.jadintracker.id/api_mobile/Api_mobile_v1_2_13/";
+  static String MAIN_BASE = "https://dev.cooperation.my.id/";
+
   static String MOCK_BASE = 'https://posdemo.sisapp.com:8443/rtracker/api/';
   static String MOCK_LOCAL_BASE = 'https://192.168.2.1:11443/rtracker/api/';
 
