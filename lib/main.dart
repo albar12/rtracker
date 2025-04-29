@@ -277,14 +277,14 @@ class App extends StatelessWidget {
         loginResponse: LoginResponse.fromJson(jsonDecode(loginResponse)),
       );
     } else {
-      return const SignInPage();
-      // String loginResponse = Preferences.getInstance()
-      //         .getString(SharedPreferenceKey.LOGIN_RESPONSE) ??
-      //     '{}';
+      // return const SignInPage();
+      String loginResponse = Preferences.getInstance()
+              .getString(SharedPreferenceKey.LOGIN_RESPONSE) ??
+          '{}';
 
-      // return HomePage(
-      //   loginResponse: LoginResponse.fromJson(jsonDecode(loginResponse)),
-      // );
+      return HomePage(
+        loginResponse: LoginResponse.fromJson(jsonDecode(loginResponse)),
+      );
     }
   }
 }
